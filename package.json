@@ -1,6 +1,6 @@
 {
   "name": "@littoral/literally",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Lit based structural web components for app development.",
   "keywords": [
     "lit"
