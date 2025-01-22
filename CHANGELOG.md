@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/Zoramite/literally/compare/v1.0.0...v1.1.0) (2025-01-22)
+
+
+### Features
+
+* cta element and updates to mixins ([059b287](https://github.com/Zoramite/literally/commit/059b28768371465f62fa48367fadeef71b8380e7))
+* Moving to MIT license ([f0c1dca](https://github.com/Zoramite/literally/commit/f0c1dca57fcfdd4684b02ba2ef87f5c9a21a3cf8))
+
 ## 1.0.0 (2025-01-21)
 
 
