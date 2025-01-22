@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+tsconfig.tsbuildinfo
+
 # Firebase
 .firebase/*
 

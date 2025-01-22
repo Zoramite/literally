@@ -4,7 +4,7 @@ import { Constructor } from '../mixins/mixin';
 import { RouteTrie, RouteTrieMatchValue } from './router';
 import { state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
-import { routeTrieContext, routeTrieMatchContext } from '../context/contexts';
+import { routeTrieContext, routeTrieMatchContext } from './context';
 
 /**
  * Navigation event for updating path.

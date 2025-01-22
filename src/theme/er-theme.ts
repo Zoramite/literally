@@ -119,11 +119,11 @@ export class ErTheme extends LitElement {
   static styles = [
     css`
       /**
-     * General, non-color variables.
-     *
-     * Dynamic clamps from:
-     * https://docs.google.com/spreadsheets/d/19SINDcV-eMSv1A4VSwGY-Ltl5v7y4DBE1dPQj26VLTg
-     */
+       * General, non-color variables.
+       *
+       * Dynamic clamps from:
+       * https://docs.google.com/spreadsheets/d/19SINDcV-eMSv1A4VSwGY-Ltl5v7y4DBE1dPQj26VLTg
+       */
       :host {
         --er-sys-body-font-size-xsmall: clamp(10px, 1.4323vw, 12px);
         --er-sys-body-font-size-small: clamp(14px, 1.9531vw, 16px);
