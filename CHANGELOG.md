@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Zoramite/literally/compare/v1.1.0...v1.2.0) (2025-03-08)
+
+
+### Features
+
+* Structural components ([5f2c59b](https://github.com/Zoramite/literally/commit/5f2c59b934a539c7580ed86c5e3771ac4b051dc1))
+
 ## [1.1.0](https://github.com/Zoramite/literally/compare/v1.0.0...v1.1.0) (2025-01-22)
 
 
