@@ -96,8 +96,10 @@ export class ErCTA extends LitElement {
     super.connectedCallback();
 
     this.addEventListener('click', () => {
-      this.dispatchEvent(navigateToPathEvent(this.path));
-      return false;
+      if (this.path) {
+        this.dispatchEvent(navigateToPathEvent(this.path));
+        return false;
+      }
     });
   }
 
