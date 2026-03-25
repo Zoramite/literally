@@ -10,5 +10,5 @@ export const routeTrieMatchContext = createContext<
 
 /** Context for a route trie. */
 export const routeTrieContext = createContext<RouteTrie<PageRoute> | undefined>(
-  'route-trie'
+  'route-trie',
 );

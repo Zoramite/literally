@@ -103,7 +103,9 @@ export class ErFlex extends LitElement {
   size = 'medium';
 
   render() {
-    return html`<slot></slot>`;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 

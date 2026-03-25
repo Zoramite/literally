@@ -77,10 +77,7 @@ export class ErCTA extends LitElement {
           --er-cta-hover-background-color,
           var(--md-sys-color-tertiary-container)
         );
-        color: var(
-          --er-cta-hover-color,
-          var(--md-sys-color-on-tertiary-container)
-        );
+        color: var(--er-cta-hover-color, var(--md-sys-color-on-tertiary-container));
       }
 
       :host(.block) {
@@ -104,7 +101,9 @@ export class ErCTA extends LitElement {
   }
 
   render() {
-    return html`<slot></slot>`;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 

@@ -9,7 +9,7 @@ interface RafInterface {
 }
 
 /**
- * Mixin for adding teams lookup.
+ * Mixin for adding raf loop timing.
  */
 export const RafMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   class RafElement extends superClass {

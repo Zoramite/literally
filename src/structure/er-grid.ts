@@ -44,7 +44,9 @@ export class ErGrid extends LitElement {
   ];
 
   render() {
-    return html`<slot></slot>`;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 
@@ -499,7 +501,9 @@ export class ErGridItem extends LitElement {
   ];
 
   render() {
-    return html`<slot></slot>`;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 

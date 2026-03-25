@@ -119,18 +119,17 @@ describe('wildcard matching', () => {
     expect(match?.params!['foo']).toBe('foobar/baz/be');
   });
 
-  test.concurrent(
-    'match multi-level with param sibling route',
-    async ({ expect }) => {
-      const trie = new RouteTrie();
+  test.concurrent('match multi-level with param sibling route', async ({
+    expect,
+  }) => {
+    const trie = new RouteTrie();
 
-      trie.add('/{foo:*}', 'baz');
-      trie.add('/{foobar}', 'tux');
+    trie.add('/{foo:*}', 'baz');
+    trie.add('/{foobar}', 'tux');
 
-      const match = trie.match('/foobar/baz/be');
+    const match = trie.match('/foobar/baz/be');
 
-      expect(match?.value).toBe('baz');
-      expect(match?.params!['foo']).toBe('foobar/baz/be');
-    },
-  );
+    expect(match?.value).toBe('baz');
+    expect(match?.params!['foo']).toBe('foobar/baz/be');
+  });
 });
