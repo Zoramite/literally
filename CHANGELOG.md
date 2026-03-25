@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/Zoramite/literally/compare/v1.3.0...v1.4.0) (2026-03-25)
+
+
+### Features
+
+* Add header components ([a528342](https://github.com/Zoramite/literally/commit/a528342a1eae546edeef974669d3a106eb7c1c71))
+* Adding UI components for chips and cards ([1171b8a](https://github.com/Zoramite/literally/commit/1171b8a5069d0002dfcce0359ea22cfcd48dcac9))
+
 ## [1.3.0](https://github.com/Zoramite/literally/compare/v1.2.0...v1.3.0) (2026-03-25)
 
 
