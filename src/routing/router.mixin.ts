@@ -1,17 +1,16 @@
-import { LitElement, PropertyValueMap, TemplateResult, html } from 'lit';
+import { consume, provide } from '@lit/context';
+import { LitElement, PropertyValueMap, TemplateResult } from 'lit';
+import { state } from 'lit/decorators.js';
 
 import { Constructor } from '../mixins/mixin';
-import { RouteTrie, RouteTrieMatchValue } from './router';
-import { state } from 'lit/decorators.js';
-import { provide } from '@lit/context';
+import {
+  NavigationEvent,
+  ROUTE_NAVIGATION_EVENT_NAME,
+} from '../navigation/navigation';
 import { routeTrieContext, routeTrieMatchContext } from './context';
+import { RouteTrie, RouteTrieMatchValue } from './router';
 
-/**
- * Navigation event for updating path.
- */
-export interface NavigationEvent {
-  path: string;
-}
+export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
 
 /**
  * Set a route value event.
@@ -21,25 +20,49 @@ export interface RouteSetEvent<Type> {
   value: Type;
 }
 
-export interface PageRoute {
-  pageOptions?: {
-    print?: {
-      hideTitle?: boolean;
-      largeTitle?: boolean;
-    };
-  };
+export interface DefaultPageOptions {
+  // Title of the page used to update the browser title.
+  title?: string;
+}
+
+export interface PageDetails {
+  pageOptions?: DefaultPageOptions;
   template: TemplateResult;
 }
 
-export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
-export const ROUTE_NAVIGATION_EVENT_NAME = 'routeNavigation';
+export interface PageRoute {
+  // If no permissions provided it is considered looking for a public page.
+  // If no result it is considered a permission error.
+  content: (
+    permissions?: Record<string, boolean> | null,
+  ) => PageDetails | undefined;
+}
 
 interface RouterInterface {
   routeTrieMatch: RouteTrieMatchValue<PageRoute> | undefined;
   routeTrie: RouteTrie<PageRoute>;
   routePath: string;
-  renderCurrentRoute: () => TemplateResult;
 }
+
+export interface RouteMatchInterface {
+  routeMatch: RouteTrieMatchValue<PageRoute> | undefined;
+}
+
+/**
+ * Mixin for adding a route match consumer.
+ */
+export const RouteMatchConsumerMixin = <T extends Constructor<LitElement>>(
+  superClass: T,
+) => {
+  class RouteMatchElement extends superClass {
+    static styles = [(superClass as unknown as typeof LitElement).styles ?? []];
+
+    @consume({ context: routeTrieMatchContext, subscribe: true })
+    @state()
+    routeMatch: RouteTrieMatchValue<PageRoute> | undefined;
+  }
+  return RouteMatchElement as Constructor<RouteMatchInterface> & T;
+};
 
 /**
  * Mixin for adding router functionality to a component.
@@ -92,6 +115,16 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
           this.updateRouteTrieMatch();
         }
       });
+
+      // Add listener for anchor changes
+      window.addEventListener('hashchange', () => {
+        const newPath = this.currentHash;
+
+        if (newPath && this.routePath !== newPath) {
+          this.routePath = newPath;
+          this.updateRouteTrieMatch();
+        }
+      });
     }
 
     get currentHash() {
@@ -103,10 +136,34 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     }
 
     handleNavigation(evt: CustomEvent<NavigationEvent>) {
-      this.routePath = evt.detail.path;
+      const currentUrl = new URL(window.location.href);
+      const nextUrl = new URL(window.location.href);
+      nextUrl.hash = evt.detail.path;
 
-      // Push the new location to the history.
-      history.pushState(evt.detail, '', `#${this.routePath}`);
+      // Check if we are moving to a different root path.
+      if (evt.detail.rootPath) {
+        const currentRootPath = currentUrl.pathname;
+
+        if (currentRootPath !== evt.detail.rootPath) {
+          nextUrl.pathname = evt.detail.rootPath;
+        }
+      }
+
+      // Check for new window triggering.
+      if (evt.detail.openInNewWindow) {
+        window.open(nextUrl.toString(), '_blank');
+        return;
+      }
+
+      // Do a full redirect if the paths have changed.
+      if (currentUrl.pathname !== nextUrl.pathname) {
+        window.location.href = nextUrl.toString();
+        return;
+      }
+
+      // Handle internally, no full redirection
+      this.routePath = nextUrl.hash.slice(1);
+      history.pushState(evt.detail, '', nextUrl.hash);
     }
 
     handleRouteChange(evt: CustomEvent<RouteSetEvent<PageRoute>>) {
@@ -117,20 +174,17 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       this.routeTrie.set(evt.detail.path, evt.detail.value);
     }
 
-    renderCurrentRoute() {
-      // No route matched, nothing to show.
-      if (!this.routeTrieMatch?.value?.template) {
-        return html``;
-      }
-
-      // Return the template result from the route
-      return this.routeTrieMatch.value.template;
-    }
-
     protected willUpdate(changedProperties: PropertyValueMap<this>): void {
       if (changedProperties.has('routePath')) {
         // Update the matched route when the path has changed.
         this.updateRouteTrieMatch();
+
+        // Scroll to the top of the page on path change.
+        window.scrollTo({
+          top: 0,
+          // Not smooth, so that it happens instantly.
+          behavior: 'instant',
+        });
       }
     }
 
@@ -145,6 +199,5 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
 declare global {
   interface GlobalEventHandlersEventMap {
     routeTrieSetRoute: CustomEvent<RouteSetEvent<PageRoute>>;
-    routeNavigation: CustomEvent<NavigationEvent>;
   }
 }

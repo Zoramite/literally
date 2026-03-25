@@ -30,3 +30,9 @@ export function navigateToPathEvent(
     },
   });
 }
+
+declare global {
+  interface GlobalEventHandlersEventMap {
+    routeNavigation: CustomEvent<NavigationEvent>;
+  }
+}

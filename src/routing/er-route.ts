@@ -1,6 +1,6 @@
+import { consume } from '@lit/context';
 import { LitElement, PropertyValueMap, html } from 'lit';
 import { state } from 'lit/decorators.js';
-import { consume } from '@lit/context';
 
 import { routeTrieContext } from './context';
 import { RouteTrie } from './router';

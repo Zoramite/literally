@@ -1,16 +1,24 @@
-import { LitElement, css, html } from 'lit';
+import { css, CSSResultGroup, html, LitElement } from 'lit';
+
+import { Constructor } from '../mixins/mixin';
 
 /**
- * Theme element for controlling the css variables for all elements contained
- * within.
+ * Event for triggering the theme mode override.
+ */
+export interface ThemeModeEvent {
+  mode: 'light' | 'dark';
+}
+
+interface ThemeInterface {}
+
+/**
+ * Default theme for ease of use an example.
  *
  * Theme variables created using:
  * https://material-foundation.github.io/material-theme-builder/
- *
- * @slot - All elements to be themed.
  */
-export class ErTheme extends LitElement {
-  static darkTheme = css`
+export const defaultTheme = {
+  dark: css`
     /*  Dark theme css variables. */
     --md-sys-color-primary: rgb(177 197 255);
     --md-sys-color-surface-tint: rgb(177 197 255);
@@ -61,9 +69,8 @@ export class ErTheme extends LitElement {
     --md-sys-color-surface-container: rgb(30 31 37);
     --md-sys-color-surface-container-high: rgb(40 42 47);
     --md-sys-color-surface-container-highest: rgb(51 52 58);
-  `;
-
-  static lightTheme = css`
+  `,
+  light: css`
     /*  Light theme css variables. */
     --md-sys-color-primary: rgb(71 93 146);
     --md-sys-color-surface-tint: rgb(71 93 146);
@@ -114,85 +121,121 @@ export class ErTheme extends LitElement {
     --md-sys-color-surface-container: rgb(238 237 244);
     --md-sys-color-surface-container-high: rgb(232 231 239);
     --md-sys-color-surface-container-highest: rgb(226 226 233);
-  `;
+  `,
+};
 
-  static styles = [
-    css`
-      /**
-       * General, non-color variables.
-       *
-       * Dynamic clamps from:
-       * https://docs.google.com/spreadsheets/d/19SINDcV-eMSv1A4VSwGY-Ltl5v7y4DBE1dPQj26VLTg
-       */
-      :host {
-        --er-sys-body-font-size-xsmall: clamp(10px, 1.4323vw, 12px);
-        --er-sys-body-font-size-small: clamp(14px, 1.9531vw, 16px);
-        --er-sys-body-font-size-medium: clamp(16px, 2.2135vw, 18px);
-        --er-sys-body-font-size-large: clamp(18px, 2.6042vw, 22px);
-
-        --er-sys-title-font-size-h1: clamp(32px, 4.6875vw, 40px);
-        --er-sys-title-font-size-h2: clamp(28px, 3.9063vw, 34px);
-        --er-sys-title-font-size-h3: clamp(22px, 3.125vw, 28px);
-        --er-sys-title-font-size-h4: clamp(18px, 2.6042vw, 22px);
-        --er-sys-title-font-size-h5: clamp(16px, 2.3438vw, 20px);
-        --er-sys-title-font-size-h6: clamp(14px, 2.0833vw, 18px);
-
-        --space-none: clamp(0px, 0vw, 0px);
-        --space-xxsmall: clamp(1px, 0.2604vw, 2px);
-        --space-xsmall: clamp(2px, 0.3906vw, 4px);
-        --space-small: clamp(5px, 0.7813vw, 8px);
-        --space-medium: clamp(12px, 1.8229vw, 16px);
-        --space-large: clamp(18px, 2.6042vw, 24px);
-        --space-xlarge: clamp(24px, 3.3854vw, 30px);
-        --space-xxlarge: clamp(30px, 4.2969vw, 36px);
-        --space-xxxlarge: clamp(36px, 5.0781vw, 42px);
-        --space-xxxxlarge: clamp(42px, 6.5104vw, 58px);
-
-        --animation-timing-xxxshort: 120ms;
-        --animation-timing-xxshort: 250ms;
-        --animation-timing-xshort: 500ms;
-        --animation-timing-short: 1s;
-        --animation-timing-medium: 2s;
-        --animation-timing-long: 3s;
-        --animation-timing-xlong: 5s;
-
-        --grid-margin: clamp(18px, 2.6042vw, 24px);
-        --grid-gap: clamp(14px, 2.0833vw, 18px);
-
-        --body-font-family: 'Comfortaa', sans-serif;
-        --body-font-optical-sizing: auto;
-        --body-font-weight: 400;
-
-        --title-font-family: 'Titillium Web', sans-serif;
-        --title-font-optical-sizing: auto;
-        --title-font-weight: 700;
-      }
-
-      @media (prefers-color-scheme: light) {
+/**
+ * Mixin for creating a theme element for controlling the css variables for all
+ * elements contained within.
+ */
+export const ThemeMixin = <T extends Constructor<LitElement>>(
+  superClass: T,
+  lightTheme: CSSResultGroup = defaultTheme.light,
+  darkTheme: CSSResultGroup = defaultTheme.dark,
+) => {
+  class ThemeElement extends superClass {
+    static styles = [
+      (superClass as unknown as typeof LitElement).styles ?? [],
+      css`
+        /**
+        * General, non-color variables.
+        *
+        * Dynamic clamps from:
+        * https://docs.google.com/spreadsheets/d/19SINDcV-eMSv1A4VSwGY-Ltl5v7y4DBE1dPQj26VLTg
+        */
         :host {
-          ${ErTheme.lightTheme};
+          --er-sys-body-font-size-xxsmall: clamp(10px, 1.4323vw, 12px);
+          --er-sys-body-font-size-xsmall: clamp(12px, 1.6927vw, 14px);
+          --er-sys-body-font-size-small: clamp(14px, 1.9531vw, 16px);
+          --er-sys-body-font-size-medium: clamp(16px, 2.2135vw, 18px);
+          --er-sys-body-font-size-large: clamp(18px, 2.6042vw, 22px);
+          --er-sys-body-font-size-xlarge: clamp(20px, 2.8646vw, 24px);
+          --er-sys-body-font-size-xxlarge: clamp(26px, 3.6458vw, 32px);
+          --er-sys-body-font-size-xxxlarge: clamp(32px, 4.4271vw, 38px);
+
+          --er-sys-title-font-size-h1: clamp(32px, 4.6875vw, 40px);
+          --er-sys-title-font-size-h2: clamp(28px, 3.9063vw, 34px);
+          --er-sys-title-font-size-h3: clamp(22px, 3.125vw, 28px);
+          --er-sys-title-font-size-h4: clamp(18px, 2.6042vw, 22px);
+          --er-sys-title-font-size-h5: clamp(16px, 2.3438vw, 20px);
+          --er-sys-title-font-size-h6: clamp(14px, 2.0833vw, 18px);
+
+          --space-none: clamp(0px, 0vw, 0px);
+          --space-xxsmall: clamp(1px, 0.2604vw, 2px);
+          --space-xsmall: clamp(2px, 0.3906vw, 4px);
+          --space-small: clamp(5px, 0.7813vw, 8px);
+          --space-medium: clamp(12px, 1.8229vw, 16px);
+          --space-large: clamp(18px, 2.6042vw, 24px);
+          --space-xlarge: clamp(24px, 3.3854vw, 30px);
+          --space-xxlarge: clamp(30px, 4.2969vw, 36px);
+          --space-xxxlarge: clamp(36px, 5.0781vw, 42px);
+          --space-xxxxlarge: clamp(42px, 6.5104vw, 58px);
+
+          --animation-timing-xxxshort: 120ms;
+          --animation-timing-xxshort: 250ms;
+          --animation-timing-xshort: 500ms;
+          --animation-timing-short: 1s;
+          --animation-timing-medium: 2s;
+          --animation-timing-long: 3s;
+          --animation-timing-xlong: 5s;
+
+          --grid-margin: clamp(18px, 2.6042vw, 24px);
+          --grid-gap: clamp(14px, 2.0833vw, 18px);
+
+          --body-font-optical-sizing: auto;
+          --body-font-weight: 400;
+
+          --title-font-optical-sizing: auto;
+          --title-font-weight: 700;
         }
-      }
 
-      @media (prefers-color-scheme: dark) {
-        :host {
-          ${ErTheme.darkTheme};
+        @media (prefers-color-scheme: light) {
+          :host {
+            ${lightTheme};
+          }
         }
-      }
 
-      :host(.light) {
-        ${ErTheme.lightTheme};
-      }
+        @media (prefers-color-scheme: dark) {
+          :host {
+            ${darkTheme};
+          }
+        }
 
-      :host(.dark) {
-        ${ErTheme.darkTheme};
-      }
-    `,
-  ];
+        :host(.light) {
+          ${lightTheme};
+        }
 
-  render() {
-    return html`
-      <slot></slot>
-    `;
+        :host(.dark) {
+          ${darkTheme};
+        }
+      `,
+    ];
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      this.addEventListener('themeMode', (evt: CustomEvent<ThemeModeEvent>) => {
+        if (evt.detail.mode === 'light') {
+          this.classList.add('light');
+          this.classList.remove('dark');
+        } else {
+          this.classList.add('dark');
+          this.classList.remove('light');
+        }
+      });
+    }
+
+    render() {
+      return html`
+        <slot></slot>
+      `;
+    }
+  }
+  return ThemeElement as Constructor<ThemeInterface> & T;
+};
+
+declare global {
+  interface GlobalEventHandlersEventMap {
+    themeMode: CustomEvent<ThemeModeEvent>;
   }
 }

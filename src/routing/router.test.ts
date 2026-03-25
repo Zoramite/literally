@@ -1,4 +1,5 @@
 import { describe, test } from 'vitest';
+
 import { RouteTrie } from './router';
 
 describe('direct matching', () => {

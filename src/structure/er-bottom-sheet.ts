@@ -12,7 +12,6 @@ export class ErBottomSheet extends LitElement {
         align-items: center;
         display: flex;
         flex-flow: column;
-        pointer-events: none;
         justify-content: flex-end;
         position: fixed;
         bottom: 0;
@@ -20,10 +19,6 @@ export class ErBottomSheet extends LitElement {
         right: 0;
         top: 0;
         z-index: 1000;
-      }
-
-      :host([open]) {
-        pointer-events: initial;
       }
 
       :host([open].scrim) {
@@ -45,15 +40,20 @@ export class ErBottomSheet extends LitElement {
         color: var(--er-bottom-sheet-color, var(--md-sys-color-on-surface));
         height: 0;
         max-width: 640px;
-        max-height: 95vh;
+        max-height: 95dvh;
+        min-height: 25dvh;
+        overflow: auto;
         width: 100%;
         transition: height var(--animation-timing-xxshort) ease-in-out;
       }
 
+      :host(.full) .container {
+        max-width: 95dvw;
+      }
+
       :host([open]) .container {
-        /* TODO: Wait for auto height to work. */
-        /* height: calc(auto); */
-        height: 50vh;
+        /* Wait for auto height to work. */
+        height: calc-size(fit-content, size);
       }
 
       slot {
@@ -66,6 +66,9 @@ export class ErBottomSheet extends LitElement {
   @property({ type: Boolean, attribute: 'open', reflect: true })
   isOpen = false;
 
+  @property({ type: Boolean, attribute: 'no-auto-close', reflect: true })
+  noAutoClose = false;
+
   connectedCallback(): void {
     super.connectedCallback();
 
@@ -73,6 +76,10 @@ export class ErBottomSheet extends LitElement {
   }
 
   handleScrimClick(evt: MouseEvent) {
+    if (this.noAutoClose) {
+      return;
+    }
+
     const targets = evt.composedPath();
 
     for (const target of targets) {
