@@ -4,7 +4,7 @@ import { consume } from '@lit/context';
 
 import { routeTrieContext } from './context';
 import { RouteTrie } from './router';
-import { type PageRoute } from './router-mixin';
+import { type PageRoute } from './router.mixin';
 
 /**
  * Base component for breaking up routing into multiple files.

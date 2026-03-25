@@ -16,6 +16,7 @@
     "url": "git+https://github.com/Zoramite/literally.git"
   },
   "scripts": {
+    "build": "tsc",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",

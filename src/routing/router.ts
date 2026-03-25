@@ -66,6 +66,8 @@ const PARAM_REGEX = /^{(?<param>[^:}]+)[:]?(?<type>[^}]*)}$/i;
  *    - May fail if sub node matching (ex: '/foo/{bar}/baz`)
  *  - Wildcard matching
  *    - Allows for the remaining path to be a variable. (ex: `/foo/{bar:*}`)
+ *
+ * The default title is used for updating page title during a navigation event.
  */
 export class RouteTrie<Type> {
   root: RouteTrieNode<Type>;
@@ -75,6 +77,7 @@ export class RouteTrie<Type> {
     public pathSeparator = '/',
     public paramSeparator = ':',
     public wildcardIndicator = '*',
+    public defaultTitle = '',
   ) {
     this.root = new RouteTrieNode(
       this.pathSeparator,
