@@ -39,9 +39,7 @@ export class ErA extends NavigationMixin(LitElement) {
   ];
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html` <slot></slot> `;
   }
 }
 

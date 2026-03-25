@@ -226,9 +226,7 @@ export const ThemeMixin = <T extends Constructor<LitElement>>(
     }
 
     render() {
-      return html`
-        <slot></slot>
-      `;
+      return html` <slot></slot> `;
     }
   }
   return ThemeElement as Constructor<ThemeInterface> & T;
