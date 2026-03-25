@@ -18,17 +18,20 @@
   "bugs": {
     "url": "https://github.com/Zoramite/literally/issues"
   },
-  "dependencies": {
+  "dependencies": {},
+  "peerDependencies": {
     "@lit/context": "^1.1.3",
     "lit": "^3.2.1"
   },
   "devDependencies": {
+    "@lit/context": "^1.1.3",
     "eslint": "^9.17.0",
     "eslint-plugin-lit": "^1.15.0",
     "eslint-plugin-wc": "^2.2.0",
+    "lit": "^3.2.1",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^3.0.8"
   }
 }
