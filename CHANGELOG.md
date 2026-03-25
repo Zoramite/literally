@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/Zoramite/literally/compare/v1.2.0...v1.3.0) (2026-03-25)
+
+
+### Features
+
+* Common UI components and utils ([928cb44](https://github.com/Zoramite/literally/commit/928cb44d7ccfc9773be4d500c9fa4a52f086aaaa))
+
+
+### Bug Fixes
+
+* Updating the structure components with improvements ([009d98e](https://github.com/Zoramite/literally/commit/009d98e4dd650765a349b1e3075e5da69176b2ab))
+
 ## [1.2.0](https://github.com/Zoramite/literally/compare/v1.1.0...v1.2.0) (2026-03-25)
 
 
