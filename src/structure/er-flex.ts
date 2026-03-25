@@ -1,10 +1,10 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { breakpoints } from './devices';
+import { breakpoints } from '../structure/devices';
 
 /**
- * Spacer for controlling the spacing between vertical elements of the page.
+ * Spacer for controlling the spacing between flex elements of the page.
  */
 @customElement('er-flex')
 export class ErFlex extends LitElement {
@@ -14,6 +14,8 @@ export class ErFlex extends LitElement {
         display: flex;
         flex-flow: row;
         gap: var(--er-flex-gap, var(--space-medium));
+        max-width: 100%;
+        overflow: hidden;
       }
 
       :host(.full) {
@@ -22,6 +24,26 @@ export class ErFlex extends LitElement {
 
       :host(.overflow-hidden) {
         overflow: hidden;
+      }
+
+      :host(.gap-small) {
+        gap: var(--space-small);
+      }
+
+      :host(.gap-large) {
+        gap: var(--space-large);
+      }
+
+      :host(.gap-xlarge) {
+        gap: var(--space-xlarge);
+      }
+
+      ::slotted(.grow) {
+        flex-grow: 1;
+      }
+
+      ::slotted(.shrink) {
+        flex-shrink: 1;
       }
     `,
     // Targeted breakpoint styles.
@@ -45,6 +67,10 @@ export class ErFlex extends LitElement {
 
         :host(.align-flex-end${breakpoint?.targetClass ?? css``}) {
           align-items: flex-end;
+        }
+
+        :host(.align-baseline${breakpoint?.targetClass ?? css``}) {
+          align-items: baseline;
         }
 
         :host(.align-center${breakpoint?.targetClass ?? css``}) {
@@ -104,7 +130,9 @@ export class ErFlex extends LitElement {
   size = 'medium';
 
   render() {
-    return html` <slot></slot> `;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 

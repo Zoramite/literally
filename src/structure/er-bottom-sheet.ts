@@ -24,11 +24,7 @@ export class ErBottomSheet extends LitElement {
       :host([open].scrim) {
         background-color: color-mix(
           in srgb,
-          var(
-              --er-bottom-sheet-scrim-background-color,
-              var(--md-sys-color-scrim)
-            )
-            80%,
+          var(--er-bottom-sheet-scrim-background-color, var(--md-sys-color-scrim)) 80%,
           transparent
         );
       }
@@ -103,7 +99,9 @@ export class ErBottomSheet extends LitElement {
   }
 
   render() {
-    return html` <div class="container"><slot></slot></div> `;
+    return html`
+      <div class="container"><slot></slot></div>
+    `;
   }
 
   protected updated(changedProperties: PropertyValueMap<this>) {

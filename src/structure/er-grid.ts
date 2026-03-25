@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { tablet, desktop, mobile, print } from './devices';
+import { tablet, desktop, mobile, print, breakpoints } from './devices';
 
 /**
  * Grid for controlling the layout of the page.
@@ -13,12 +13,13 @@ export class ErGrid extends LitElement {
   static styles = [
     css`
       :host {
-        column-gap: var(--grid-gap);
+        box-sizing: border-box;
+        column-gap: var(--grid-gap-column, var(--grid-gap));
         display: grid;
         /* 4 Columns on mobile */
         grid-template-columns: repeat(4, 1fr);
         margin: 0 var(--grid-margin);
-        row-gap: var(--grid-gap-row, var(--space-medium));
+        row-gap: var(--grid-gap-row, var(--grid-gap));
       }
 
       ${tablet.mediaQuery} {
@@ -42,10 +43,90 @@ export class ErGrid extends LitElement {
         }
       }
     `,
+    // Targeted breakpoint styles.
+    ...breakpoints.mixupStyles((breakpoint) => {
+      const styling = css`
+        :host(.gap-row-small${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-row: var(--space-small);
+        }
+
+        :host(.gap-row-medium${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-row: var(--space-medium);
+        }
+
+        :host(.gap-row-large${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-row: var(--space-large);
+        }
+
+        :host(.gap-row-xlarge${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-row: var(--space-xlarge);
+        }
+
+        :host(.gap-row-xxlarge${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-row: var(--space-xxlarge);
+        }
+
+        :host(.gap-row-xxxlarge${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-row: var(--space-xxxlarge);
+        }
+
+        :host(.gap-col-small${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-column: var(--space-small);
+        }
+
+        :host(.gap-col-medium${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-column: var(--space-medium);
+        }
+
+        :host(.gap-col-large${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-column: var(--space-large);
+        }
+
+        :host(.gap-col-xlarge${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-column: var(--space-xlarge);
+        }
+
+        :host(.gap-col-xxlarge${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-column: var(--space-xxlarge);
+        }
+
+        :host(.gap-col-xxxlarge${breakpoint?.targetClass ?? css``}) {
+          --grid-gap-column: var(--space-xxxlarge);
+        }
+
+        :host(.align-baseline${breakpoint?.targetClass ?? css``}) {
+          align-items: baseline;
+        }
+
+        :host(.align-end${breakpoint?.targetClass ?? css``}) {
+          align-items: end;
+        }
+
+        :host(.align-center${breakpoint?.targetClass ?? css``}) {
+          align-items: center;
+        }
+
+        :host(.align-start${breakpoint?.targetClass ?? css``}) {
+          align-items: start;
+        }
+      `;
+
+      if (!breakpoint) {
+        return styling;
+      }
+
+      return css`
+        ${breakpoint.mediaQuery} {
+          ${styling}
+        }
+      `;
+    }),
   ];
 
   render() {
-    return html` <slot></slot> `;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 
@@ -63,8 +144,8 @@ export class ErGridItem extends LitElement {
       }
 
       /**
-     * Default spans for all breakpoints to full width.
-     */
+       * Default spans for all breakpoints to full width.
+       */
       ${mobile.mediaQuery} {
         :host {
           grid-column-end: span 4;
@@ -90,8 +171,8 @@ export class ErGridItem extends LitElement {
       }
 
       /**
-     * Grid settings per attributes.
-     */
+       * Grid settings per attributes.
+       */
 
       ${mobile.mediaQuery} {
         /* Mobile span attribute. */
@@ -430,7 +511,7 @@ export class ErGridItem extends LitElement {
           grid-column-end: span 8;
         }
 
-        /* Tablet start attribute. */
+        /* Print start attribute. */
         :host([start*='print:1']) {
           grid-column-start: 1;
         }
@@ -463,7 +544,7 @@ export class ErGridItem extends LitElement {
           grid-column-start: 8;
         }
 
-        /* Tablet end attribute. */
+        /* Print end attribute. */
         :host([end*='print:2']) {
           grid-column-end: 2;
         }
@@ -500,7 +581,9 @@ export class ErGridItem extends LitElement {
   ];
 
   render() {
-    return html` <slot></slot> `;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 

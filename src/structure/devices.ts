@@ -75,6 +75,8 @@ export const desktop: BreakpointDevice = {
 class BreakpointHelper {
   constructor(public breakpoints: BreakpointDevice[]) {}
 
+  watchMedia: Record<string, MediaQueryList> = {};
+
   mixupStyles(mixer: BreakpointTargetMixer): CSSResult[] {
     const styles: CSSResult[] = [];
 
@@ -90,6 +92,28 @@ class BreakpointHelper {
 
     return styles;
   }
+
+  /**
+   * Determine which of the breakpoints are currently matching on the page.
+   */
+  findActiveBreakpoints(): BreakpointDevice[] {
+    const matchingBreakpoints: BreakpointDevice[] = [];
+
+    /* Check for media matches on the window. */
+    for (const breakpoint of this.breakpoints) {
+      if (!this.watchMedia[breakpoint.breakpoint]) {
+        this.watchMedia[breakpoint.breakpoint] = window.matchMedia(
+          breakpoint.query.toString(),
+        );
+      }
+
+      if (this.watchMedia[breakpoint.breakpoint].matches) {
+        matchingBreakpoints.push(breakpoint);
+      }
+    }
+
+    return matchingBreakpoints;
+  }
 }
 
 /**
@@ -98,6 +122,8 @@ class BreakpointHelper {
 export const breakpoints = new BreakpointHelper([
   print,
   mobile,
+  tabletLT,
   tablet,
+  tabletGT,
   desktop,
 ]);
