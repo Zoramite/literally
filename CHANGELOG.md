@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/Zoramite/literally/compare/v1.4.0...v2.0.0) (2026-03-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update to use standard decorators
+
+### Features
+
+* Update to use standard decorators ([4bcb754](https://github.com/Zoramite/literally/commit/4bcb75410fd5c5104ff7d75eda35caf266d2786f))
+
 ## [1.4.0](https://github.com/Zoramite/literally/compare/v1.3.0...v1.4.0) (2026-03-25)
 
 
