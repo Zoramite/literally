@@ -26,20 +26,20 @@ export const NavigationMixin = <T extends Constructor<LitElement>>(
     static styles = [(superClass as unknown as typeof LitElement).styles ?? []];
 
     @property({ type: Boolean, attribute: 'disabled', reflect: true })
-    isDisabled = false;
+    accessor isDisabled = false;
 
     @property({ reflect: true })
-    path?: string = undefined;
+    accessor path: string | undefined = undefined;
 
     @property({ reflect: true })
-    rootPath?: string = undefined;
+    accessor rootPath: string | undefined = undefined;
 
     @property({ type: Boolean, attribute: 'open-new', reflect: true })
-    openInNewWindow = false;
+    accessor openInNewWindow = false;
 
     // Allow for a callback if not using the path.
     @property({ attribute: false })
-    navigationCallback?: NavigationCallback;
+    accessor navigationCallback: NavigationCallback | undefined;
 
     connectedCallback(): void {
       super.connectedCallback();

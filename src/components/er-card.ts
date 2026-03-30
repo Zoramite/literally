@@ -25,8 +25,10 @@ export class ErCard extends NavigationMixin(LitElement) {
       :host(.link:hover) {
         /* background-color: var(--er-card-background-color-hover); */
         box-shadow:
-          color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent) 0px 1px 3px,
-          color-mix(in srgb, var(--md-sys-color-shadow) 24%, transparent) 0px 1px 2px;
+          color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent) 0px
+            1px 3px,
+          color-mix(in srgb, var(--md-sys-color-shadow) 24%, transparent) 0px
+            1px 2px;
         cursor: pointer;
       }
 
@@ -54,7 +56,8 @@ export class ErCard extends NavigationMixin(LitElement) {
       }
 
       :host(.outlined) {
-        border: 1px solid var(--er-card-border-color, var(--md-sys-color-on-surface));
+        border: 1px solid
+          var(--er-card-border-color, var(--md-sys-color-on-surface));
       }
 
       :host(.themeSurfaceVariant) {
@@ -152,7 +155,7 @@ export class ErCard extends NavigationMixin(LitElement) {
   ];
 
   @property()
-  highlight?: string;
+  accessor highlight: string | undefined;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -161,9 +164,7 @@ export class ErCard extends NavigationMixin(LitElement) {
   }
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html` <slot></slot> `;
   }
 
   protected updated(changedProperties: PropertyValues<this>): void {

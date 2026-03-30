@@ -12,7 +12,7 @@ import { type PageRoute } from './router.mixin';
 export class ERRouteBase extends LitElement {
   @consume({ context: routeTrieContext, subscribe: true })
   @state()
-  routeTrie: RouteTrie<PageRoute> | undefined;
+  accessor routeTrie: RouteTrie<PageRoute> | undefined;
 
   render() {
     return html``;
