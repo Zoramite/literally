@@ -127,12 +127,10 @@ export class ErFlex extends LitElement {
   ];
 
   @property({ reflect: true })
-  size = 'medium';
+  accessor size = 'medium';
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html` <slot></slot> `;
   }
 }
 

@@ -18,14 +18,21 @@ export class ErHeader extends LitElement {
       h4,
       h5,
       h6 {
-        font-family: var(--er-header-title-font-family, var(--title-font-family));
+        font-family: var(
+          --er-header-title-font-family,
+          var(--title-font-family)
+        );
         font-optical-sizing: var(
           --er-header-title-font-optical-sizing,
           var(--title-font-optical-sizing)
         );
         font-size: var(--er-header-title-font-size);
-        font-weight: var(--er-header-title-font-weight, var(--title-font-weight));
-        margin: var(--er-header-margin-top, 0) 0 var(--er-header-margin-bottom, 0) 0;
+        font-weight: var(
+          --er-header-title-font-weight,
+          var(--title-font-weight)
+        );
+        margin: var(--er-header-margin-top, 0) 0
+          var(--er-header-margin-bottom, 0) 0;
         padding: 0;
       }
 
@@ -92,9 +99,7 @@ export class ErH1 extends ErHeader {
   ];
 
   render() {
-    return html`
-      <h1><slot></slot></h1>
-    `;
+    return html` <h1><slot></slot></h1> `;
   }
 }
 
@@ -128,9 +133,7 @@ export class ErH2 extends ErHeader {
   ];
 
   render() {
-    return html`
-      <h2><slot></slot></h2>
-    `;
+    return html` <h2><slot></slot></h2> `;
   }
 }
 
@@ -164,9 +167,7 @@ export class ErH3 extends ErHeader {
   ];
 
   render() {
-    return html`
-      <h3><slot></slot></h3>
-    `;
+    return html` <h3><slot></slot></h3> `;
   }
 }
 
@@ -200,9 +201,7 @@ export class ErH4 extends ErHeader {
   ];
 
   render() {
-    return html`
-      <h4><slot></slot></h4>
-    `;
+    return html` <h4><slot></slot></h4> `;
   }
 }
 
@@ -236,9 +235,7 @@ export class ErH5 extends ErHeader {
   ];
 
   render() {
-    return html`
-      <h5><slot></slot></h5>
-    `;
+    return html` <h5><slot></slot></h5> `;
   }
 }
 
@@ -272,9 +269,7 @@ export class ErH6 extends ErHeader {
   ];
 
   render() {
-    return html`
-      <h6><slot></slot></h6>
-    `;
+    return html` <h6><slot></slot></h6> `;
   }
 }
 

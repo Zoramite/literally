@@ -109,10 +109,10 @@ export class ErChip extends NavigationMixin(LitElement) {
   ];
 
   @property({ attribute: 'icon-start' })
-  iconStart?: string;
+  accessor iconStart: string | undefined;
 
   @property({ attribute: 'icon-end' })
-  iconEnd?: string;
+  accessor iconEnd: string | undefined;
 
   render() {
     return html`

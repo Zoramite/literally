@@ -60,7 +60,7 @@ export class ErSpacer extends LitElement {
   ];
 
   @property({ reflect: true })
-  size = 'medium';
+  accessor size = 'medium';
 
   render() {
     return nothing;
