@@ -115,16 +115,16 @@ export class ErIcon extends NavigationMixin(LitElement) {
   ];
 
   @property({ reflect: true })
-  icon = '';
+  accessor icon = '';
 
   @property({ reflect: true })
-  color?: string;
+  accessor color: string | undefined;
 
   @property({ type: Boolean, reflect: true })
-  disabled = false;
+  accessor disabled = false;
 
   @property({ type: Boolean, attribute: 'keep-color', reflect: true })
-  keepColor = false;
+  accessor keepColor = false;
 
   render() {
     if (this.color) {

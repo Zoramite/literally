@@ -59,7 +59,7 @@ export const RouteMatchConsumerMixin = <T extends Constructor<LitElement>>(
 
     @consume({ context: routeTrieMatchContext, subscribe: true })
     @state()
-    routeMatch: RouteTrieMatchValue<PageRoute> | undefined;
+    accessor routeMatch: RouteTrieMatchValue<PageRoute> | undefined;
   }
   return RouteMatchElement as Constructor<RouteMatchInterface> & T;
 };
@@ -74,14 +74,14 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     static styles = [(superClass as unknown as typeof LitElement).styles ?? []];
 
     @state()
-    routePath = '';
+    accessor routePath = '';
 
     @provide({ context: routeTrieMatchContext })
     @state()
-    routeTrieMatch: RouteTrieMatchValue<PageRoute> | undefined;
+    accessor routeTrieMatch: RouteTrieMatchValue<PageRoute> | undefined;
 
     @provide({ context: routeTrieContext })
-    routeTrie = new RouteTrie<PageRoute>();
+    accessor routeTrie = new RouteTrie<PageRoute>();
 
     connectedCallback(): void {
       super.connectedCallback();

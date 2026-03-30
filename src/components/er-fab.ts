@@ -13,7 +13,10 @@ export class ErFab extends NavigationMixin(LitElement) {
     css`
       :host {
         align-items: center;
-        background-color: var(--er-fab-background-color, var(--md-sys-color-surface));
+        background-color: var(
+          --er-fab-background-color,
+          var(--md-sys-color-surface)
+        );
         border: 1px solid var(--er-fab-border-color, transparent);
         border-radius: var(--er-fab-border-radius, var(--space-small));
         box-sizing: border-box;
@@ -87,7 +90,11 @@ export class ErFab extends NavigationMixin(LitElement) {
       :host([path]:hover:not([disabled])),
       :host(.link:hover:not([disabled])) {
         outline: 1px solid
-          color-mix(in srgb, var(--er-fab-theme-background-color) 60%, transparent);
+          color-mix(
+            in srgb,
+            var(--er-fab-theme-background-color) 60%,
+            transparent
+          );
         outline-offset: -1px;
         cursor: pointer;
       }
@@ -113,16 +120,16 @@ export class ErFab extends NavigationMixin(LitElement) {
   ];
 
   @property({ attribute: 'icon' })
-  icon?: string;
+  accessor icon: string | undefined;
 
   @property({ attribute: 'expanded', type: Boolean })
-  expanded = false;
+  accessor expanded = false;
 
   @property({})
-  highlight?: string;
+  accessor highlight: string | undefined;
 
   @property({})
-  label?: string;
+  accessor label: string | undefined;
 
   connectedCallback(): void {
     super.connectedCallback();
