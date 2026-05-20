@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/Zoramite/literally/compare/v1.4.0...v1.5.0) (2026-05-20)
+
+
+### Features
+
+* App services manager ([#8](https://github.com/Zoramite/literally/issues/8)) ([bbd51d7](https://github.com/Zoramite/literally/commit/bbd51d7926054d65dd46d74f6226bd4356710ae3))
+
 ## [1.4.0](https://github.com/Zoramite/literally/compare/v1.3.0...v1.4.0) (2026-03-25)
 
 
