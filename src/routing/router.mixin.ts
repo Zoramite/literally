@@ -38,7 +38,7 @@ export interface PageRoute {
   ) => PageDetails | undefined;
 }
 
-interface RouterInterface {
+export interface RouterInterface {
   routeTrieMatch: RouteTrieMatchValue<PageRoute> | undefined;
   routeTrie: RouteTrie<PageRoute>;
   routePath: string;
