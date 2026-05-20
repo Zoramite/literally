@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/Zoramite/literally/compare/v1.5.0...v1.5.1) (2026-05-20)
+
+
+### Bug Fixes
+
+* Update app render content to return the template ([4c9c9f9](https://github.com/Zoramite/literally/commit/4c9c9f92ae1027dbf550362fd5392b79337cbf96))
+
 ## [1.5.0](https://github.com/Zoramite/literally/compare/v1.4.0...v1.5.0) (2026-05-20)
 
 
