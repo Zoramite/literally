@@ -1,5 +1,5 @@
 import { provide } from '@lit/context';
-import { LitElement, TemplateResult, css, html } from 'lit';
+import { LitElement, TemplateResult, css, html, nothing } from 'lit';
 import { query, state } from 'lit/decorators.js';
 
 import { AppElementEvent, StickySize } from '../navigation/navigation';
@@ -56,16 +56,6 @@ export class ERApp extends RouterMixin(LitElement) {
 
       slot {
         display: block;
-      }
-
-      .snackbars {
-        bottom: calc(var(--sticky-bottom, 0px) + var(--space-large));
-        display: grid;
-        gap: var(--space-medium);
-        left: var(--space-large);
-        position: fixed;
-        right: var(--space-large);
-        z-index: 1000;
       }
 
       /* Adjustments for print. */
@@ -151,7 +141,7 @@ export class ERApp extends RouterMixin(LitElement) {
       return html``;
     }
 
-    return routeMatch.content();
+    return routeMatch.content()?.template ?? html``;
   }
 }
 
