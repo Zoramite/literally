@@ -1,5 +1,5 @@
 import { provide } from '@lit/context';
-import { LitElement, TemplateResult, css, html, nothing } from 'lit';
+import { LitElement, TemplateResult, css, html } from 'lit';
 import { query, state } from 'lit/decorators.js';
 
 import { AppElementEvent, StickySize } from '../navigation/navigation';
