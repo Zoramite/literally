@@ -1,4 +1,20 @@
+import { TemplateResult } from 'lit';
+
 export const ROUTE_NAVIGATION_EVENT_NAME = 'routeNavigation';
+
+export interface StickySize {
+  position: 'top' | 'bottom';
+  size: number;
+}
+
+/**
+ * Allows for adding an app level element arbitrarily.
+ * This allows for an element to not be constrained by the container for such
+ * things as modals or other full screen elements.
+ */
+export interface AppElementEvent {
+  element: TemplateResult;
+}
 
 /**
  * Navigation event for updating path.
@@ -34,5 +50,7 @@ export function navigateToPathEvent(
 declare global {
   interface GlobalEventHandlersEventMap {
     routeNavigation: CustomEvent<NavigationEvent>;
+    stickySizeUpdate: CustomEvent<StickySize>;
+    appElement: CustomEvent<AppElementEvent>;
   }
 }
