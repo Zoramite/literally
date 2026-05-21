@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/Zoramite/literally/compare/v1.6.0...v2.0.0) (2026-05-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Move app services into a generic manager class
+
+### Features
+
+* Move app services into a generic manager class ([e4b79b5](https://github.com/Zoramite/literally/commit/e4b79b52756e0e13b7dd124c3098514e6b3372ea))
+
 ## [1.6.0](https://github.com/Zoramite/literally/compare/v1.5.1...v1.6.0) (2026-05-21)
 
 
