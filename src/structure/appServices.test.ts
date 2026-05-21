@@ -3,12 +3,14 @@ import { describe, test } from 'vitest';
 import { AppServices } from './appServices';
 
 describe('App services', () => {
-  test.concurrent('undefined when no service is registered', async ({
+  test.concurrent('thow error when no service is registered', async ({
     expect,
   }) => {
     const appServices = new AppServices();
 
-    expect(appServices.getService('foo')).toBeUndefined();
+    expect(() => {
+      appServices.getService('foo');
+    }).toThrow();
   });
 
   test.concurrent('has no initiator when no service is registered', async ({

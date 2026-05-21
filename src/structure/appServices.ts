@@ -30,6 +30,10 @@ export class AppServices implements AppServicesInfo {
       this.services[service] = this.initiators[service]();
     }
 
+    if (!this.services[service]) {
+      throw new Error(`Service ${service} not found`);
+    }
+
     return this.services[service];
   }
 
