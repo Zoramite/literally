@@ -1,11 +1,8 @@
-import { provide } from '@lit/context';
 import { LitElement, TemplateResult, css, html } from 'lit';
 import { query, state } from 'lit/decorators.js';
 
 import { AppElementEvent, StickySize } from '../navigation/navigation';
 import { RouterMixin } from '../routing/router.mixin';
-import { AppServices, AppServicesInfo } from './appServices';
-import { appServicesContext } from './context';
 
 /**
  * Base app for use in applications.
@@ -86,14 +83,6 @@ export class ERApp extends RouterMixin(LitElement) {
       }
     `,
   ];
-
-  /**
-   * App services manager.
-   */
-
-  @provide({ context: appServicesContext })
-  @state()
-  services: AppServicesInfo = new AppServices();
 
   /**
    * Helper
