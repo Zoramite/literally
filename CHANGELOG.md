@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/Zoramite/literally/compare/v2.0.0...v2.0.1) (2026-05-29)
+
+
+### Bug Fixes
+
+* Force usage of type imports ([28222f9](https://github.com/Zoramite/literally/commit/28222f97054502e75b8cc5ab1fe1288bc6332c77))
+
 ## [2.0.0](https://github.com/Zoramite/literally/compare/v1.6.0...v2.0.0) (2026-05-21)
 
 
