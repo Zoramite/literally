@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/Zoramite/literally/compare/v2.0.1...v2.1.0) (2026-05-29)
+
+
+### Features
+
+* Public route implementation ([2757912](https://github.com/Zoramite/literally/commit/27579129c22b11babf78121fb32afb19a7b3d3ad))
+
 ## [2.0.1](https://github.com/Zoramite/literally/compare/v2.0.0...v2.0.1) (2026-05-29)
 
 

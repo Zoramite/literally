@@ -1,6 +1,6 @@
 {
   "name": "@littoral/literally",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Lit based structural web components for app development.",
   "exports": {
     "./*": "./src/*.ts"
