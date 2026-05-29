@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { LitElement, PropertyValueMap, html } from 'lit';
+import { LitElement, type PropertyValueMap, html } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { routeTrieContext } from './context';

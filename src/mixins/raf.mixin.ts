@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-import { Constructor } from './mixin';
+import { type Constructor } from './mixin';
 
 interface RafInterface {
   cancelRaf(): void;

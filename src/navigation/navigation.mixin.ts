@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { Constructor } from '../mixins/mixin';
+import { type Constructor } from '../mixins/mixin';
 import { navigateToPathEvent } from './navigation';
 
 type NavigationCallback =

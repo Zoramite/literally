@@ -1,8 +1,8 @@
-import { LitElement, PropertyValues, css, html, nothing } from 'lit';
+import { LitElement, type PropertyValues, css, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { NavigationMixin } from '../navigation/navigation.mixin';
-import { BreakpointDevice, breakpoints } from '../structure/devices';
+import { type BreakpointDevice, breakpoints } from '../structure/devices';
 
 /**
  * Fab visual element for collapsable button/links.
@@ -13,7 +13,10 @@ export class ErFab extends NavigationMixin(LitElement) {
     css`
       :host {
         align-items: center;
-        background-color: var(--er-fab-background-color, var(--md-sys-color-surface));
+        background-color: var(
+          --er-fab-background-color,
+          var(--md-sys-color-surface)
+        );
         border: 1px solid var(--er-fab-border-color, transparent);
         border-radius: var(--er-fab-border-radius, var(--space-small));
         box-sizing: border-box;
@@ -87,7 +90,11 @@ export class ErFab extends NavigationMixin(LitElement) {
       :host([path]:hover:not([disabled])),
       :host(.link:hover:not([disabled])) {
         outline: 1px solid
-          color-mix(in srgb, var(--er-fab-theme-background-color) 60%, transparent);
+          color-mix(
+            in srgb,
+            var(--er-fab-theme-background-color) 60%,
+            transparent
+          );
         outline-offset: -1px;
         cursor: pointer;
       }

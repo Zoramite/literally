@@ -1,6 +1,6 @@
-import { css, CSSResultGroup, html, LitElement } from 'lit';
+import { css, type CSSResultGroup, html, LitElement } from 'lit';
 
-import { Constructor } from '../mixins/mixin';
+import { type Constructor } from '../mixins/mixin';
 
 /**
  * Event for triggering the theme mode override.

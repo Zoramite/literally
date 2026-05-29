@@ -1,4 +1,4 @@
-import { TemplateResult } from 'lit';
+import { type TemplateResult } from 'lit';
 
 export const ROUTE_NAVIGATION_EVENT_NAME = 'routeNavigation';
 

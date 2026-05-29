@@ -1,14 +1,14 @@
 import { consume, provide } from '@lit/context';
-import { LitElement, PropertyValueMap, TemplateResult } from 'lit';
+import { LitElement, type PropertyValueMap, type TemplateResult } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { Constructor } from '../mixins/mixin';
+import { type Constructor } from '../mixins/mixin';
 import {
-  NavigationEvent,
+  type NavigationEvent,
   ROUTE_NAVIGATION_EVENT_NAME,
 } from '../navigation/navigation';
 import { routeTrieContext, routeTrieMatchContext } from './context';
-import { RouteTrie, RouteTrieMatchValue } from './router';
+import { RouteTrie, type RouteTrieMatchValue } from './router';
 
 export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
 

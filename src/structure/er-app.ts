@@ -1,7 +1,10 @@
-import { LitElement, TemplateResult, css, html } from 'lit';
+import { LitElement, type TemplateResult, css, html } from 'lit';
 import { query, state } from 'lit/decorators.js';
 
-import { AppElementEvent, StickySize } from '../navigation/navigation';
+import {
+  type AppElementEvent,
+  type StickySize,
+} from '../navigation/navigation';
 import { RouterMixin } from '../routing/router.mixin';
 
 /**
