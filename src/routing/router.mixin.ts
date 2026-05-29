@@ -1,5 +1,5 @@
 import { consume, provide } from '@lit/context';
-import { LitElement, type PropertyValueMap, type TemplateResult } from 'lit';
+import { LitElement, type PropertyValueMap } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { type Constructor } from '../mixins/mixin';
@@ -8,6 +8,7 @@ import {
   ROUTE_NAVIGATION_EVENT_NAME,
 } from '../navigation/navigation';
 import { routeTrieContext, routeTrieMatchContext } from './context';
+import { type PageRoute } from './route';
 import { RouteTrie, type RouteTrieMatchValue } from './router';
 
 export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
@@ -18,24 +19,6 @@ export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
 export interface RouteSetEvent<Type> {
   path: string;
   value: Type;
-}
-
-export interface DefaultPageOptions {
-  // Title of the page used to update the browser title.
-  title?: string;
-}
-
-export interface PageDetails {
-  pageOptions?: DefaultPageOptions;
-  template: TemplateResult;
-}
-
-export interface PageRoute {
-  // If no permissions provided it is considered looking for a public page.
-  // If no result it is considered a permission error.
-  content: (
-    permissions?: Record<string, boolean> | null,
-  ) => PageDetails | undefined;
 }
 
 export interface RouterInterface {
