@@ -1,7 +1,7 @@
 import { createContext } from '@lit/context';
 
+import { type PageRoute } from './route';
 import { RouteTrie, type RouteTrieMatchValue } from './router';
-import { type PageRoute } from './router.mixin';
 
 /** Context for a route trie match. */
 export const routeTrieMatchContext = createContext<

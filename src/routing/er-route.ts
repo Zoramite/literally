@@ -3,8 +3,8 @@ import { LitElement, type PropertyValueMap, html } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { routeTrieContext } from './context';
+import { type PageRoute } from './route';
 import { RouteTrie } from './router';
-import { type PageRoute } from './router.mixin';
 
 /**
  * Base component for breaking up routing into multiple files.
