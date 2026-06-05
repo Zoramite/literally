@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/Zoramite/literally/compare/v2.1.0...v2.2.0) (2026-06-05)
+
+
+### Features
+
+* Translation utility and manager ([#15](https://github.com/Zoramite/literally/issues/15)) ([4e5f3eb](https://github.com/Zoramite/literally/commit/4e5f3eb6eccd6fa949d36f9270e9cb3f89c8f215))
+
+
+### Bug Fixes
+
+* Missed references for page route interface ([f5fb87f](https://github.com/Zoramite/literally/commit/f5fb87fb3acdb7aa03d72544827788543ba6902b))
+
 ## [2.1.0](https://github.com/Zoramite/literally/compare/v2.0.1...v2.1.0) (2026-05-29)
 
 
