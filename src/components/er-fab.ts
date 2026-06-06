@@ -21,6 +21,7 @@ export class ErFab extends NavigationMixin(LitElement) {
         border-radius: var(--er-fab-border-radius, var(--space-small));
         box-sizing: border-box;
         color: var(--er-fab-color, var(--md-sys-color-on-surface));
+        cursor: pointer;
         display: inline-flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -31,6 +32,7 @@ export class ErFab extends NavigationMixin(LitElement) {
       }
 
       :host([disabled]) {
+        cursor: initial;
         opacity: 0.5;
       }
 
@@ -46,6 +48,10 @@ export class ErFab extends NavigationMixin(LitElement) {
             color-mix(in srgb, var(--er-fab-highlight-color) 35%, transparent),
             transparent 60%
           );
+      }
+
+      :host(.noLink) {
+        cursor: initial;
       }
 
       :host(.primary) {
@@ -96,7 +102,6 @@ export class ErFab extends NavigationMixin(LitElement) {
             transparent
           );
         outline-offset: -1px;
-        cursor: pointer;
       }
     `,
     // Targeted breakpoint styles.

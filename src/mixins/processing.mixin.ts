@@ -30,7 +30,7 @@ export const ProcessingMixin = <T extends Constructor<LitElement>>(
     private processingInfo: Record<string, boolean> = {};
 
     isProcessing(key = DEFAULT_KEY): boolean {
-      return !!this.processingInfo[key];
+      return this.processingInfo[key] === true;
     }
 
     startProcessing(key = DEFAULT_KEY) {
