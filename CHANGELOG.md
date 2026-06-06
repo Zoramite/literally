@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.2.0](https://github.com/Zoramite/literally/compare/v2.1.0...v2.2.0) (2026-06-06)
+
+
+### Features
+
+* Processing mixin for managing element processing ([ed685cd](https://github.com/Zoramite/literally/commit/ed685cd21d02a378d2baa47e2308270f67cbd0d4))
+* Translation utility and manager ([#15](https://github.com/Zoramite/literally/issues/15)) ([4e5f3eb](https://github.com/Zoramite/literally/commit/4e5f3eb6eccd6fa949d36f9270e9cb3f89c8f215))
+* Updated tests for the localization manager ([f38c7c6](https://github.com/Zoramite/literally/commit/f38c7c67c2f516ce27d4f0d4f43cc0e736fc8482))
+
+
+### Bug Fixes
+
+* Adjust cursor behavior for fab ([8924b72](https://github.com/Zoramite/literally/commit/8924b727957f816f098a13c785405f3e4eacb0bc))
+* Missed references for page route interface ([f5fb87f](https://github.com/Zoramite/literally/commit/f5fb87fb3acdb7aa03d72544827788543ba6902b))
+
 ## [2.1.0](https://github.com/Zoramite/literally/compare/v2.0.1...v2.1.0) (2026-05-29)
 
 
