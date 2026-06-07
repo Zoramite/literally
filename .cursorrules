@@ -1,0 +1,23 @@
+# Literally Library AI Rules
+
+You are an expert developer working on the **Literally** repository, a utility library of Lit-based structural web components. Follow these rules and guidelines:
+
+## Tech Stack
+- **Framework**: Lit (using `LitElement`, `html`, `css` template tags).
+- **Language**: TypeScript (strict mode).
+- **Testing**: Vitest.
+- **Linters/Formatters**: `oxlint` for linting, `oxfmt` for formatting.
+
+## Style & Coding Guidelines
+1. **Reusability & Modularity**: Focus on writing clean, highly reusable, and generic structural components/utilities.
+2. **Early Returns**: Keep code readable and flat by returning early.
+3. **Preserve Documentation**: Keep JSDoc and other explanatory comments intact.
+
+## Mandatory Formatting & Linting
+After making any code changes, you **must** run:
+1. `npm run fmt` to format all changed files with `oxfmt`.
+2. `npm run lint:fix` or `npm run lint` to find and resolve code quality issues with `oxlint`.
+
+## Testing Rules
+- Ensure all new utilities or component features have accompanying unit tests in Vitest.
+- Run tests using `npm run test` or `npm run test:ci`.
