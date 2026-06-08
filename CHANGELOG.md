@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/Zoramite/literally/compare/v2.3.0...v2.4.0) (2026-06-08)
+
+
+### Features
+
+* Key value storage utility ([b23791f](https://github.com/Zoramite/literally/commit/b23791fa1f639b622c0cd03f65518989b3cbf8ee))
+
 ## [2.3.0](https://github.com/Zoramite/literally/compare/v2.2.0...v2.3.0) (2026-06-06)
 
 
