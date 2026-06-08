@@ -2,6 +2,9 @@
 
 You are an expert developer working on the **Literally** repository, a utility library of Lit-based structural web components. Follow these rules and guidelines:
 
+## Tooling & Package Manager
+- **Package Manager**: Strictly use **npm**. Do NOT use **yarn**, **pnpm**, or any other package manager under any circumstances. All dependencies and runs must go through `npm`.
+
 ## Tech Stack
 - **Framework**: Lit (using `LitElement`, `html`, `css` template tags).
 - **Language**: TypeScript (strict mode).

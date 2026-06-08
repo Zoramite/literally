@@ -25,12 +25,15 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "test": "npx vitest",
-    "test:ci": "npx vitest run --mode test"
+    "test:ci": "npx vitest run --mode test",
+    "prepare": "husky"
   },
   "dependencies": {},
   "devDependencies": {
     "@lit/context": "^1.1.6",
+    "husky": "^9.0.11",
     "lit": "^3.3.3",
+    "lint-staged": "^15.2.2",
     "oxfmt": "^0.52.0",
     "oxlint": "^1.67.0",
     "tsx": "^4.22.3",
@@ -40,5 +43,11 @@
   "peerDependencies": {
     "@lit/context": "^1.1.6",
     "lit": "^3.3.3"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "oxfmt",
+      "oxlint --fix"
+    ]
   }
 }
