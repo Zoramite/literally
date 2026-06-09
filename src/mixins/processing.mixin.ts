@@ -4,6 +4,13 @@ import { type Constructor } from './mixin';
 
 const DEFAULT_KEY = '_default_';
 
+export const PROCESSING_START_EVENT_NAME = 'processing-start';
+export const PROCESSING_STOP_EVENT_NAME = 'processing-stop';
+
+export interface ProcessingEvent {
+  key?: string;
+}
+
 type ProcessingFunction = () => void;
 type ProcessingAsyncFunction = () => Promise<void>;
 
@@ -35,11 +42,25 @@ export const ProcessingMixin = <T extends Constructor<LitElement>>(
 
     startProcessing(key = DEFAULT_KEY) {
       this.processingInfo[key] = true;
+      this.dispatchEvent(
+        new CustomEvent(PROCESSING_START_EVENT_NAME, {
+          bubbles: true,
+          composed: true,
+          detail: { key },
+        }),
+      );
       this.requestUpdate();
     }
 
     stopProcessing(key = DEFAULT_KEY) {
       this.processingInfo[key] = false;
+      this.dispatchEvent(
+        new CustomEvent(PROCESSING_STOP_EVENT_NAME, {
+          bubbles: true,
+          composed: true,
+          detail: { key },
+        }),
+      );
       this.requestUpdate();
     }
 
@@ -66,3 +87,10 @@ export const ProcessingMixin = <T extends Constructor<LitElement>>(
   }
   return ProcessingElement as Constructor<ProcessingInterface> & T;
 };
+
+declare global {
+  interface GlobalEventHandlersEventMap {
+    processingStart: CustomEvent<ProcessingEvent>;
+    processingStop: CustomEvent<ProcessingEvent>;
+  }
+}

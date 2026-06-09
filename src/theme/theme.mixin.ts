@@ -1,15 +1,27 @@
+import { consume, provide } from '@lit/context';
 import { css, type CSSResultGroup, html, LitElement } from 'lit';
+import { state } from 'lit/decorators.js';
 
 import { type Constructor } from '../mixins/mixin';
+import { themeContext } from './context';
+
+type ThemeMode = 'light' | 'dark';
 
 /**
  * Event for triggering the theme mode override.
  */
 export interface ThemeModeEvent {
-  mode: 'light' | 'dark';
+  mode: ThemeMode | 'system';
 }
 
-interface ThemeInterface {}
+export interface ThemeInfo {
+  mode: ThemeMode | 'system';
+  resolvedMode: ThemeMode;
+}
+
+interface ThemeInterface {
+  theme: ThemeInfo;
+}
 
 /**
  * Default theme for ease of use an example.
@@ -211,23 +223,95 @@ export const ThemeMixin = <T extends Constructor<LitElement>>(
       `,
     ];
 
+    @provide({ context: themeContext })
+    @state()
+    theme: ThemeInfo = {
+      mode: 'system',
+      resolvedMode:
+        typeof window !== 'undefined' &&
+        window.matchMedia?.('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light',
+    };
+
+    private _query?: MediaQueryList;
+    private _queryListener?: () => void;
+
     connectedCallback() {
       super.connectedCallback();
 
+      if (typeof window !== 'undefined' && window.matchMedia) {
+        this._query = window.matchMedia('(prefers-color-scheme: dark)');
+        this._queryListener = () => {
+          this._updateTheme();
+        };
+        this._query.addEventListener('change', this._queryListener);
+      }
+
       this.addEventListener('themeMode', (evt: CustomEvent<ThemeModeEvent>) => {
-        if (evt.detail.mode === 'light') {
-          this.classList.add('light');
-          this.classList.remove('dark');
-        } else {
-          this.classList.add('dark');
-          this.classList.remove('light');
-        }
+        this._setThemeMode(evt.detail.mode);
       });
+
+      this._updateTheme();
+    }
+
+    disconnectedCallback() {
+      if (this._query && this._queryListener) {
+        this._query.removeEventListener('change', this._queryListener);
+      }
+      super.disconnectedCallback?.();
+    }
+
+    private _setThemeMode(mode: ThemeMode | 'system') {
+      this.theme = {
+        ...this.theme,
+        mode,
+      };
+      this._updateTheme();
+    }
+
+    private _updateTheme() {
+      const mode = this.theme.mode;
+      let resolvedMode: ThemeMode;
+      if (mode === 'system') {
+        resolvedMode = this._query?.matches ? 'dark' : 'light';
+      } else {
+        resolvedMode = mode;
+      }
+
+      this.theme = {
+        mode,
+        resolvedMode,
+      };
+
+      if (resolvedMode === 'light') {
+        this.classList.add('light');
+        this.classList.remove('dark');
+      } else {
+        this.classList.add('dark');
+        this.classList.remove('light');
+      }
     }
 
     render() {
       return html` <slot></slot> `;
     }
+  }
+  return ThemeElement as Constructor<ThemeInterface> & T;
+};
+
+/**
+ * Mixin for adding a theme consumer.
+ */
+export const ThemeConsumerMixin = <T extends Constructor<LitElement>>(
+  superClass: T,
+) => {
+  class ThemeElement extends superClass {
+    static styles = [(superClass as unknown as typeof LitElement).styles ?? []];
+
+    @consume({ context: themeContext, subscribe: true })
+    @state()
+    theme: ThemeInfo | undefined;
   }
   return ThemeElement as Constructor<ThemeInterface> & T;
 };
