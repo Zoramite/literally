@@ -31,7 +31,7 @@ export const NavigationMixin = <T extends Constructor<LitElement>>(
     @property({ reflect: true })
     path?: string = undefined;
 
-    @property({ reflect: true })
+    @property({ attribute: 'root-path', reflect: true })
     rootPath?: string = undefined;
 
     @property({ type: Boolean, attribute: 'open-new', reflect: true })
