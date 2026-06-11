@@ -1,6 +1,6 @@
 import { consume, provide } from '@lit/context';
 import { css, type CSSResultGroup, html, LitElement } from 'lit';
-import { state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { type Constructor } from '../mixins/mixin';
 import { themeContext } from './context';
@@ -234,6 +234,12 @@ export const ThemeMixin = <T extends Constructor<LitElement>>(
           : 'light',
     };
 
+    @property({ type: Boolean, attribute: 'dark', reflect: true })
+    isDark = false;
+
+    @property({ type: Boolean, attribute: 'light', reflect: true })
+    isLight = false;
+
     private _query?: MediaQueryList;
     private _queryListener?: () => void;
 
@@ -273,7 +279,13 @@ export const ThemeMixin = <T extends Constructor<LitElement>>(
     private _updateTheme() {
       const mode = this.theme.mode;
       let resolvedMode: ThemeMode;
-      if (mode === 'system') {
+
+      // Allow forcing dark via the dark attribute.
+      if (this.isDark) {
+        resolvedMode = 'dark';
+      } else if (this.isLight) {
+        resolvedMode = 'light';
+      } else if (mode === 'system') {
         resolvedMode = this._query?.matches ? 'dark' : 'light';
       } else {
         resolvedMode = mode;
