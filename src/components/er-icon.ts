@@ -100,6 +100,7 @@ export class ErIcon extends NavigationMixin(LitElement) {
 
       .material-symbols-outlined {
         display: inline-block;
+        font-size: var(--er-icon-font-size, 24px);
         line-height: 1;
         overflow: hidden;
         max-width: 24px;

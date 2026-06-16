@@ -15,11 +15,14 @@ export class ErFlex extends LitElement {
         flex-flow: row;
         gap: var(--er-flex-gap, var(--space-medium));
         max-width: 100%;
-        overflow: hidden;
       }
 
       :host(.full) {
         width: 100%;
+      }
+
+      :host(.inline) {
+        display: inline-flex;
       }
 
       :host(.overflow-hidden) {

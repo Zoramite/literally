@@ -16,6 +16,7 @@ export class ErCard extends NavigationMixin(LitElement) {
           var(--md-sys-color-surface)
         );
         border-radius: var(--er-card-border-radius, var(--space-medium));
+        box-sizing: border-box;
         color: var(--er-card-color, var(--md-sys-color-on-surface));
         display: block;
         padding: var(--er-card-padding, var(--space-medium));
@@ -30,6 +31,10 @@ export class ErCard extends NavigationMixin(LitElement) {
           color-mix(in srgb, var(--md-sys-color-shadow) 24%, transparent) 0px
             1px 2px;
         cursor: pointer;
+      }
+
+      :host(.full-height) {
+        height: 100%;
       }
 
       :host(.maybeHighlight) {

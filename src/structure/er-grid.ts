@@ -575,6 +575,10 @@ export class ErGridItem extends LitElement {
           grid-column-end: 9;
         }
       }
+
+      :host(.align-self-stretch) {
+        align-self: stretch;
+      }
     `,
   ];
 
