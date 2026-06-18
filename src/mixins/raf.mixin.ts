@@ -3,9 +3,14 @@ import { LitElement } from 'lit';
 import { type Constructor } from './mixin';
 
 interface RafInterface {
-  cancelRaf(): void;
-  onRaf(): void;
-  startRaf(rafTimeout: number, isRepeatingRaf: boolean): void;
+  cancelRaf(key?: string): void;
+  onRaf(): void | Promise<void>;
+  startRaf(
+    rafTimeout?: number,
+    isRepeatingRaf?: boolean,
+    key?: string,
+    callback?: () => void | Promise<void>,
+  ): void;
 }
 
 /**
@@ -15,49 +20,92 @@ export const RafMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   class RafElement extends superClass {
     static styles = [(superClass as unknown as typeof LitElement).styles ?? []];
 
-    // Keep track of if the raf loop should stop.
-    protected cancelLoop = false;
+    // Keep track of active rafs by key
+    protected activeRafs = new Map<
+      string,
+      {
+        timeoutId?: ReturnType<typeof setTimeout>;
+        rafId?: number;
+        callback?: () => void | Promise<void>;
+      }
+    >();
 
-    cancelRaf() {
-      this.cancelLoop = true;
+    cancelRaf(key = 'default') {
+      const state = this.activeRafs.get(key);
+      if (state) {
+        if (state.timeoutId) clearTimeout(state.timeoutId as number);
+        if (state.rafId) cancelAnimationFrame(state.rafId);
+        this.activeRafs.delete(key);
+      }
     }
 
-    onRaf() {
+    onRaf(): void | Promise<void> {
       // no-op on base class. Override on child component.
     }
 
-    startRaf(rafTimeout = 100, isRepeatingRaf = false) {
-      // Reset the cancel for a new raf start.
-      this.cancelLoop = false;
+    /**
+     * Starts a requestAnimationFrame timeout loop that only runs when the browser tab is active.
+     *
+     * @param rafTimeout The time in milliseconds to wait before triggering the callback.
+     * @param isRepeatingRaf Whether the timer should continuously repeat.
+     * @param key An optional key to uniquely identify and manage multiple timers independently.
+     * @param callback An optional function to execute. If omitted, falls back to calling `onRaf()`.
+     *                 If the callback (or `onRaf()`) is asynchronous and returns a Promise,
+     *                 the next iteration of a repeating timer will only be scheduled AFTER the Promise resolves.
+     */
+    startRaf(
+      rafTimeout = 100,
+      isRepeatingRaf = false,
+      key = 'default',
+      callback?: () => void | Promise<void>,
+    ) {
+      // Cancel any existing raf for this key to restart it
+      this.cancelRaf(key);
 
-      // Initial start time of the timeout.
-      let start = new Date().getTime();
+      const rafState: {
+        timeoutId?: ReturnType<typeof setTimeout>;
+        rafId?: number;
+        callback?: () => void | Promise<void>;
+      } = { callback };
+      this.activeRafs.set(key, rafState);
 
-      // Loop using the animation frame to not run when the page is not visible.
-      const loop = () => {
-        // Stopping raf loop?
-        if (this.cancelLoop) {
-          return;
-        }
+      const queueRaf = () => {
+        if (!this.activeRafs.has(key)) return;
 
-        const delta = new Date().getTime() - start;
+        rafState.timeoutId = undefined;
 
-        if (delta >= rafTimeout) {
-          this.onRaf();
+        rafState.rafId = requestAnimationFrame(async () => {
+          rafState.rafId = undefined;
 
-          if (isRepeatingRaf) {
-            // If it is repeating, restart the timer.
-            start = new Date().getTime();
+          if (!this.activeRafs.has(key)) return;
+
+          if (rafState.callback) {
+            await rafState.callback();
           } else {
-            // Completed single raf, stop the loop.
-            return;
+            await this.onRaf();
           }
-        }
 
-        requestAnimationFrame(loop);
+          if (isRepeatingRaf && this.activeRafs.has(key)) {
+            // If repeating, schedule the next timeout
+            scheduleTimeout();
+          } else {
+            // If not repeating or cancelled inside onRaf, clean up
+            if (this.activeRafs.get(key) === rafState) {
+              this.activeRafs.delete(key);
+            }
+          }
+        });
       };
 
-      requestAnimationFrame(loop);
+      const scheduleTimeout = () => {
+        if (!this.activeRafs.has(key)) return;
+
+        // Use setTimeout to wait for the duration efficiently without CPU polling
+        rafState.timeoutId = setTimeout(queueRaf, rafTimeout);
+      };
+
+      // Start the initial timeout
+      scheduleTimeout();
     }
   }
   return RafElement as Constructor<RafInterface> & T;
