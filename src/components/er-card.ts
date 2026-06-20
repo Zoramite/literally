@@ -37,6 +37,23 @@ export class ErCard extends NavigationMixin(LitElement) {
         height: 100%;
       }
 
+      :host(.hover-effect) {
+        transition:
+          box-shadow 0.3s ease,
+          transform 0.3s ease,
+          background-color 0.3s ease;
+      }
+
+      :host(.hover-effect:hover) {
+        box-shadow: 0 8px 24px
+          color-mix(
+            in srgb,
+            var(--md-sys-color-shadow, #000000) 8%,
+            transparent
+          );
+        transform: translateY(-2px);
+      }
+
       :host(.maybeHighlight) {
         border-bottom: 5px solid transparent;
         border-top: 5px solid transparent;
