@@ -30,3 +30,7 @@ star-camp-points-firebase-adminsdk.json
 *.njsproj
 *.sln
 *.sw?
+
+# Storybook build output
+storybook-static/
+
