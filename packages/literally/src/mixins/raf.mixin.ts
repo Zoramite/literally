@@ -33,7 +33,7 @@ export const RafMixin = <T extends Constructor<LitElement>>(superClass: T) => {
     cancelRaf(key = 'default') {
       const state = this.activeRafs.get(key);
       if (state) {
-        if (state.timeoutId) clearTimeout(state.timeoutId as number);
+        if (state.timeoutId) clearTimeout(state.timeoutId);
         if (state.rafId) cancelAnimationFrame(state.rafId);
         this.activeRafs.delete(key);
       }
