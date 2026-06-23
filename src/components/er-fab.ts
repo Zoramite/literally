@@ -110,6 +110,10 @@ export class ErFab extends NavigationMixin(LitElement) {
         :host(.full${breakpoint?.targetClass ?? css``}) {
           width: 100%;
         }
+
+        :host(.center${breakpoint?.targetClass ?? css``}) {
+          justify-content: center;
+        }
       `;
 
       if (!breakpoint) {

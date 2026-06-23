@@ -101,6 +101,10 @@ export class ErChip extends NavigationMixin(LitElement) {
         cursor: pointer;
       }
 
+      :host(.capitalize) {
+        text-transform: capitalize;
+      }
+
       ::slotted(*) {
         text-wrap: nowrap;
         white-space: nowrap;
