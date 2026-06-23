@@ -43,7 +43,9 @@ export class BrowserStorage implements KeyValueStorage {
   private get storage(): Storage | null {
     if (typeof window === 'undefined') return null;
     try {
-      return this.type === 'local' ? window.localStorage : window.sessionStorage;
+      return this.type === 'local'
+        ? window.localStorage
+        : window.sessionStorage;
     } catch {
       return null;
     }

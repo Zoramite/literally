@@ -18,15 +18,18 @@ jobs:
         id: release
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-          release-type: node
       - uses: actions/checkout@v6
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
           registry-url: 'https://registry.npmjs.org'
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - run: npm ci
-        if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
+      - name: Publish @littoral/literally
+        run: npm publish -w packages/literally
+        if: ${{ steps.release.outputs['packages/literally--release_created'] }}
+      - name: Publish @littoral/literally-firebase
+        run: npm publish -w packages/literally-firebase
+        if: ${{ steps.release.outputs['packages/literally-firebase--release_created'] }}

@@ -178,11 +178,15 @@ strings:
 
     // Should still succeed in loading, activeStrings is empty, but baseStrings is loaded
     expect(localization.t('simple')).toBe('Simple string');
-    expect(localization.t('welcome', { name: 'Randy' })).toBe('');
+    expect(localization.t('welcome', { name: 'Randy' })).toBe(
+      'Welcome, Randy!',
+    );
   });
 
   it('should warn on missing translation keys', async () => {
-    const loader = vi.fn().mockImplementation(async (locale: string) => LOCALES[locale]);
+    const loader = vi
+      .fn()
+      .mockImplementation(async (locale: string) => LOCALES[locale]);
     const manager = new LocalizationManager({ loader });
     const localization = await manager.load('en');
 
@@ -190,12 +194,17 @@ strings:
     const result = localization.t('non_existent_key');
 
     expect(result).toBe('');
-    expect(warnSpy).toHaveBeenCalledWith('Unable to find the translation key:', 'non_existent_key');
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Unable to find the translation key:',
+      'non_existent_key',
+    );
     warnSpy.mockRestore();
   });
 
   it('should treat nested keys pointing to objects (non-strings) as missing', async () => {
-    const loader = vi.fn().mockImplementation(async (locale: string) => LOCALES[locale]);
+    const loader = vi
+      .fn()
+      .mockImplementation(async (locale: string) => LOCALES[locale]);
     const manager = new LocalizationManager({ loader });
     const localization = await manager.load('en');
 
@@ -203,12 +212,17 @@ strings:
     const result = localization.t('nested'); // nested points to { value: 'Deep nested string' }
 
     expect(result).toBe('');
-    expect(warnSpy).toHaveBeenCalledWith('Unable to find the translation key:', 'nested');
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Unable to find the translation key:',
+      'nested',
+    );
     warnSpy.mockRestore();
   });
 
   it('should preserve template placeholders for missing variables', async () => {
-    const loader = vi.fn().mockImplementation(async (locale: string) => LOCALES[locale]);
+    const loader = vi
+      .fn()
+      .mockImplementation(async (locale: string) => LOCALES[locale]);
     const manager = new LocalizationManager({ loader });
     const localization = await manager.load('en');
 
@@ -237,11 +251,15 @@ strings:
         },
       },
     };
-    const loader = vi.fn().mockImplementation(async (locale: string) => localesWithNum[locale]);
+    const loader = vi
+      .fn()
+      .mockImplementation(async (locale: string) => localesWithNum[locale]);
     const manager = new LocalizationManager({ loader });
     const localization = await manager.load('en');
 
-    expect(localization.t('price', { val: 12.3456 })).toBe('The raw number is 12.346.');
+    expect(localization.t('price', { val: 12.3456 })).toBe(
+      'The raw number is 12.346.',
+    );
   });
 
   it('should handle formatting errors gracefully and fall back to String(value)', async () => {
@@ -260,7 +278,9 @@ strings:
         },
       },
     };
-    const loader = vi.fn().mockImplementation(async (locale: string) => localesInvalid[locale]);
+    const loader = vi
+      .fn()
+      .mockImplementation(async (locale: string) => localesInvalid[locale]);
     const manager = new LocalizationManager({ loader });
     const localization = await manager.load('en');
 

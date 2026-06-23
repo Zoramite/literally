@@ -1,25 +1,11 @@
 {
-  "name": "@littoral/literally",
-  "version": "2.5.0",
-  "description": "Lit based structural web components for app development.",
-  "exports": {
-    "./*": "./src/*.ts"
-  },
-  "keywords": [
-    "lit"
+  "name": "literally-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "homepage": "https://github.com/Zoramite/literally#readme",
-  "bugs": {
-    "url": "https://github.com/Zoramite/literally/issues"
-  },
-  "license": "MIT",
-  "author": "Randy Merrill <Zoramite+github@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Zoramite/literally.git"
-  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
@@ -28,10 +14,11 @@
     "test:ci": "npx vitest run --mode test",
     "prepare": "husky"
   },
-  "dependencies": {},
   "devDependencies": {
     "@lit/context": "^1.1.6",
+    "@open-wc/testing": "^4.0.0",
     "husky": "^9.0.11",
+    "jsdom": "^29.1.1",
     "lit": "^3.3.3",
     "lint-staged": "^17.0.7",
     "oxfmt": "^0.54.0",
@@ -39,10 +26,6 @@
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
-  },
-  "peerDependencies": {
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.3"
   },
   "lint-staged": {
     "*.{ts,js}": [

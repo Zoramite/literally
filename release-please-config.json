@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    "packages/literally": {
+      "release-type": "node",
+      "package-name": "@littoral/literally"
+    },
+    "packages/literally-firebase": {
+      "release-type": "node",
+      "package-name": "@littoral/literally-firebase"
+    }
+  }
+}
