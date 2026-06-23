@@ -20,6 +20,9 @@
     "url": "git+https://github.com/Zoramite/literally.git"
   },
   "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@littoral/literally": "^2.5.0",
     "lit": "^3.3.3",

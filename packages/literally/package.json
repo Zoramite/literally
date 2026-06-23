@@ -19,6 +19,9 @@
     "url": "git+https://github.com/Zoramite/literally.git"
   },
   "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@lit/context": "^1.1.6",
     "lit": "^3.3.3"
