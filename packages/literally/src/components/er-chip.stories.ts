@@ -79,6 +79,31 @@ export const Primary: Story = {
   },
 };
 
+export const Secondary: Story = {
+  args: {
+    label: 'Secondary Chip',
+    variant: 'secondary',
+    theme: 'themeSecondary',
+  },
+};
+
+export const Tertiary: Story = {
+  args: {
+    label: 'Tertiary Chip',
+    variant: 'tertiary',
+    theme: 'themeTertiary',
+  },
+};
+
+export const ErrorState: Story = {
+  args: {
+    label: 'Error Alert',
+    variant: 'primary',
+    theme: 'themeError',
+    iconStart: 'warning',
+  },
+};
+
 export const WithIcon: Story = {
   args: {
     label: 'Settings',
@@ -86,4 +111,33 @@ export const WithIcon: Story = {
     theme: 'themePrimary',
     iconStart: 'settings',
   },
+};
+
+export const Capitalized: Story = {
+  args: {
+    label: 'must capitalize me',
+    variant: 'primary',
+    theme: 'themePrimary',
+    capitalize: true,
+  },
+};
+
+export const AllChipsShowcase: StoryObj = {
+  render: () => html`
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <er-chip class="themePrimary primary">Primary</er-chip>
+      <er-chip class="themeSecondary secondary">Secondary</er-chip>
+      <er-chip class="themeTertiary tertiary">Tertiary</er-chip>
+      <er-chip class="themeError primary" icon-start="error">Error</er-chip>
+      <er-chip class="themePrimary primary capitalize"
+        >capitalized label</er-chip
+      >
+      <er-chip
+        class="themeSecondary secondary"
+        icon-start="star"
+        icon-end="close"
+        >With Both Icons</er-chip
+      >
+    </div>
+  `,
 };

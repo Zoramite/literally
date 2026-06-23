@@ -24,3 +24,8 @@ After making any code changes, you **must** run:
 ## Testing Rules
 - Ensure all new utilities or component features have accompanying unit tests in Vitest.
 - Run tests using `npm run test` or `npm run test:ci`.
+
+## Storybook Rules
+- When modifying or adding features to a component, check if it has an associated Storybook story (usually `<component-name>.stories.ts` in the same directory).
+- If a story exists, update it to showcase the new properties, attributes, events, or visual states.
+- If creating a new component, write a corresponding Storybook story for it to showcase its usage.

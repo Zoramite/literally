@@ -92,6 +92,16 @@ export class ErCard extends NavigationMixin(LitElement) {
         --er-card-color: var(--md-sys-color-on-surface-variant);
       }
 
+      :host(.themeSurfaceContainer) {
+        --er-card-background-color: var(--md-sys-color-surface-container);
+        --er-card-background-color-hover: color-mix(
+          in srgb,
+          var(--er-card-background-color) 80%,
+          transparent
+        );
+        --er-card-color: var(--md-sys-color-on-surface);
+      }
+
       :host(.themePrimary) {
         --er-card-background-color: var(--md-sys-color-primary);
         --er-card-background-color-hover: color-mix(
@@ -100,6 +110,16 @@ export class ErCard extends NavigationMixin(LitElement) {
           transparent
         );
         --er-card-color: var(--md-sys-color-on-primary);
+      }
+
+      :host(.themePrimaryContainer) {
+        --er-card-background-color: var(--md-sys-color-primary-container);
+        --er-card-background-color-hover: color-mix(
+          in srgb,
+          var(--er-card-background-color) 80%,
+          transparent
+        );
+        --er-card-color: var(--md-sys-color-on-primary-container);
       }
 
       :host(.themeSecondary) {
@@ -112,6 +132,16 @@ export class ErCard extends NavigationMixin(LitElement) {
         --er-card-color: var(--md-sys-color-on-secondary);
       }
 
+      :host(.themeSecondaryContainer) {
+        --er-card-background-color: var(--md-sys-color-secondary-container);
+        --er-card-background-color-hover: color-mix(
+          in srgb,
+          var(--er-card-background-color) 80%,
+          transparent
+        );
+        --er-card-color: var(--md-sys-color-on-secondary-container);
+      }
+
       :host(.themeTertiary) {
         --er-card-background-color: var(--md-sys-color-tertiary);
         --er-card-background-color-hover: color-mix(
@@ -120,6 +150,16 @@ export class ErCard extends NavigationMixin(LitElement) {
           transparent
         );
         --er-card-color: var(--md-sys-color-on-tertiary);
+      }
+
+      :host(.themeTertiaryContainer) {
+        --er-card-background-color: var(--md-sys-color-tertiary-container);
+        --er-card-background-color-hover: color-mix(
+          in srgb,
+          var(--er-card-background-color) 80%,
+          transparent
+        );
+        --er-card-color: var(--md-sys-color-on-tertiary-container);
       }
 
       :host(.themeError) {
