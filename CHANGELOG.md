@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.5.0](https://github.com/Zoramite/literally/compare/v2.4.0...v2.5.0) (2026-06-23)
+
+
+### Features
+
+* Allow the theme to be overriden by attribute ([0030211](https://github.com/Zoramite/literally/commit/003021195b14ca4103c7dd0f527e653d22faf185))
+* Capitalize chip and center fab content ([11aaed0](https://github.com/Zoramite/literally/commit/11aaed03ee4af9a628962730d7e3e0b6cfcc479c))
+* Effects on card for hover and a list item for toggle state ([9105161](https://github.com/Zoramite/literally/commit/910516125b7354965edc85af77671706160f871a))
+* Improved RAF mixin ([f0034c0](https://github.com/Zoramite/literally/commit/f0034c0c425d7a8e4583af6e6e83a91332dcb49b))
+* Theme provider and consumer ([200b522](https://github.com/Zoramite/literally/commit/200b5226a89e4c5bae558fc1da93779c69b2d1f8))
+
+
+### Bug Fixes
+
+* Adding an attribute for the root path ([6756920](https://github.com/Zoramite/literally/commit/67569209552200acbd37e15a7bd0c452ba1b5f53))
+* Refining the options for some of the components ([1e6cecd](https://github.com/Zoramite/literally/commit/1e6cecd1b935986302faf9a3e38343a533522dd3))
+
 ## [2.4.0](https://github.com/Zoramite/literally/compare/v2.3.0...v2.4.0) (2026-06-08)
 
 
