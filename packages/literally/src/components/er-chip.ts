@@ -109,6 +109,16 @@ export class ErChip extends NavigationMixin(LitElement) {
         text-wrap: nowrap;
         white-space: nowrap;
       }
+
+      :host(.wrap) {
+        white-space: wrap;
+        text-wrap: pretty;
+      }
+
+      :host(.wrap)::slotted(*) {
+        text-wrap: pretty;
+        white-space: wrap;
+      }
     `,
   ];
 
