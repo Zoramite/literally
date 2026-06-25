@@ -93,17 +93,18 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
 
       // Add pop state listener for navigation.
       window.addEventListener('popstate', (event: PopStateEvent) => {
-        if (event.state?.path) {
-          this.routePath = event.state.path;
+        const nextPath = event.state?.path ?? this.currentHash ?? '';
+        if (this.routePath !== nextPath) {
+          this.routePath = nextPath;
           this.updateRouteTrieMatch();
         }
       });
 
       // Add listener for anchor changes
       window.addEventListener('hashchange', () => {
-        const newPath = this.currentHash;
+        const newPath = this.currentHash ?? '';
 
-        if (newPath && this.routePath !== newPath) {
+        if (this.routePath !== newPath) {
           this.routePath = newPath;
           this.updateRouteTrieMatch();
         }
