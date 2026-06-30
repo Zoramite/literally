@@ -5,6 +5,9 @@
   "exports": {
     "./*": "./src/*.ts"
   },
+  "scripts": {
+    "docs:components": "cem analyze --litelement --globs \"src/**/*.ts\" --exclude \"src/**/*.test.ts\" --exclude \"src/**/*.stories.ts\" && node ../literally/bin/generate-components-doc.mjs"
+  },
   "keywords": [
     "lit",
     "firebase"
@@ -27,5 +30,6 @@
     "@littoral/literally": "^2.5.0",
     "lit": "^3.3.3",
     "firebase": "^12.14.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

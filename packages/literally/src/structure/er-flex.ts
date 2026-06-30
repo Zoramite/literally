@@ -30,15 +30,15 @@ export class ErFlex extends LitElement {
       }
 
       :host(.gap-small) {
-        gap: var(--space-small);
+        --er-flex-gap: var(--space-small);
       }
 
       :host(.gap-large) {
-        gap: var(--space-large);
+        --er-flex-gap: var(--space-large);
       }
 
       :host(.gap-xlarge) {
-        gap: var(--space-xlarge);
+        --er-flex-gap: var(--space-xlarge);
       }
 
       ::slotted(.grow) {
@@ -114,6 +114,30 @@ export class ErFlex extends LitElement {
 
         :host(.justify-space-evenly${breakpoint?.targetClass ?? css``}) {
           justify-content: space-evenly;
+        }
+
+        :host(.basis-33${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+          flex-basis: calc(
+            (100% - (var(--er-flex-gap, var(--space-medium)) * 2)) / 3
+          );
+        }
+
+        :host(.basis-50${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+          flex-basis: calc(
+            (100% - (var(--er-flex-gap, var(--space-medium)) * 1)) / 2
+          );
+        }
+
+        :host(.basis-25${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+          flex-basis: calc(
+            (100% - (var(--er-flex-gap, var(--space-medium)) * 3)) / 4
+          );
+        }
+
+        :host(.basis-20${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+          flex-basis: calc(
+            (100% - (var(--er-flex-gap, var(--space-medium)) * 4)) / 5
+          );
         }
       `;
 
