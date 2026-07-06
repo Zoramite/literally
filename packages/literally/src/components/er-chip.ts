@@ -46,6 +46,15 @@ export class ErChip extends NavigationMixin(LitElement) {
         justify-self: flex-end;
       }
 
+      :host(.full) {
+        box-sizing: border-box;
+        width: 100%;
+      }
+
+      :host(.center) {
+        text-align: center;
+      }
+
       :host(.primary) {
         --er-chip-background-color: var(--er-chip-theme-background-color);
         --er-chip-color: var(--er-chip-theme-color);
@@ -54,10 +63,6 @@ export class ErChip extends NavigationMixin(LitElement) {
       :host(.secondary) {
         --er-chip-border-color: var(--er-chip-theme-background-color);
         --er-chip-color: var(--er-chip-theme-background-color);
-      }
-
-      :host(.secondary:hover) {
-        --er-chip-background-color: var(--md-sys-color-surface-variant);
       }
 
       :host(.tertiary) {
@@ -99,6 +104,11 @@ export class ErChip extends NavigationMixin(LitElement) {
       :host(.link:hover),
       :host([path]:hover) {
         cursor: pointer;
+      }
+
+      :host(.link.secondary:hover),
+      :host([path].secondary:hover) {
+        --er-chip-background-color: var(--md-sys-color-surface-variant);
       }
 
       :host(.capitalize) {
