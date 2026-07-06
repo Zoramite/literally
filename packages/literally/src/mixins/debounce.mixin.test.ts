@@ -47,10 +47,10 @@ describe('DebounceMixin', () => {
     const callback1 = vi.fn();
     const callback2 = vi.fn();
 
-    el.debounce('key1', callback1, 100);
+    el.debounce(callback1, 100, 'key1');
     vi.advanceTimersByTime(50);
 
-    el.debounce('key2', callback2, 100);
+    el.debounce(callback2, 100, 'key2');
     vi.advanceTimersByTime(50);
 
     // callback1 should be triggered now
@@ -62,30 +62,11 @@ describe('DebounceMixin', () => {
     expect(callback2).toHaveBeenCalledTimes(1);
   });
 
-  test('debounces using callback first and optional key last', () => {
-    const el = new TestElement();
-    const callback = vi.fn();
-
-    el.debounce(callback, 100, 'custom-key');
-    vi.advanceTimersByTime(50);
-
-    // Call with different key, should not cancel the first
-    const otherCallback = vi.fn();
-    el.debounce(otherCallback, 100, 'other-key');
-
-    vi.advanceTimersByTime(50);
-    expect(callback).toHaveBeenCalledTimes(1);
-    expect(otherCallback).not.toHaveBeenCalled();
-
-    vi.advanceTimersByTime(50);
-    expect(otherCallback).toHaveBeenCalledTimes(1);
-  });
-
   test('cancelDebounce cancels the timeout', () => {
     const el = new TestElement();
     const callback = vi.fn();
 
-    el.debounce('key1', callback, 100);
+    el.debounce(callback, 100, 'key1');
     vi.advanceTimersByTime(50);
     el.cancelDebounce('key1');
 
@@ -110,8 +91,8 @@ describe('DebounceMixin', () => {
     const callback1 = vi.fn();
     const callback2 = vi.fn();
 
-    el.debounce('key1', callback1, 100);
-    el.debounce('key2', callback2, 150);
+    el.debounce(callback1, 100, 'key1');
+    el.debounce(callback2, 150, 'key2');
 
     el.disconnectedCallback();
 

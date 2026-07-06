@@ -8,11 +8,6 @@ export interface DebounceInterface {
     delayMs: number,
     key?: string,
   ): void;
-  debounce(
-    key: string,
-    callback: () => void | Promise<void>,
-    delayMs: number,
-  ): void;
   cancelDebounce(key?: string): void;
 }
 
@@ -28,31 +23,15 @@ export const DebounceMixin = <T extends Constructor<LitElement>>(
     private debounceTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
     debounce(
-      keyOrCallback: string | (() => void | Promise<void>),
-      callbackOrDelayMs: (() => void | Promise<void>) | number,
-      delayMsOrKey?: number | string,
+      callback: () => void | Promise<void>,
+      delayMs: number,
+      key = 'default',
     ) {
-      let key = 'default';
-      let callback: () => void | Promise<void>;
-      let actualDelayMs: number;
-
-      if (typeof keyOrCallback === 'string') {
-        key = keyOrCallback;
-        callback = callbackOrDelayMs as () => void | Promise<void>;
-        actualDelayMs = delayMsOrKey as number;
-      } else {
-        callback = keyOrCallback;
-        actualDelayMs = callbackOrDelayMs as number;
-        if (typeof delayMsOrKey === 'string') {
-          key = delayMsOrKey;
-        }
-      }
-
       this.cancelDebounce(key);
       const timeout = setTimeout(async () => {
         this.debounceTimeouts.delete(key);
         await callback();
-      }, actualDelayMs);
+      }, delayMs);
       this.debounceTimeouts.set(key, timeout);
     }
 
