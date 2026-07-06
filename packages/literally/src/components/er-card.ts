@@ -168,6 +168,16 @@ export class ErCard extends NavigationMixin(LitElement) {
       }
 
       :host(.themeError) {
+        --er-card-background-color: var(--md-sys-color-error);
+        --er-card-background-color-hover: color-mix(
+          in srgb,
+          var(--er-card-background-color) 80%,
+          transparent
+        );
+        --er-card-color: var(--md-sys-color-on-error);
+      }
+
+      :host(.themeErrorContainer) {
         --er-card-background-color: var(--md-sys-color-error-container);
         --er-card-background-color-hover: color-mix(
           in srgb,
