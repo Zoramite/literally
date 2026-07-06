@@ -59,6 +59,11 @@ export class ErCard extends NavigationMixin(LitElement) {
         border-top: 5px solid transparent;
       }
 
+      :host([highlight].maybeHighlight) {
+        border-bottom-color: var(--er-card-highlight-color);
+        border-top-color: var(--er-card-highlight-color);
+      }
+
       :host([highlight]) {
         background:
           radial-gradient(
@@ -216,7 +221,7 @@ export class ErCard extends NavigationMixin(LitElement) {
     }),
   ];
 
-  @property()
+  @property({ reflect: true })
   highlight?: string;
 
   connectedCallback(): void {
