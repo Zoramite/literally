@@ -1,5 +1,5 @@
 import { NavigationMixin } from '@littoral/literally/navigation/navigation.mixin';
-import { LitElement, css, html } from 'lit';
+import { LitElement, css, html, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { contrast, hexToRgb } from '../utils/color';
@@ -83,9 +83,9 @@ export class ErIcon extends NavigationMixin(LitElement) {
         --on-color-default: var(--md-sys-color-on-primary);
       }
 
-      :host(.themePrimarySurface) {
-        --color-default: var(--md-sys-color-primary-surface);
-        --on-color-default: var(--md-sys-color-on-primary-surface);
+      :host(.themePrimaryContainer) {
+        --color-default: var(--md-sys-color-primary-container);
+        --on-color-default: var(--md-sys-color-on-primary-container);
       }
 
       :host(.themeSecondary) {
@@ -93,9 +93,29 @@ export class ErIcon extends NavigationMixin(LitElement) {
         --on-color-default: var(--md-sys-color-on-secondary);
       }
 
+      :host(.themeSecondaryContainer) {
+        --color-default: var(--md-sys-color-secondary-container);
+        --on-color-default: var(--md-sys-color-on-secondary-container);
+      }
+
       :host(.themeTertiary) {
-        --color-default: var(--md-sys-color-secondary);
-        --on-color-default: var(--md-sys-color-on-secondary);
+        --color-default: var(--md-sys-color-tertiary);
+        --on-color-default: var(--md-sys-color-on-tertiary);
+      }
+
+      :host(.themeTertiaryContainer) {
+        --color-default: var(--md-sys-color-tertiary-container);
+        --on-color-default: var(--md-sys-color-on-tertiary-container);
+      }
+
+      :host(.themeError) {
+        --color-default: var(--md-sys-color-error);
+        --on-color-default: var(--md-sys-color-on-error);
+      }
+
+      :host(.themeErrorContainer) {
+        --color-default: var(--md-sys-color-error-container);
+        --on-color-default: var(--md-sys-color-on-error-container);
       }
 
       .material-symbols-outlined {
@@ -103,7 +123,26 @@ export class ErIcon extends NavigationMixin(LitElement) {
         font-size: var(--er-icon-font-size, 24px);
         line-height: 1;
         overflow: hidden;
-        max-width: 24px;
+        max-width: var(--er-icon-font-size, 24px);
+      }
+
+      :host([highlight]) {
+        background: transparent;
+        background-color: transparent;
+        border-color: transparent;
+      }
+
+      :host([highlight]) .material-symbols-outlined {
+        background: linear-gradient(
+          135deg,
+          var(--er-icon-highlight-color) 0%,
+          color-mix(in srgb, var(--er-icon-highlight-color) 40%, var(--color))
+            60%,
+          var(--color) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
       }
 
       @media print {
@@ -126,6 +165,19 @@ export class ErIcon extends NavigationMixin(LitElement) {
 
   @property({ type: Boolean, attribute: 'keep-color', reflect: true })
   keepColor = false;
+
+  @property({ reflect: true })
+  highlight?: string;
+
+  protected override willUpdate(changedProperties: PropertyValues) {
+    if (changedProperties.has('highlight')) {
+      if (!this.highlight) {
+        this.style.setProperty('--er-icon-highlight-color', 'transparent');
+      } else {
+        this.style.setProperty('--er-icon-highlight-color', this.highlight);
+      }
+    }
+  }
 
   render() {
     if (this.color) {
