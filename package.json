@@ -27,13 +27,13 @@
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.8",
     "lit": "^3.3.3",
-    "oxfmt": "^0.56.0",
-    "oxlint": "^1.71.0",
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.73.0",
     "storybook": "^10.4.6",
-    "tsx": "^4.22.4",
-    "typescript": "^6.0.3",
-    "vite": "^8.1.0",
-    "vitest": "^4.1.9"
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.4",
+    "vitest": "^4.1.10"
   },
   "lint-staged": {
     "*.{ts,js}": [
