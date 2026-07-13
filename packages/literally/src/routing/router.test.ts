@@ -134,3 +134,21 @@ describe('wildcard matching', () => {
     expect(match?.params!['foo']).toBe('foobar/baz/be');
   });
 });
+
+describe('query parameter stripping', () => {
+  test.concurrent('ignores query parameters during matching', async ({
+    expect,
+  }) => {
+    const trie = new RouteTrie();
+
+    trie.add('/foo', 'bar');
+    trie.add('/baz/{id}', 'item');
+
+    let match = trie.match('/foo?templateId=123&test=true');
+    expect(match?.value).toBe('bar');
+
+    match = trie.match('/baz/abc?name=hello');
+    expect(match?.value).toBe('item');
+    expect(match?.params!['id']).toBe('abc');
+  });
+});

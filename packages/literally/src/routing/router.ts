@@ -274,6 +274,9 @@ export class RouteTrieNode<Type> {
    * Cleanup a path by remove extraneous starting and ending characters.
    */
   normalizePath(path: string) {
+    // Strip query parameters if present
+    path = path.split('?')[0];
+
     // Remove starting whitespace.
     path = path.replace(/^\s+/, '');
 
