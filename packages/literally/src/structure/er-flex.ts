@@ -101,11 +101,11 @@ export class ErFlex extends LitElement {
           align-items: flex-end;
         }
 
-        :host(.align-baseline${breakpoint?.targetClass ?? css``}) {
+        :host(.alignBaseline${breakpoint?.targetClass ?? css``}) {
           align-items: baseline;
         }
 
-        :host(.align-center${breakpoint?.targetClass ?? css``}) {
+        :host(.alignCenter${breakpoint?.targetClass ?? css``}) {
           align-items: center;
         }
 
