@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/Zoramite/literally/compare/literally-v2.6.0...literally-v3.0.0) (2026-07-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* Normalize CSS classes to camelCase and add class documentation
+
+### Features
+
+* Normalize CSS classes to camelCase and add class documentation ([27a0b61](https://github.com/Zoramite/literally/commit/27a0b615cce30c321866feeb1143eeb5518afbe4))
+
 ## [2.6.0](https://github.com/Zoramite/literally/compare/literally-v2.5.0...literally-v2.6.0) (2026-07-13)
 
 
