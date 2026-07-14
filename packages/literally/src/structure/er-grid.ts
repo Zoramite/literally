@@ -7,6 +7,24 @@ import { tablet, desktop, mobile, print, breakpoints } from './devices';
  * Grid for controlling the layout of the page.
  *
  * @slot - Grid contents.
+ *
+ * @cssclass gapRowSmall - Set small row gap. Supports breakpoint suffixes (e.g. gapRowSmallOnMobile).
+ * @cssclass gapRowMedium - Set medium row gap. Supports breakpoint suffixes (e.g. gapRowMediumOnMobile).
+ * @cssclass gapRowLarge - Set large row gap. Supports breakpoint suffixes (e.g. gapRowLargeOnMobile).
+ * @cssclass gapRowXlarge - Set extra large row gap. Supports breakpoint suffixes (e.g. gapRowXlargeOnMobile).
+ * @cssclass gapRowXxlarge - Set double extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxlargeOnMobile).
+ * @cssclass gapRowXxxlarge - Set triple extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxxlargeOnMobile).
+ * @cssclass gapColSmall - Set small column gap. Supports breakpoint suffixes (e.g. gapColSmallOnMobile).
+ * @cssclass gapColMedium - Set medium column gap. Supports breakpoint suffixes (e.g. gapColMediumOnMobile).
+ * @cssclass gapColLarge - Set large column gap. Supports breakpoint suffixes (e.g. gapColLargeOnMobile).
+ * @cssclass gapColXlarge - Set extra large column gap. Supports breakpoint suffixes (e.g. gapColXlargeOnMobile).
+ * @cssclass gapColXxlarge - Set double extra large column gap. Supports breakpoint suffixes (e.g. gapColXxlargeOnMobile).
+ * @cssclass gapColXxxlarge - Set triple extra large column gap. Supports breakpoint suffixes (e.g. gapColXxxlargeOnMobile).
+ * @cssclass alignBaseline - Align items to baseline. Supports breakpoint suffixes (e.g. alignBaselineOnMobile).
+ * @cssclass alignEnd - Align items to end. Supports breakpoint suffixes (e.g. alignEndOnMobile).
+ * @cssclass alignCenter - Align items to center. Supports breakpoint suffixes (e.g. alignCenterOnMobile).
+ * @cssclass alignStart - Align items to start. Supports breakpoint suffixes (e.g. alignStartOnMobile).
+ * @cssclass alignSelfStretch - Set align-self to stretch on grid items.
  */
 @customElement('er-grid')
 export class ErGrid extends LitElement {
@@ -46,67 +64,67 @@ export class ErGrid extends LitElement {
     // Targeted breakpoint styles.
     ...breakpoints.mixupStyles((breakpoint) => {
       const styling = css`
-        :host(.gap-row-small${breakpoint?.targetClass ?? css``}) {
+        :host(.gapRowSmall${breakpoint?.targetClass ?? css``}) {
           --grid-gap-row: var(--space-small);
         }
 
-        :host(.gap-row-medium${breakpoint?.targetClass ?? css``}) {
+        :host(.gapRowMedium${breakpoint?.targetClass ?? css``}) {
           --grid-gap-row: var(--space-medium);
         }
 
-        :host(.gap-row-large${breakpoint?.targetClass ?? css``}) {
+        :host(.gapRowLarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-row: var(--space-large);
         }
 
-        :host(.gap-row-xlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.gapRowXlarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-row: var(--space-xlarge);
         }
 
-        :host(.gap-row-xxlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.gapRowXxlarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-row: var(--space-xxlarge);
         }
 
-        :host(.gap-row-xxxlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.gapRowXxxlarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-row: var(--space-xxxlarge);
         }
 
-        :host(.gap-col-small${breakpoint?.targetClass ?? css``}) {
+        :host(.gapColSmall${breakpoint?.targetClass ?? css``}) {
           --grid-gap-column: var(--space-small);
         }
 
-        :host(.gap-col-medium${breakpoint?.targetClass ?? css``}) {
+        :host(.gapColMedium${breakpoint?.targetClass ?? css``}) {
           --grid-gap-column: var(--space-medium);
         }
 
-        :host(.gap-col-large${breakpoint?.targetClass ?? css``}) {
+        :host(.gapColLarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-column: var(--space-large);
         }
 
-        :host(.gap-col-xlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.gapColXlarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-column: var(--space-xlarge);
         }
 
-        :host(.gap-col-xxlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.gapColXxlarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-column: var(--space-xxlarge);
         }
 
-        :host(.gap-col-xxxlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.gapColXxxlarge${breakpoint?.targetClass ?? css``}) {
           --grid-gap-column: var(--space-xxxlarge);
         }
 
-        :host(.align-baseline${breakpoint?.targetClass ?? css``}) {
+        :host(.alignBaseline${breakpoint?.targetClass ?? css``}) {
           align-items: baseline;
         }
 
-        :host(.align-end${breakpoint?.targetClass ?? css``}) {
+        :host(.alignEnd${breakpoint?.targetClass ?? css``}) {
           align-items: end;
         }
 
-        :host(.align-center${breakpoint?.targetClass ?? css``}) {
+        :host(.alignCenter${breakpoint?.targetClass ?? css``}) {
           align-items: center;
         }
 
-        :host(.align-start${breakpoint?.targetClass ?? css``}) {
+        :host(.alignStart${breakpoint?.targetClass ?? css``}) {
           align-items: start;
         }
       `;
@@ -576,7 +594,7 @@ export class ErGridItem extends LitElement {
         }
       }
 
-      :host(.align-self-stretch) {
+      :host(.alignSelfStretch) {
         align-self: stretch;
       }
     `,

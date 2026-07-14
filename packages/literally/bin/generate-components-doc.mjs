@@ -110,6 +110,18 @@ if (components.length === 0) {
         }
         md += `\n`;
       }
+
+      // CSS Classes
+      if (comp.cssClasses && comp.cssClasses.length > 0) {
+        md += `#### CSS Classes\n`;
+        md += `| Name | Description |\n`;
+        md += `|---|---|\n`;
+        for (const cssClass of comp.cssClasses) {
+          const desc = cssClass.description?.replace(/\n/g, ' ') || '';
+          md += `| \`${cssClass.name}\` | ${desc} |\n`;
+        }
+        md += `\n`;
+      }
     }
   }
 }

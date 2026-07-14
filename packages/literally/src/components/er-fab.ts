@@ -6,6 +6,19 @@ import { type BreakpointDevice, breakpoints } from '../structure/devices';
 
 /**
  * Fab visual element for collapsable button/links.
+ *
+ * @cssclass noLink - Disable the pointer cursor.
+ * @cssclass primary - Style the fab with the primary theme color.
+ * @cssclass secondary - Style the fab with the secondary outline theme.
+ * @cssclass tertiary - Style the fab with the tertiary text theme.
+ * @cssclass themePrimary - Apply primary theme color.
+ * @cssclass themeSecondary - Apply secondary theme color.
+ * @cssclass themeTertiary - Apply tertiary theme color.
+ * @cssclass themeError - Apply error theme color.
+ * @cssclass link - Make the fab hoverable with an outline.
+ * @cssclass full - Make the fab take the full width of its parent container. Supports breakpoint suffixes (e.g. fullOnMobile).
+ * @cssclass center - Center the content inside the fab. Supports breakpoint suffixes (e.g. centerOnMobile).
+ * @cssclass expanded - Force the fab to be expanded. Supports breakpoint suffixes (e.g. expandedOnMobile).
  */
 @customElement('er-fab')
 export class ErFab extends NavigationMixin(LitElement) {
@@ -161,7 +174,7 @@ export class ErFab extends NavigationMixin(LitElement) {
       }
 
       // Allow expanding based on breakpoints using css classes.
-      if (className.startsWith('expanded-')) {
+      if (className.startsWith('expandedOn')) {
         if (matchingBreakpoints === undefined) {
           matchingBreakpoints = breakpoints.findActiveBreakpoints();
         }

@@ -12,7 +12,7 @@ const meta: Meta = {
     const classes = [];
     if (args.theme) classes.push(args.theme);
     if (args.outlined) classes.push('outlined');
-    if (args.hoverEffect) classes.push('hover-effect');
+    if (args.hoverEffect) classes.push('hoverEffect');
     if (args.link) classes.push('link');
     if (args.padding) classes.push(args.padding);
 
@@ -54,13 +54,13 @@ const meta: Meta = {
       control: 'select',
       options: [
         '',
-        'pad-xsmall',
-        'pad-small',
-        'pad-medium',
-        'pad-large',
-        'pad-xlarge',
-        'pad-xxlarge',
-        'pad-xxxlarge',
+        'padXsmall',
+        'padSmall',
+        'padMedium',
+        'padLarge',
+        'padXlarge',
+        'padXxlarge',
+        'padXxxlarge',
       ],
     },
   },
@@ -73,7 +73,7 @@ const meta: Meta = {
     hoverEffect: true,
     link: false,
     highlight: '',
-    padding: 'pad-medium',
+    padding: 'padMedium',
   },
 };
 

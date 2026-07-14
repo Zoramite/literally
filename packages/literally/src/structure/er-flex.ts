@@ -5,6 +5,35 @@ import { breakpoints } from '../structure/devices';
 
 /**
  * Spacer for controlling the spacing between flex elements of the page.
+ *
+ * @cssclass full - Make the flex container take 100% width.
+ * @cssclass inline - Set display to inline-flex.
+ * @cssclass overflowHidden - Set overflow to hidden.
+ * @cssclass gapSmall - Set small gap spacing.
+ * @cssclass gapLarge - Set large gap spacing.
+ * @cssclass gapXlarge - Set extra large gap spacing.
+ * @cssclass flowColumn - Set flex direction to column. Supports breakpoint suffixes (e.g. flowColumnOnMobile).
+ * @cssclass flowRow - Set flex direction to row. Supports breakpoint suffixes (e.g. flowRowOnMobile).
+ * @cssclass wrap - Enable flex wrapping. Supports breakpoint suffixes (e.g. wrapOnMobile).
+ * @cssclass alignFlexStart - Align items to flex-start. Supports breakpoint suffixes (e.g. alignFlexStartOnMobile).
+ * @cssclass alignFlexEnd - Align items to flex-end. Supports breakpoint suffixes (e.g. alignFlexEndOnMobile).
+ * @cssclass alignBaseline - Align items to baseline. Supports breakpoint suffixes (e.g. alignBaselineOnMobile).
+ * @cssclass alignCenter - Align items to center. Supports breakpoint suffixes (e.g. alignCenterOnMobile).
+ * @cssclass alignSpaceBetween - Align items with space-between. Supports breakpoint suffixes (e.g. alignSpaceBetweenOnMobile).
+ * @cssclass alignSpaceAround - Align items with space-around. Supports breakpoint suffixes (e.g. alignSpaceAroundOnMobile).
+ * @cssclass alignSpaceEvenly - Align items with space-evenly. Supports breakpoint suffixes (e.g. alignSpaceEvenlyOnMobile).
+ * @cssclass justifyFlexStart - Justify content to flex-start. Supports breakpoint suffixes (e.g. justifyFlexStartOnMobile).
+ * @cssclass justifyFlexEnd - Justify content to flex-end. Supports breakpoint suffixes (e.g. justifyFlexEndOnMobile).
+ * @cssclass justifyCenter - Justify content to center. Supports breakpoint suffixes (e.g. justifyCenterOnMobile).
+ * @cssclass justifySpaceBetween - Justify content with space-between. Supports breakpoint suffixes (e.g. justifySpaceBetweenOnMobile).
+ * @cssclass justifySpaceAround - Justify content with space-around. Supports breakpoint suffixes (e.g. justifySpaceAroundOnMobile).
+ * @cssclass justifySpaceEvenly - Justify content with space-evenly. Supports breakpoint suffixes (e.g. justifySpaceEvenlyOnMobile).
+ * @cssclass basis33 - Set flex basis to 33.3% for slotted items. Supports breakpoint suffixes (e.g. basis33OnMobile).
+ * @cssclass basis50 - Set flex basis to 50% for slotted items. Supports breakpoint suffixes (e.g. basis50OnMobile).
+ * @cssclass basis25 - Set flex basis to 25% for slotted items. Supports breakpoint suffixes (e.g. basis25OnMobile).
+ * @cssclass basis20 - Set flex basis to 20% for slotted items. Supports breakpoint suffixes (e.g. basis20OnMobile).
+ * @cssclass grow - Set flex grow to 1 on slotted children.
+ * @cssclass shrink - Set flex shrink to 1 on slotted children.
  */
 @customElement('er-flex')
 export class ErFlex extends LitElement {
@@ -25,19 +54,19 @@ export class ErFlex extends LitElement {
         display: inline-flex;
       }
 
-      :host(.overflow-hidden) {
+      :host(.overflowHidden) {
         overflow: hidden;
       }
 
-      :host(.gap-small) {
+      :host(.gapSmall) {
         --er-flex-gap: var(--space-small);
       }
 
-      :host(.gap-large) {
+      :host(.gapLarge) {
         --er-flex-gap: var(--space-large);
       }
 
-      :host(.gap-xlarge) {
+      :host(.gapXlarge) {
         --er-flex-gap: var(--space-xlarge);
       }
 
@@ -52,11 +81,11 @@ export class ErFlex extends LitElement {
     // Targeted breakpoint styles.
     ...breakpoints.mixupStyles((breakpoint) => {
       const styling = css`
-        :host(.flow-column${breakpoint?.targetClass ?? css``}) {
+        :host(.flowColumn${breakpoint?.targetClass ?? css``}) {
           flex-flow: column;
         }
 
-        :host(.flow-row${breakpoint?.targetClass ?? css``}) {
+        :host(.flowRow${breakpoint?.targetClass ?? css``}) {
           flex-flow: row;
         }
 
@@ -64,11 +93,11 @@ export class ErFlex extends LitElement {
           flex-wrap: wrap;
         }
 
-        :host(.align-flex-start${breakpoint?.targetClass ?? css``}) {
+        :host(.alignFlexStart${breakpoint?.targetClass ?? css``}) {
           align-items: flex-start;
         }
 
-        :host(.align-flex-end${breakpoint?.targetClass ?? css``}) {
+        :host(.alignFlexEnd${breakpoint?.targetClass ?? css``}) {
           align-items: flex-end;
         }
 
@@ -80,23 +109,23 @@ export class ErFlex extends LitElement {
           align-items: center;
         }
 
-        :host(.align-space-between${breakpoint?.targetClass ?? css``}) {
+        :host(.alignSpaceBetween${breakpoint?.targetClass ?? css``}) {
           align-items: space-between;
         }
 
-        :host(.align-space-around${breakpoint?.targetClass ?? css``}) {
+        :host(.alignSpaceAround${breakpoint?.targetClass ?? css``}) {
           align-items: space-around;
         }
 
-        :host(.align-space-evenly${breakpoint?.targetClass ?? css``}) {
+        :host(.alignSpaceEvenly${breakpoint?.targetClass ?? css``}) {
           align-items: space-evenly;
         }
 
-        :host(.justify-flex-start${breakpoint?.targetClass ?? css``}) {
+        :host(.justifyFlexStart${breakpoint?.targetClass ?? css``}) {
           justify-content: flex-start;
         }
 
-        :host(.justify-flex-end${breakpoint?.targetClass ?? css``}) {
+        :host(.justifyFlexEnd${breakpoint?.targetClass ?? css``}) {
           justify-content: flex-end;
         }
 
@@ -104,37 +133,37 @@ export class ErFlex extends LitElement {
           justify-content: center;
         }
 
-        :host(.justify-space-between${breakpoint?.targetClass ?? css``}) {
+        :host(.justifySpaceBetween${breakpoint?.targetClass ?? css``}) {
           justify-content: space-between;
         }
 
-        :host(.justify-space-around${breakpoint?.targetClass ?? css``}) {
+        :host(.justifySpaceAround${breakpoint?.targetClass ?? css``}) {
           justify-content: space-around;
         }
 
-        :host(.justify-space-evenly${breakpoint?.targetClass ?? css``}) {
+        :host(.justifySpaceEvenly${breakpoint?.targetClass ?? css``}) {
           justify-content: space-evenly;
         }
 
-        :host(.basis-33${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+        :host(.basis33${breakpoint?.targetClass ?? css``}) ::slotted(*) {
           flex-basis: calc(
             (100% - (var(--er-flex-gap, var(--space-medium)) * 2)) / 3
           );
         }
 
-        :host(.basis-50${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+        :host(.basis50${breakpoint?.targetClass ?? css``}) ::slotted(*) {
           flex-basis: calc(
             (100% - (var(--er-flex-gap, var(--space-medium)) * 1)) / 2
           );
         }
 
-        :host(.basis-25${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+        :host(.basis25${breakpoint?.targetClass ?? css``}) ::slotted(*) {
           flex-basis: calc(
             (100% - (var(--er-flex-gap, var(--space-medium)) * 3)) / 4
           );
         }
 
-        :host(.basis-20${breakpoint?.targetClass ?? css``}) ::slotted(*) {
+        :host(.basis20${breakpoint?.targetClass ?? css``}) ::slotted(*) {
           flex-basis: calc(
             (100% - (var(--er-flex-gap, var(--space-medium)) * 4)) / 5
           );

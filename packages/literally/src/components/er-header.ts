@@ -4,6 +4,11 @@ import { customElement } from 'lit/decorators.js';
 
 /**
  * Customized header styling.
+ *
+ * @cssclass marginAfterMedium - Adds a medium bottom margin.
+ * @cssclass center - Center aligns the header text. Supports breakpoint suffixes (e.g. centerOnMobile).
+ * @cssclass right - Right aligns the header text. Supports breakpoint suffixes (e.g. rightOnMobile).
+ * @cssclass left - Left aligns the header text. Supports breakpoint suffixes (e.g. leftOnMobile).
  */
 export class ErHeader extends LitElement {
   static styles = [
@@ -36,7 +41,7 @@ export class ErHeader extends LitElement {
         padding: 0;
       }
 
-      :host(.margin-after-medium) {
+      :host(.marginAfterMedium) {
         --er-header-margin-bottom: var(--space-medium);
       }
     `,
@@ -78,14 +83,8 @@ export class ErH1 extends ErHeader {
     ...ErHeader.styles,
     css`
       :host {
-        --er-header-title-font-family: var(
-            --er-h1-title-font-family,
-            var(--title-font-family)
-          )
-          --er-header-title-font-optical-sizing: var(
-            --er-h1-title-font-optical-sizing,
-            var(--title-font-optical-sizing)
-          );
+        --er-header-title-font-family: var(--er-h1-title-font-family, var(--title-font-family))
+          --er-header-title-font-optical-sizing: var(--er-h1-title-font-optical-sizing, var(--title-font-optical-sizing));
         --er-header-title-font-size: var(
           --er-h1-title-font-size,
           var(--er-sys-title-font-size-h1)
@@ -112,14 +111,8 @@ export class ErH2 extends ErHeader {
     ...ErHeader.styles,
     css`
       :host {
-        --er-header-title-font-family: var(
-            --er-h2-title-font-family,
-            var(--title-font-family)
-          )
-          --er-header-title-font-optical-sizing: var(
-            --er-h2-title-font-optical-sizing,
-            var(--title-font-optical-sizing)
-          );
+        --er-header-title-font-family: var(--er-h2-title-font-family, var(--title-font-family))
+          --er-header-title-font-optical-sizing: var(--er-h2-title-font-optical-sizing, var(--title-font-optical-sizing));
         --er-header-title-font-size: var(
           --er-h2-title-font-size,
           var(--er-sys-title-font-size-h2)
@@ -146,14 +139,8 @@ export class ErH3 extends ErHeader {
     ...ErHeader.styles,
     css`
       :host {
-        --er-header-title-font-family: var(
-            --er-h3-title-font-family,
-            var(--title-font-family)
-          )
-          --er-header-title-font-optical-sizing: var(
-            --er-h3-title-font-optical-sizing,
-            var(--title-font-optical-sizing)
-          );
+        --er-header-title-font-family: var(--er-h3-title-font-family, var(--title-font-family))
+          --er-header-title-font-optical-sizing: var(--er-h3-title-font-optical-sizing, var(--title-font-optical-sizing));
         --er-header-title-font-size: var(
           --er-h3-title-font-size,
           var(--er-sys-title-font-size-h3)
@@ -180,14 +167,8 @@ export class ErH4 extends ErHeader {
     ...ErHeader.styles,
     css`
       :host {
-        --er-header-title-font-family: var(
-            --er-h4-title-font-family,
-            var(--title-font-family)
-          )
-          --er-header-title-font-optical-sizing: var(
-            --er-h4-title-font-optical-sizing,
-            var(--title-font-optical-sizing)
-          );
+        --er-header-title-font-family: var(--er-h4-title-font-family, var(--title-font-family))
+          --er-header-title-font-optical-sizing: var(--er-h4-title-font-optical-sizing, var(--title-font-optical-sizing));
         --er-header-title-font-size: var(
           --er-h4-title-font-size,
           var(--er-sys-title-font-size-h4)
@@ -214,14 +195,8 @@ export class ErH5 extends ErHeader {
     ...ErHeader.styles,
     css`
       :host {
-        --er-header-title-font-family: var(
-            --er-h5-title-font-family,
-            var(--title-font-family)
-          )
-          --er-header-title-font-optical-sizing: var(
-            --er-h5-title-font-optical-sizing,
-            var(--title-font-optical-sizing)
-          );
+        --er-header-title-font-family: var(--er-h5-title-font-family, var(--title-font-family))
+          --er-header-title-font-optical-sizing: var(--er-h5-title-font-optical-sizing, var(--title-font-optical-sizing));
         --er-header-title-font-size: var(
           --er-h5-title-font-size,
           var(--er-sys-title-font-size-h5)
@@ -248,14 +223,8 @@ export class ErH6 extends ErHeader {
     ...ErHeader.styles,
     css`
       :host {
-        --er-header-title-font-family: var(
-            --er-h6-title-font-family,
-            var(--title-font-family)
-          )
-          --er-header-title-font-optical-sizing: var(
-            --er-h6-title-font-optical-sizing,
-            var(--title-font-optical-sizing)
-          );
+        --er-header-title-font-family: var(--er-h6-title-font-family, var(--title-font-family))
+          --er-header-title-font-optical-sizing: var(--er-h6-title-font-optical-sizing, var(--title-font-optical-sizing));
         --er-header-title-font-size: var(
           --er-h6-title-font-size,
           var(--er-sys-title-font-size-h6)

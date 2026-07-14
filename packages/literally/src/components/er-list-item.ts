@@ -6,6 +6,8 @@ import './er-icon';
 
 /**
  * List item element for displaying interactive items with icons and content.
+ *
+ * @cssclass content - Style the main text/body container inside the list item.
  */
 @customElement('er-list-item')
 export class ErListItem extends NavigationMixin(LitElement) {

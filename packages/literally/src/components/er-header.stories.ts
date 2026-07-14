@@ -12,7 +12,7 @@ const meta: Meta = {
       classes.push(args.alignment);
     }
     if (args.marginAfter) {
-      classes.push('margin-after-medium');
+      classes.push('marginAfterMedium');
     }
 
     const headingText = args.text || 'Heading Level';

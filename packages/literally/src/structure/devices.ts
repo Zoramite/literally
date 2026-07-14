@@ -21,7 +21,7 @@ export type BreakpointTargetMixer = (
 /** Printing :) */
 export const print: BreakpointDevice = {
   breakpoint: 'print',
-  targetClass: css`-on-print`,
+  targetClass: css`OnPrint`,
   query: css`print`,
   // prettier-ignore
   mediaQuery: css`@media print`,
@@ -30,7 +30,7 @@ export const print: BreakpointDevice = {
 /** Mobile device. */
 export const mobile: BreakpointDevice = {
   breakpoint: 'mobile',
-  targetClass: css`-on-mobile`,
+  targetClass: css`OnMobile`,
   query: css`(max-width: 767px)`,
   // prettier-ignore
   mediaQuery: css`@media (max-width: 767px)`,
@@ -39,7 +39,7 @@ export const mobile: BreakpointDevice = {
 /** Tablet and lesser device. */
 export const tabletLT: BreakpointDevice = {
   breakpoint: 'tabletLT',
-  targetClass: css`-on-tablet-lt`,
+  targetClass: css`OnTabletLt`,
   query: css`(max-width: 1023px)`,
   // prettier-ignore
   mediaQuery: css`@media (max-width: 1023px)`,
@@ -48,7 +48,7 @@ export const tabletLT: BreakpointDevice = {
 /** Tablet device. */
 export const tablet: BreakpointDevice = {
   breakpoint: 'tablet',
-  targetClass: css`-on-tablet`,
+  targetClass: css`OnTablet`,
   query: css`(min-width: 768px) and (max-width: 1023px)`,
   // prettier-ignore
   mediaQuery: css`@media (min-width: 768px) and (max-width: 1023px)`,
@@ -57,7 +57,7 @@ export const tablet: BreakpointDevice = {
 /** Tablet and greater device. */
 export const tabletGT: BreakpointDevice = {
   breakpoint: 'tabletGT',
-  targetClass: css`-on-tablet-gt`,
+  targetClass: css`OnTabletGt`,
   query: css`(min-width: 768px)`,
   // prettier-ignore
   mediaQuery: css`@media (min-width: 768px)`,
@@ -66,7 +66,7 @@ export const tabletGT: BreakpointDevice = {
 /** Desktop device. */
 export const desktop: BreakpointDevice = {
   breakpoint: 'desktop',
-  targetClass: css`-on-desktop`,
+  targetClass: css`OnDesktop`,
   query: css`(min-width: 1024px)`,
   // prettier-ignore
   mediaQuery: css`@media (min-width: 1024px)`,

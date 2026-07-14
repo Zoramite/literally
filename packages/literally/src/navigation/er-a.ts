@@ -7,6 +7,10 @@ import { NavigationMixin } from './navigation.mixin';
  * In-app replacement for `<a>` links.
  *
  * @slot - Label for the link
+ *
+ * @cssclass block - Set display to block.
+ * @cssclass inlineBlock - Set display to inline-block.
+ * @cssclass ellipsis - Apply text overflow ellipsis and block display.
  */
 @customElement('er-a')
 export class ErA extends NavigationMixin(LitElement) {
@@ -21,7 +25,7 @@ export class ErA extends NavigationMixin(LitElement) {
         display: block;
       }
 
-      :host(.inline-block) {
+      :host(.inlineBlock) {
         display: inline-block;
       }
 

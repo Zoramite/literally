@@ -6,6 +6,22 @@ import { contrast, hexToRgb } from '../utils/color';
 
 /**
  * Element for displaying material symbol icons.
+ *
+ * @cssclass dim - Apply 25% opacity to the icon.
+ * @cssclass link - Make the icon hoverable with a pointer cursor.
+ * @cssclass outline - Apply outlined style (swaps background and color).
+ * @cssclass rounded - Apply a circular border radius (50%).
+ * @cssclass roundish - Apply a small border radius.
+ * @cssclass padSmall - Set small padding.
+ * @cssclass padMedium - Set medium padding.
+ * @cssclass themePrimary - Apply primary theme colors.
+ * @cssclass themePrimaryContainer - Apply primary-container theme colors.
+ * @cssclass themeSecondary - Apply secondary theme colors.
+ * @cssclass themeSecondaryContainer - Apply secondary-container theme colors.
+ * @cssclass themeTertiary - Apply tertiary theme colors.
+ * @cssclass themeTertiaryContainer - Apply tertiary-container theme colors.
+ * @cssclass themeError - Apply error theme colors.
+ * @cssclass themeErrorContainer - Apply error-container theme colors.
  */
 @customElement('er-icon')
 export class ErIcon extends NavigationMixin(LitElement) {

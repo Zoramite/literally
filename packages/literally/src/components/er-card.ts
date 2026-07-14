@@ -5,6 +5,28 @@ import { customElement, property } from 'lit/decorators.js';
 
 /**
  * Card element for displaying information grouped together.
+ *
+ * @cssclass link - Makes the card hoverable with a pointer cursor.
+ * @cssclass fullHeight - Sets height to 100%.
+ * @cssclass hoverEffect - Applies elevation/transform hover transition.
+ * @cssclass outlined - Applies a 1px border.
+ * @cssclass themeSurfaceVariant - Sets surface-variant theme colors.
+ * @cssclass themeSurfaceContainer - Sets surface-container theme colors.
+ * @cssclass themePrimary - Sets primary theme colors.
+ * @cssclass themePrimaryContainer - Sets primary-container theme colors.
+ * @cssclass themeSecondary - Sets secondary theme colors.
+ * @cssclass themeSecondaryContainer - Sets secondary-container theme colors.
+ * @cssclass themeTertiary - Sets tertiary theme colors.
+ * @cssclass themeTertiaryContainer - Sets tertiary-container theme colors.
+ * @cssclass themeError - Sets error theme colors.
+ * @cssclass themeErrorContainer - Sets error-container theme colors.
+ * @cssclass padXsmall - Sets extra small padding. Supports breakpoint suffixes (e.g. padXsmallOnMobile).
+ * @cssclass padSmall - Sets small padding. Supports breakpoint suffixes (e.g. padSmallOnMobile).
+ * @cssclass padMedium - Sets medium padding. Supports breakpoint suffixes (e.g. padMediumOnMobile).
+ * @cssclass padLarge - Sets large padding. Supports breakpoint suffixes (e.g. padLargeOnMobile).
+ * @cssclass padXlarge - Sets extra large padding. Supports breakpoint suffixes (e.g. padXlargeOnMobile).
+ * @cssclass padXxlarge - Sets double extra large padding. Supports breakpoint suffixes (e.g. padXxlargeOnMobile).
+ * @cssclass padXxxlarge - Sets triple extra large padding. Supports breakpoint suffixes (e.g. padXxxlargeOnMobile).
  */
 @customElement('er-card')
 export class ErCard extends NavigationMixin(LitElement) {
@@ -33,18 +55,18 @@ export class ErCard extends NavigationMixin(LitElement) {
         cursor: pointer;
       }
 
-      :host(.full-height) {
+      :host(.fullHeight) {
         height: 100%;
       }
 
-      :host(.hover-effect) {
+      :host(.hoverEffect) {
         transition:
           box-shadow 0.3s ease,
           transform 0.3s ease,
           background-color 0.3s ease;
       }
 
-      :host(.hover-effect:hover) {
+      :host(.hoverEffect:hover) {
         box-shadow: 0 8px 24px
           color-mix(
             in srgb,
@@ -190,31 +212,31 @@ export class ErCard extends NavigationMixin(LitElement) {
     // Targeted breakpoint styles.
     ...breakpoints.mixupStyles((breakpoint) => {
       const styling = css`
-        :host(.pad-xsmall${breakpoint?.targetClass ?? css``}) {
+        :host(.padXsmall${breakpoint?.targetClass ?? css``}) {
           --er-card-padding: var(--space-xsmall);
         }
 
-        :host(.pad-small${breakpoint?.targetClass ?? css``}) {
+        :host(.padSmall${breakpoint?.targetClass ?? css``}) {
           --er-card-padding: var(--space-small);
         }
 
-        :host(.pad-medium${breakpoint?.targetClass ?? css``}) {
+        :host(.padMedium${breakpoint?.targetClass ?? css``}) {
           --er-card-padding: var(--space-medium);
         }
 
-        :host(.pad-large${breakpoint?.targetClass ?? css``}) {
+        :host(.padLarge${breakpoint?.targetClass ?? css``}) {
           --er-card-padding: var(--space-large);
         }
 
-        :host(.pad-xlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.padXlarge${breakpoint?.targetClass ?? css``}) {
           --er-card-padding: var(--space-xlarge);
         }
 
-        :host(.pad-xxlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.padXxlarge${breakpoint?.targetClass ?? css``}) {
           --er-card-padding: var(--space-xxlarge);
         }
 
-        :host(.pad-xxxlarge${breakpoint?.targetClass ?? css``}) {
+        :host(.padXxxlarge${breakpoint?.targetClass ?? css``}) {
           --er-card-padding: var(--space-xxxlarge);
         }
       `;

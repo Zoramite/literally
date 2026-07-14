@@ -22,6 +22,31 @@ Card element for displaying information grouped together.
 | `openInNewWindow` (prop) | `boolean` | `false` |  |
 | `navigationCallback` (prop) | `NavigationCallback | undefined` | `-` |  |
 
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `link` | Makes the card hoverable with a pointer cursor. |
+| `fullHeight` | Sets height to 100%. |
+| `hoverEffect` | Applies elevation/transform hover transition. |
+| `outlined` | Applies a 1px border. |
+| `themeSurfaceVariant` | Sets surface-variant theme colors. |
+| `themeSurfaceContainer` | Sets surface-container theme colors. |
+| `themePrimary` | Sets primary theme colors. |
+| `themePrimaryContainer` | Sets primary-container theme colors. |
+| `themeSecondary` | Sets secondary theme colors. |
+| `themeSecondaryContainer` | Sets secondary-container theme colors. |
+| `themeTertiary` | Sets tertiary theme colors. |
+| `themeTertiaryContainer` | Sets tertiary-container theme colors. |
+| `themeError` | Sets error theme colors. |
+| `themeErrorContainer` | Sets error-container theme colors. |
+| `padXsmall` | Sets extra small padding. Supports breakpoint suffixes (e.g. padXsmallOnMobile). |
+| `padSmall` | Sets small padding. Supports breakpoint suffixes (e.g. padSmallOnMobile). |
+| `padMedium` | Sets medium padding. Supports breakpoint suffixes (e.g. padMediumOnMobile). |
+| `padLarge` | Sets large padding. Supports breakpoint suffixes (e.g. padLargeOnMobile). |
+| `padXlarge` | Sets extra large padding. Supports breakpoint suffixes (e.g. padXlargeOnMobile). |
+| `padXxlarge` | Sets double extra large padding. Supports breakpoint suffixes (e.g. padXxlargeOnMobile). |
+| `padXxxlarge` | Sets triple extra large padding. Supports breakpoint suffixes (e.g. padXxxlargeOnMobile). |
+
 ### `<er-chip>` (ErChip)
 **File**: [er-chip.ts](src/components/er-chip.ts)
 
@@ -42,6 +67,25 @@ Chip element for displaying info in a stylized way.
 | `rootPath` (prop) | `string | undefined` | `undefined` |  |
 | `openInNewWindow` (prop) | `boolean` | `false` |  |
 | `navigationCallback` (prop) | `NavigationCallback | undefined` | `-` |  |
+
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `alignSelfCenter` | Align the chip to the center of the cross axis. |
+| `justifySelfCenter` | Justify the chip to the center of the main axis. |
+| `justifySelfFlexEnd` | Justify the chip to the flex-end. |
+| `full` | Make the chip take the full width of its parent container. |
+| `center` | Center the text inside the chip. |
+| `primary` | Style the chip with the primary theme color. |
+| `secondary` | Style the chip with the secondary outline theme. |
+| `tertiary` | Style the chip with the tertiary text theme. |
+| `capitalize` | Capitalize the text in the chip. |
+| `wrap` | Enable text wrapping for the chip contents. |
+| `themePrimary` | Apply primary theme color. |
+| `themeSecondary` | Apply secondary theme color. |
+| `themeTertiary` | Apply tertiary theme color. |
+| `themeError` | Apply error theme color. |
+| `link` | Make the chip hoverable with a pointer cursor. |
 
 ### `<er-fab>` (ErFab)
 **File**: [er-fab.ts](src/components/er-fab.ts)
@@ -64,6 +108,22 @@ Fab visual element for collapsable button/links.
 | `rootPath` (prop) | `string | undefined` | `undefined` |  |
 | `openInNewWindow` (prop) | `boolean` | `false` |  |
 | `navigationCallback` (prop) | `NavigationCallback | undefined` | `-` |  |
+
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `noLink` | Disable the pointer cursor. |
+| `primary` | Style the fab with the primary theme color. |
+| `secondary` | Style the fab with the secondary outline theme. |
+| `tertiary` | Style the fab with the tertiary text theme. |
+| `themePrimary` | Apply primary theme color. |
+| `themeSecondary` | Apply secondary theme color. |
+| `themeTertiary` | Apply tertiary theme color. |
+| `themeError` | Apply error theme color. |
+| `link` | Make the fab hoverable with an outline. |
+| `full` | Make the fab take the full width of its parent container. Supports breakpoint suffixes (e.g. fullOnMobile). |
+| `center` | Center the content inside the fab. Supports breakpoint suffixes (e.g. centerOnMobile). |
+| `expanded` | Force the fab to be expanded. Supports breakpoint suffixes (e.g. expandedOnMobile). |
 
 ### `<er-h1>` (ErH1)
 **File**: [er-header.ts](src/components/er-header.ts)
@@ -107,6 +167,7 @@ Element for displaying material symbol icons.
 | `color` (attr) | `string | undefined` | `-` |  |
 | `disabled` (attr) | `boolean` | `false` |  |
 | `keep-color` (attr) | `boolean` | `false` |  |
+| `highlight` (attr) | `string | undefined` | `-` |  |
 | `path` (attr) | `string | undefined` | `undefined` |  |
 | `root-path` (attr) | `string | undefined` | `undefined` |  |
 | `open-new` (attr) | `boolean` | `false` |  |
@@ -115,6 +176,25 @@ Element for displaying material symbol icons.
 | `rootPath` (prop) | `string | undefined` | `undefined` |  |
 | `openInNewWindow` (prop) | `boolean` | `false` |  |
 | `navigationCallback` (prop) | `NavigationCallback | undefined` | `-` |  |
+
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `dim` | Apply 25% opacity to the icon. |
+| `link` | Make the icon hoverable with a pointer cursor. |
+| `outline` | Apply outlined style (swaps background and color). |
+| `rounded` | Apply a circular border radius (50%). |
+| `roundish` | Apply a small border radius. |
+| `padSmall` | Set small padding. |
+| `padMedium` | Set medium padding. |
+| `themePrimary` | Apply primary theme colors. |
+| `themePrimaryContainer` | Apply primary-container theme colors. |
+| `themeSecondary` | Apply secondary theme colors. |
+| `themeSecondaryContainer` | Apply secondary-container theme colors. |
+| `themeTertiary` | Apply tertiary theme colors. |
+| `themeTertiaryContainer` | Apply tertiary-container theme colors. |
+| `themeError` | Apply error theme colors. |
+| `themeErrorContainer` | Apply error-container theme colors. |
 
 ### `<er-list-item>` (ErListItem)
 **File**: [er-list-item.ts](src/components/er-list-item.ts)
@@ -136,6 +216,11 @@ List item element for displaying interactive items with icons and content.
 | `rootPath` (prop) | `string | undefined` | `undefined` |  |
 | `openInNewWindow` (prop) | `boolean` | `false` |  |
 | `navigationCallback` (prop) | `NavigationCallback | undefined` | `-` |  |
+
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `content` | Style the main text/body container inside the list item. |
 
 ## `src/localization`
 
@@ -176,6 +261,13 @@ In-app replacement for `<a>` links.
 |---|---|
 | *(default)* | Label for the link |
 
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `block` | Set display to block. |
+| `inlineBlock` | Set display to inline-block. |
+| `ellipsis` | Apply text overflow ellipsis and block display. |
+
 ## `src/structure`
 
 ### `<er-bottom-sheet>` (ErBottomSheet)
@@ -207,6 +299,38 @@ Spacer for controlling the spacing between flex elements of the page.
 |---|---|---|---|
 | `size` (attr) | `string` | `'medium'` |  |
 
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `full` | Make the flex container take 100% width. |
+| `inline` | Set display to inline-flex. |
+| `overflowHidden` | Set overflow to hidden. |
+| `gapSmall` | Set small gap spacing. |
+| `gapLarge` | Set large gap spacing. |
+| `gapXlarge` | Set extra large gap spacing. |
+| `flowColumn` | Set flex direction to column. Supports breakpoint suffixes (e.g. flowColumnOnMobile). |
+| `flowRow` | Set flex direction to row. Supports breakpoint suffixes (e.g. flowRowOnMobile). |
+| `wrap` | Enable flex wrapping. Supports breakpoint suffixes (e.g. wrapOnMobile). |
+| `alignFlexStart` | Align items to flex-start. Supports breakpoint suffixes (e.g. alignFlexStartOnMobile). |
+| `alignFlexEnd` | Align items to flex-end. Supports breakpoint suffixes (e.g. alignFlexEndOnMobile). |
+| `alignBaseline` | Align items to baseline. Supports breakpoint suffixes (e.g. alignBaselineOnMobile). |
+| `alignCenter` | Align items to center. Supports breakpoint suffixes (e.g. alignCenterOnMobile). |
+| `alignSpaceBetween` | Align items with space-between. Supports breakpoint suffixes (e.g. alignSpaceBetweenOnMobile). |
+| `alignSpaceAround` | Align items with space-around. Supports breakpoint suffixes (e.g. alignSpaceAroundOnMobile). |
+| `alignSpaceEvenly` | Align items with space-evenly. Supports breakpoint suffixes (e.g. alignSpaceEvenlyOnMobile). |
+| `justifyFlexStart` | Justify content to flex-start. Supports breakpoint suffixes (e.g. justifyFlexStartOnMobile). |
+| `justifyFlexEnd` | Justify content to flex-end. Supports breakpoint suffixes (e.g. justifyFlexEndOnMobile). |
+| `justifyCenter` | Justify content to center. Supports breakpoint suffixes (e.g. justifyCenterOnMobile). |
+| `justifySpaceBetween` | Justify content with space-between. Supports breakpoint suffixes (e.g. justifySpaceBetweenOnMobile). |
+| `justifySpaceAround` | Justify content with space-around. Supports breakpoint suffixes (e.g. justifySpaceAroundOnMobile). |
+| `justifySpaceEvenly` | Justify content with space-evenly. Supports breakpoint suffixes (e.g. justifySpaceEvenlyOnMobile). |
+| `basis33` | Set flex basis to 33.3% for slotted items. Supports breakpoint suffixes (e.g. basis33OnMobile). |
+| `basis50` | Set flex basis to 50% for slotted items. Supports breakpoint suffixes (e.g. basis50OnMobile). |
+| `basis25` | Set flex basis to 25% for slotted items. Supports breakpoint suffixes (e.g. basis25OnMobile). |
+| `basis20` | Set flex basis to 20% for slotted items. Supports breakpoint suffixes (e.g. basis20OnMobile). |
+| `grow` | Set flex grow to 1 on slotted children. |
+| `shrink` | Set flex shrink to 1 on slotted children. |
+
 ### `<er-grid>` (ErGrid)
 **File**: [er-grid.ts](src/structure/er-grid.ts)
 
@@ -216,6 +340,27 @@ Grid for controlling the layout of the page.
 | Name | Description |
 |---|---|
 | *(default)* | Grid contents. |
+
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `gapRowSmall` | Set small row gap. Supports breakpoint suffixes (e.g. gapRowSmallOnMobile). |
+| `gapRowMedium` | Set medium row gap. Supports breakpoint suffixes (e.g. gapRowMediumOnMobile). |
+| `gapRowLarge` | Set large row gap. Supports breakpoint suffixes (e.g. gapRowLargeOnMobile). |
+| `gapRowXlarge` | Set extra large row gap. Supports breakpoint suffixes (e.g. gapRowXlargeOnMobile). |
+| `gapRowXxlarge` | Set double extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxlargeOnMobile). |
+| `gapRowXxxlarge` | Set triple extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxxlargeOnMobile). |
+| `gapColSmall` | Set small column gap. Supports breakpoint suffixes (e.g. gapColSmallOnMobile). |
+| `gapColMedium` | Set medium column gap. Supports breakpoint suffixes (e.g. gapColMediumOnMobile). |
+| `gapColLarge` | Set large column gap. Supports breakpoint suffixes (e.g. gapColLargeOnMobile). |
+| `gapColXlarge` | Set extra large column gap. Supports breakpoint suffixes (e.g. gapColXlargeOnMobile). |
+| `gapColXxlarge` | Set double extra large column gap. Supports breakpoint suffixes (e.g. gapColXxlargeOnMobile). |
+| `gapColXxxlarge` | Set triple extra large column gap. Supports breakpoint suffixes (e.g. gapColXxxlargeOnMobile). |
+| `alignBaseline` | Align items to baseline. Supports breakpoint suffixes (e.g. alignBaselineOnMobile). |
+| `alignEnd` | Align items to end. Supports breakpoint suffixes (e.g. alignEndOnMobile). |
+| `alignCenter` | Align items to center. Supports breakpoint suffixes (e.g. alignCenterOnMobile). |
+| `alignStart` | Align items to start. Supports breakpoint suffixes (e.g. alignStartOnMobile). |
+| `alignSelfStretch` | Set align-self to stretch on grid items. |
 
 ### `<er-grid-item>` (ErGridItem)
 **File**: [er-grid.ts](src/structure/er-grid.ts)

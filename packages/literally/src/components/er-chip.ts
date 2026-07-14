@@ -5,6 +5,22 @@ import { customElement, property } from 'lit/decorators.js';
 
 /**
  * Chip element for displaying info in a stylized way.
+ *
+ * @cssclass alignSelfCenter - Align the chip to the center of the cross axis.
+ * @cssclass justifySelfCenter - Justify the chip to the center of the main axis.
+ * @cssclass justifySelfFlexEnd - Justify the chip to the flex-end.
+ * @cssclass full - Make the chip take the full width of its parent container.
+ * @cssclass center - Center the text inside the chip.
+ * @cssclass primary - Style the chip with the primary theme color.
+ * @cssclass secondary - Style the chip with the secondary outline theme.
+ * @cssclass tertiary - Style the chip with the tertiary text theme.
+ * @cssclass capitalize - Capitalize the text in the chip.
+ * @cssclass wrap - Enable text wrapping for the chip contents.
+ * @cssclass themePrimary - Apply primary theme color.
+ * @cssclass themeSecondary - Apply secondary theme color.
+ * @cssclass themeTertiary - Apply tertiary theme color.
+ * @cssclass themeError - Apply error theme color.
+ * @cssclass link - Make the chip hoverable with a pointer cursor.
  */
 @customElement('er-chip')
 export class ErChip extends NavigationMixin(LitElement) {
@@ -34,15 +50,15 @@ export class ErChip extends NavigationMixin(LitElement) {
         padding: var(--space-xsmall) var(--space-small);
       }
 
-      :host(.align-self-center) {
+      :host(.alignSelfCenter) {
         align-self: center;
       }
 
-      :host(.justify-self-center) {
+      :host(.justifySelfCenter) {
         justify-self: center;
       }
 
-      :host(.justify-self-flex-end) {
+      :host(.justifySelfFlexEnd) {
         justify-self: flex-end;
       }
 
