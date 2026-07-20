@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { LitElement, type PropertyValueMap, html } from 'lit';
+import { LitElement, type PropertyValueMap, html, css } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { routeTrieContext } from './context';
@@ -10,6 +10,11 @@ import { RouteTrie } from './router';
  * Base component for breaking up routing into multiple files.
  */
 export class ERRouteBase extends LitElement {
+  static styles = css`
+    :host {
+      display: none;
+    }
+  `;
   @consume({ context: routeTrieContext, subscribe: true })
   @state()
   routeTrie: RouteTrie<PageRoute> | undefined;
