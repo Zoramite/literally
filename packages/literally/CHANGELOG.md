@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/Zoramite/literally/compare/literally-v3.1.0...literally-v3.1.1) (2026-07-20)
+
+
+### Bug Fixes
+
+* Header fonts were not being correctly applied ([f4f7391](https://github.com/Zoramite/literally/commit/f4f7391b5afd7257469d7defd798a8855eb6459a))
+
 ## [3.1.0](https://github.com/Zoramite/literally/compare/literally-v3.0.0...literally-v3.1.0) (2026-07-20)
 
 
