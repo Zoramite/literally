@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.1.0](https://github.com/Zoramite/literally/compare/literally-v3.0.0...literally-v3.1.0) (2026-07-20)
+
+
+### Features
+
+* Ability to use the router using hash or paths ([60520f7](https://github.com/Zoramite/literally/commit/60520f7aa0af7b720bef41451b7b7647b78e4778))
+* Loading placeholder ([3e28740](https://github.com/Zoramite/literally/commit/3e287409e57a8e14e2e73d3aa9647030a3b2d9af))
+
+
+### Bug Fixes
+
+* Missed classname changes in normalization ([1adac6d](https://github.com/Zoramite/literally/commit/1adac6d6c8e691397a50b451661b9f284c4d202a))
+
 ## [3.0.0](https://github.com/Zoramite/literally/compare/literally-v2.6.0...literally-v3.0.0) (2026-07-14)
 
 
