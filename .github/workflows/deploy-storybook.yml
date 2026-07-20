@@ -39,6 +39,9 @@ jobs:
       - name: Build packages
         run: npm run build
 
+      - name: Generate Custom Elements Manifest
+        run: npm run docs:components
+
       - name: Build Storybook
         run: npm run build:storybook
 
