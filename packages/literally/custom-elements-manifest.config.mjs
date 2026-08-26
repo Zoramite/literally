@@ -6,7 +6,7 @@ export default {
   plugins: [
     {
       name: 'css-classes-plugin',
-      analyzePhase({ ts, node, moduleDoc, context }) {
+      analyzePhase({ ts, node, _moduleDoc, _context }) {
         if (node.kind === ts.SyntaxKind.ClassDeclaration) {
           const className = node.name?.getText();
           if (!className) return;
@@ -23,7 +23,7 @@ export default {
             while ((match = regex.exec(jsDocText)) !== null) {
               cssClasses.push({
                 name: match[1],
-                description: match[2] ? match[2].trim() : ''
+                description: match[2] ? match[2].trim() : '',
               });
             }
 
@@ -33,13 +33,13 @@ export default {
           }
         }
       },
-      moduleLinkPhase({ ts, moduleDoc, context }) {
+      moduleLinkPhase({ _ts, moduleDoc, _context }) {
         for (const declaration of moduleDoc.declarations || []) {
           if (cssClassesMap.has(declaration.name)) {
             declaration.cssClasses = cssClassesMap.get(declaration.name);
           }
         }
-      }
-    }
-  ]
+      },
+    },
+  ],
 };

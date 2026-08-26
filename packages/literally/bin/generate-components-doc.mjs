@@ -37,7 +37,9 @@ if (components.length === 0) {
 
   for (const [dir, comps] of Object.entries(groups).sort()) {
     md += `## \`${dir}\`\n\n`;
-    for (const comp of comps.sort((a, b) => a.tagName.localeCompare(b.tagName))) {
+    for (const comp of comps.sort((a, b) =>
+      a.tagName.localeCompare(b.tagName),
+    )) {
       md += `### \`<${comp.tagName}>\` (${comp.name})\n`;
       md += `**File**: [${path.basename(comp.modulePath)}](${comp.modulePath})\n\n`;
       if (comp.description) {
@@ -47,7 +49,16 @@ if (components.length === 0) {
       }
 
       // Attributes / Properties
-      const props = comp.attributes || comp.members?.filter(m => m.kind === 'field' && !m.static && m.privacy !== 'private' && m.privacy !== 'protected') || [];
+      const props =
+        comp.attributes ||
+        comp.members?.filter(
+          (m) =>
+            m.kind === 'field' &&
+            !m.static &&
+            m.privacy !== 'private' &&
+            m.privacy !== 'protected',
+        ) ||
+        [];
       if (props.length > 0) {
         md += `#### Properties & Attributes\n`;
         md += `| Name | Type | Default | Description |\n`;
@@ -62,7 +73,12 @@ if (components.length === 0) {
           md += `| \`${attr.name}\` (attr) | \`${type}\` | \`${defaultVal}\` | ${desc} |\n`;
         }
         for (const prop of comp.members || []) {
-          if (prop.kind === 'field' && !prop.static && prop.privacy !== 'private' && prop.privacy !== 'protected') {
+          if (
+            prop.kind === 'field' &&
+            !prop.static &&
+            prop.privacy !== 'private' &&
+            prop.privacy !== 'protected'
+          ) {
             if (seen.has(prop.name)) continue;
             const type = prop.type?.text || 'any';
             const defaultVal = prop.default || '-';

@@ -222,6 +222,39 @@ List item element for displaying interactive items with icons and content.
 |---|---|
 | `content` | Style the main text/body container inside the list item. |
 
+### `<er-loading>` (ErLoading)
+**File**: [er-loading.ts](src/components/er-loading.ts)
+
+Loading placeholder/skeleton component with fade animation and theme variable support.
+
+#### Properties & Attributes
+| Name | Type | Default | Description |
+|---|---|---|---|
+| `width` (attr) | `string | undefined` | `-` |  |
+| `animation` (attr) | `string | undefined` | `-` |  |
+
+#### CSS Classes
+| Name | Description |
+|---|---|
+| `themeSurfaceVariant` | Sets surface-variant theme colors. |
+| `themeSurfaceContainer` | Sets surface-container theme colors. |
+| `themePrimary` | Sets primary theme colors. |
+| `themePrimaryContainer` | Sets primary-container theme colors. |
+| `themeSecondary` | Sets secondary theme colors. |
+| `themeSecondaryContainer` | Sets secondary-container theme colors. |
+| `themeTertiary` | Sets tertiary theme colors. |
+| `themeTertiaryContainer` | Sets tertiary-container theme colors. |
+| `themeError` | Sets error theme colors. |
+| `themeErrorContainer` | Sets error-container theme colors. |
+| `w25` | Sets width to 25%. |
+| `w33` | Sets width to 33.333%. |
+| `w50` | Sets width to 50%. |
+| `w75` | Sets width to 75%. |
+| `w100` | Sets width to 100%. |
+| `pulse` | Forces the pulse animation style. |
+| `glow` | Forces the glow animation style. |
+| `none` | Disables animation. |
+
 ## `src/localization`
 
 ### `<er-t>` (ERT)
@@ -371,6 +404,19 @@ Grid item for displaying content inside the grid.
 | Name | Description |
 |---|---|
 | *(default)* | Grid item contents. |
+
+### `<er-grid-overlay>` (ErGridOverlay)
+**File**: [er-grid-overlay.ts](src/structure/er-grid-overlay.ts)
+
+Dev grid overlay component for aligning and debugging layouts on page.
+
+Toggles a translucent grid matching the er-grid structure (4 cols mobile, 8 cols tablet, 12 cols desktop).
+Can be toggled via keyboard shortcut Shift+G or the `visible` property.
+
+#### Properties & Attributes
+| Name | Type | Default | Description |
+|---|---|---|---|
+| `visible` (attr) | `boolean` | `false` |  |
 
 ### `<er-spacer>` (ErSpacer)
 **File**: [er-spacer.ts](src/structure/er-spacer.ts)
