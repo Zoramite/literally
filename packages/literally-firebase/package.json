@@ -27,9 +27,9 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@littoral/literally": "^3.0.0",
+    "@littoral/literally": "^3.1.0",
     "lit": "^3.3.3",
-    "firebase": "^12.16.0"
+    "firebase": "^12.18.0"
   },
   "customElements": "custom-elements.json"
 }
