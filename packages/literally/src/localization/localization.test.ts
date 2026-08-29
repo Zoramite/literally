@@ -291,4 +291,50 @@ strings:
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
   });
+
+  it('should support custom named formatters in config and template interpolation', async () => {
+    const customConfigLocales: Record<string, any> = {
+      en: {
+        config: {
+          locale: 'en-US',
+          formats: {
+            number: {
+              style: 'decimal',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            },
+            integer: {
+              style: 'decimal',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            },
+            compact_currency: {
+              style: 'currency',
+              currency: 'USD',
+              notation: 'compact',
+            },
+          },
+        },
+        strings: {
+          items_count: 'You have {count, integer} items.',
+          compact_val: 'Value is {amount, compact_currency}.',
+        },
+      },
+    };
+    const loader = vi
+      .fn()
+      .mockImplementation(
+        async (locale: string) => customConfigLocales[locale],
+      );
+    const manager = new LocalizationManager({ loader });
+    const localization = await manager.load('en');
+
+    expect(localization.formatNumber(42, 'integer')).toBe('42');
+    expect(localization.t('items_count', { count: 42 })).toBe(
+      'You have 42 items.',
+    );
+    expect(localization.t('compact_val', { amount: 1500000 })).toBe(
+      'Value is $1.5M.',
+    );
+  });
 });

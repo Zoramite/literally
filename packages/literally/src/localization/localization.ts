@@ -8,17 +8,13 @@ export interface Localization {
   t: (key: string, variables?: Record<string, string | number>) => string;
   formatNumber: (
     value: number,
-    type?: 'number' | 'currency' | 'percent',
+    type?: 'number' | 'currency' | 'percent' | (string & {}),
   ) => string;
 }
 
 export interface LocalizationConfig {
   locale: string;
-  formats: {
-    number: Record<string, any>;
-    currency: Record<string, any>;
-    percent: Record<string, any>;
-  };
+  formats: Record<string, Record<string, any>>;
 }
 
 /**
@@ -156,9 +152,7 @@ export class LocalizationManager {
 
     // Cache Intl.NumberFormat objects
     const formatters: Record<string, Intl.NumberFormat> = {};
-    const getFormatter = (
-      type: 'number' | 'currency' | 'percent',
-    ): Intl.NumberFormat => {
+    const getFormatter = (type: string): Intl.NumberFormat => {
       if (!formatters[type]) {
         const configOpts = this.activeConfig.formats?.[type] || {};
         formatters[type] = new Intl.NumberFormat(localeTag, configOpts);
@@ -166,10 +160,7 @@ export class LocalizationManager {
       return formatters[type];
     };
 
-    const formatNumber = (
-      value: number,
-      type: 'number' | 'currency' | 'percent' = 'number',
-    ): string => {
+    const formatNumber = (value: number, type: string = 'number'): string => {
       try {
         return getFormatter(type).format(value);
       } catch (err) {
@@ -201,7 +192,7 @@ export class LocalizationManager {
         return template;
       }
 
-      // Replace variables with support for types, e.g. {amount, currency}
+      // Replace variables with support for types, e.g. {amount, currency}, {count, integer}
       return template.replace(
         /\{([a-zA-Z0-9_]+)(?:\s*,\s*([a-zA-Z0-9_]+))?\}/g,
         (match, name, formatType) => {
@@ -211,11 +202,7 @@ export class LocalizationManager {
 
           const value = variables[name];
           if (typeof value === 'number') {
-            if (
-              formatType === 'currency' ||
-              formatType === 'percent' ||
-              formatType === 'number'
-            ) {
+            if (formatType) {
               return formatNumber(value, formatType);
             }
             // Default formatting if it's a number but no specific formatting parameter is passed
