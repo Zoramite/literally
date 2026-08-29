@@ -39,9 +39,14 @@ export function parseYaml(yamlText: string): any {
     // Check if value is a string with quotes or other primitive type
     let val: any = valStr;
     if (valStr.startsWith('"') && valStr.endsWith('"')) {
-      val = valStr.slice(1, -1);
+      val = valStr
+        .slice(1, -1)
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+        .replace(/\\n/g, '\n')
+        .replace(/\\t/g, '\t');
     } else if (valStr.startsWith("'") && valStr.endsWith("'")) {
-      val = valStr.slice(1, -1);
+      val = valStr.slice(1, -1).replace(/''/g, "'");
     } else if (valStr === 'true') {
       val = true;
     } else if (valStr === 'false') {

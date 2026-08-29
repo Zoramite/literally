@@ -88,5 +88,16 @@ key3: 'value # with single hash'
         'key-two': 'value2',
       });
     });
+
+    test('unescapes escape sequences in double-quoted strings', () => {
+      const yaml = `
+msg: "No debts added yet. Click \\"+ Add a Debt\\" above to get started!"
+escapedSlash: "C:\\\\path\\\\file"
+`;
+      expect(parseYaml(yaml)).toEqual({
+        msg: 'No debts added yet. Click "+ Add a Debt" above to get started!',
+        escapedSlash: 'C:\\path\\file',
+      });
+    });
   });
 });
