@@ -98,7 +98,11 @@ export class LocalizationManager {
       } else {
         promise = (async () => {
           try {
-            const response = await fetch(`${this.localePath}/${locale}.yaml`);
+            const cacheBuster =
+              Math.floor(Date.now() / (5 * 60 * 1000)) * (5 * 60 * 1000);
+            const response = await fetch(
+              `${this.localePath}/${locale}.yaml?t=${cacheBuster}`,
+            );
             if (!response.ok) {
               throw new Error(
                 `Failed to fetch ${this.localePath}/${locale}.yaml: ${response.statusText}`,
