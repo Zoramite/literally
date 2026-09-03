@@ -170,7 +170,7 @@ export class RouteTrieNode<Type> {
     }
 
     // Go deeper into the trie.
-    this.nodes[currentPart].add(remainder, value);
+    this.nodes[currentPart].add(remainder, value, allowOverwrite);
   }
 
   /**

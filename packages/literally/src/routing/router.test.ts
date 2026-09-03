@@ -152,3 +152,18 @@ describe('query parameter stripping', () => {
     expect(match?.params!['id']).toBe('abc');
   });
 });
+
+describe('route setting and overwriting', () => {
+  test.concurrent('allows overwriting nested routes using set', async ({
+    expect,
+  }) => {
+    const trie = new RouteTrie();
+
+    trie.set('/fleet/service', 'first-value');
+    trie.set('/fleet/service', 'second-value');
+    trie.set('/fleet/service/', 'third-value');
+
+    const match = trie.match('/fleet/service');
+    expect(match?.value).toBe('third-value');
+  });
+});
