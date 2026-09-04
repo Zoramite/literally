@@ -106,7 +106,13 @@ export class ErCard extends NavigationMixin(LitElement) {
 
       :host(.outlined) {
         border: 1px solid
-          var(--er-card-border-color, var(--md-sys-color-on-surface));
+          var(
+            --er-card-border-color,
+            var(
+              --md-sys-color-outline-variant,
+              var(--md-sys-color-outline, var(--md-sys-color-on-surface))
+            )
+          );
       }
 
       :host(.themeSurfaceVariant) {
@@ -121,6 +127,16 @@ export class ErCard extends NavigationMixin(LitElement) {
 
       :host(.themeSurfaceContainer) {
         --er-card-background-color: var(--md-sys-color-surface-container);
+        --er-card-background-color-hover: color-mix(
+          in srgb,
+          var(--er-card-background-color) 80%,
+          transparent
+        );
+        --er-card-color: var(--md-sys-color-on-surface);
+      }
+
+      :host(.themeSurfaceContainerLow) {
+        --er-card-background-color: var(--md-sys-color-surface-container-low);
         --er-card-background-color-hover: color-mix(
           in srgb,
           var(--er-card-background-color) 80%,
