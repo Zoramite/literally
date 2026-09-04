@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.2.0...literally-firebase-v0.3.0) (2026-09-04)
+
+
+### Features
+
+* Grid overlay component ([cb36886](https://github.com/Zoramite/literally/commit/cb3688651c26ee324e0527ff3a44b66aad8c5717))
+
 ## [0.2.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.1.0...literally-firebase-v0.2.0) (2026-06-23)
 
 ### Features
