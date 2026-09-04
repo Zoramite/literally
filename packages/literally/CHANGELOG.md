@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.2.0](https://github.com/Zoramite/literally/compare/literally-v3.1.0...literally-v3.2.0) (2026-09-04)
+
+
+### Features
+
+* add design token aliases mapping --er-color variables to --md-sys-color tokens ([75c5bbf](https://github.com/Zoramite/literally/commit/75c5bbf2347db880b5034797bd73a1655ce4eee2))
+* enable overwriting of existing routes in the router trie ([fd40767](https://github.com/Zoramite/literally/commit/fd4076765bf096ee13c1bbf21013252f7a29c633))
+* enable support for arbitrary custom number formatters in localization configuration and templates ([7f5cd47](https://github.com/Zoramite/literally/commit/7f5cd47a50a1c6a78640e845ced11d24a918dae4))
+* Grid overlay component ([cb36886](https://github.com/Zoramite/literally/commit/cb3688651c26ee324e0527ff3a44b66aad8c5717))
+* implement escape sequence unescaping for quoted YAML strings ([8e84238](https://github.com/Zoramite/literally/commit/8e84238ef7f9b364e55d37bcd0246e1467f158d6))
+* update er-card border fallback chain and add themeSurfaceContainerLow style variant ([ca31515](https://github.com/Zoramite/literally/commit/ca31515a5e1bc28f83f64345282f11a37a8262f9))
+
+
+### Bug Fixes
+
+* append 5-minute interval timestamp to locale fetch requests to bypass caching ([3fc57a6](https://github.com/Zoramite/literally/commit/3fc57a6d4955ce70e6a68c1d254e049f63b696a3))
+* Header fonts were not being correctly applied ([f4f7391](https://github.com/Zoramite/literally/commit/f4f7391b5afd7257469d7defd798a8855eb6459a))
+
 ## [3.1.0](https://github.com/Zoramite/literally/compare/literally-v3.0.0...literally-v3.1.0) (2026-07-20)
 
 ### Features
