@@ -199,6 +199,31 @@ export const ThemeMixin = <T extends Constructor<LitElement>>(
 
           --title-font-optical-sizing: auto;
           --title-font-weight: 700;
+
+          /* Design token aliases: --er-color-* mapped to --md-sys-color-* */
+          --er-color-primary: var(--md-sys-color-primary);
+          --er-color-on-primary: var(--md-sys-color-on-primary);
+          --er-color-surface: var(--md-sys-color-surface);
+          --er-color-on-surface: var(--md-sys-color-on-surface);
+          --er-color-surface-variant: var(--md-sys-color-surface-variant);
+          --er-color-on-surface-variant: var(--md-sys-color-on-surface-variant);
+          --er-color-outline: var(--md-sys-color-outline);
+          --er-color-outline-variant: var(--md-sys-color-outline-variant);
+          --er-color-background: var(--md-sys-color-background);
+          --er-color-on-background: var(--md-sys-color-on-background);
+          --er-color-surface-container-lowest: var(
+            --md-sys-color-surface-container-lowest
+          );
+          --er-color-surface-container-low: var(
+            --md-sys-color-surface-container-low
+          );
+          --er-color-surface-container: var(--md-sys-color-surface-container);
+          --er-color-surface-container-high: var(
+            --md-sys-color-surface-container-high
+          );
+          --er-color-surface-container-highest: var(
+            --md-sys-color-surface-container-highest
+          );
         }
 
         @media (prefers-color-scheme: light) {
