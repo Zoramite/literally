@@ -13,6 +13,8 @@ name: release-please
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -29,7 +31,11 @@ jobs:
         if: ${{ steps.release.outputs.releases_created }}
       - name: Publish @littoral/literally
         run: npm publish -w packages/literally
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ steps.release.outputs['packages/literally--release_created'] }}
       - name: Publish @littoral/literally-firebase
         run: npm publish -w packages/literally-firebase
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ steps.release.outputs['packages/literally-firebase--release_created'] }}
