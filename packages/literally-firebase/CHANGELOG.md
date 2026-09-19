@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.3.0...literally-firebase-v0.4.0) (2026-09-19)
+
+
+### Features
+
+* add Firebase authentication module with AuthController and sign-in helpers ([7755e00](https://github.com/Zoramite/literally/commit/7755e00bcb2dfa859efda54dd64bb5ab5c4438c2))
+* add Firestore data cleaning, date handling, and converter utilities with tests ([5553191](https://github.com/Zoramite/literally/commit/55531913f436620f9928ac61fccf62106bf8a537))
+* add Firestore document and query reactive controllers with tests ([9936889](https://github.com/Zoramite/literally/commit/99368895668dc6b0fd43d79ab2d370db4fcaf042))
+
 ## [0.3.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.2.0...literally-firebase-v0.3.0) (2026-09-04)
 
 ### Features

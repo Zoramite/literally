@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/Zoramite/literally/compare/literally-v3.2.0...literally-v3.3.0) (2026-09-19)
+
+
+### Features
+
+* add surface and container theme options to components and stories ([2af8ead](https://github.com/Zoramite/literally/commit/2af8ead0ae0b9b752c2069ad438d3fb578149700))
+
 ## [3.2.0](https://github.com/Zoramite/literally/compare/literally-v3.1.0...literally-v3.2.0) (2026-09-04)
 
 ### Features
