@@ -19,6 +19,90 @@ npm install @littoral/literally-firebase @littoral/literally lit firebase
 
 ## Features
 
+### Reactive Firestore Controllers (Recommended)
+
+Lit Reactive Controllers provide declarative document and query subscriptions without deep mixin inheritance hierarchies. They automatically manage connection lifecycles (`hostConnected`/`hostDisconnected`), dynamic reference updates, and reactive states (`data`, `loading`, `error`, `exists`, `count`, `isFromCache`, `hasPendingWrites`).
+
+#### `FirestoreDocController`
+
+Subscribes to a single Firestore document. Supports static `DocumentReference` objects or reactive getter functions that re-evaluate when component properties change.
+
+```typescript
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { doc, getFirestore } from 'firebase/firestore';
+import { FirestoreDocController } from '@littoral/literally-firebase/firestore';
+import { userConverter, type UserProfile } from './models';
+
+@customElement('user-profile-card')
+export class UserProfileCard extends LitElement {
+  @property() userId!: string;
+
+  private user = new FirestoreDocController<UserProfile>(this, {
+    ref: () =>
+      this.userId
+        ? doc(getFirestore(), 'users', this.userId).withConverter(userConverter)
+        : null,
+  });
+
+  render() {
+    if (this.user.loading) return html`<p>Loading user data...</p>`;
+    if (this.user.error) return html`<p>Error: ${this.user.error.message}</p>`;
+    if (!this.user.exists) return html`<p>User not found.</p>`;
+
+    return html`
+      <div>
+        <h3>${this.user.data?.name}</h3>
+        <p>${this.user.data?.email}</p>
+        ${this.user.isFromCache ? html`<small>(offline cache)</small>` : ''}
+      </div>
+    `;
+  }
+}
+```
+
+#### `FirestoreQueryController`
+
+Subscribes to Firestore collections or queries with automatic mapping to typed arrays.
+
+```typescript
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { collection, query, where, getFirestore } from 'firebase/firestore';
+import { FirestoreQueryController } from '@littoral/literally-firebase/firestore';
+import { taskConverter, type Task } from './models';
+
+@customElement('task-list')
+export class TaskList extends LitElement {
+  @property({ type: Boolean }) completed = false;
+
+  private tasks = new FirestoreQueryController<Task>(this, {
+    query: () => {
+      const col = collection(getFirestore(), 'tasks').withConverter(
+        taskConverter,
+      );
+      return query(col, where('done', '==', this.completed));
+    },
+  });
+
+  render() {
+    if (this.tasks.loading) return html`<p>Loading tasks...</p>`;
+    if (this.tasks.error)
+      return html`<p>Error: ${this.tasks.error.message}</p>`;
+    if (this.tasks.empty) return html`<p>No tasks found.</p>`;
+
+    return html`
+      <p>Count: ${this.tasks.count}</p>
+      <ul>
+        ${this.tasks.data.map((task) => html`<li>${task.title}</li>`)}
+      </ul>
+    `;
+  }
+}
+```
+
+---
+
 ### `FirestoreListenerMixin`
 
 A LitElement mixin that simplifies managing Firebase Firestore real-time snapshot listeners (`onSnapshot`).
