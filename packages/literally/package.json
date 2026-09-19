@@ -3,7 +3,11 @@
   "version": "3.2.0",
   "description": "Lit based structural web components for app development.",
   "exports": {
-    "./*": "./src/*.ts"
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
   },
   "bin": {
     "generate-components-doc": "./bin/generate-components-doc.mjs"
@@ -32,5 +36,12 @@
     "@lit/context": "^1.1.6",
     "lit": "^3.3.3"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "files": [
+    "dist",
+    "bin",
+    "custom-elements.json",
+    "README.md",
+    "CHANGELOG.md"
+  ]
 }

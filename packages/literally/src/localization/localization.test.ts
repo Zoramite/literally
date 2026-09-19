@@ -159,7 +159,9 @@ strings:
     const manager = new LocalizationManager();
     const localization = await manager.load('en');
 
-    expect(fetchMock).toHaveBeenCalledWith('/locales/en.yaml');
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringMatching(/^\/locales\/en\.yaml\?t=\d+$/),
+    );
     expect(localization.t('hello')).toBe('Hello World');
 
     vi.unstubAllGlobals();

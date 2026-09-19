@@ -3,7 +3,11 @@
   "version": "0.3.0",
   "description": "Firebase utilities and integration for littoral components.",
   "exports": {
-    "./*": "./src/*.ts"
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
   },
   "scripts": {
     "docs:components": "cem analyze --litelement --globs \"src/**/*.ts\" --exclude \"src/**/*.test.ts\" --exclude \"src/**/*.stories.ts\" && node ../literally/bin/generate-components-doc.mjs"
@@ -31,5 +35,11 @@
     "lit": "^3.3.3",
     "firebase": "^12.18.0"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "files": [
+    "dist",
+    "custom-elements.json",
+    "README.md",
+    "CHANGELOG.md"
+  ]
 }
