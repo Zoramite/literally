@@ -4,64 +4,7 @@ This roadmap outlines planned features, architectural improvements, and ergonomi
 
 ---
 
-## 1. Reactive Authentication Controller & Helpers
-
-### Motivation
-
-Authentication handling in client apps often reinvents token resolution, custom claims inspection, and mobile Safari/popup blocking workarounds (e.g. `auth/popup-blocked` fallback to `signInWithRedirect`).
-
-### Planned Features
-
-- **`AuthController`**: A Reactive Controller that connects to Firebase `Auth` to provide component-level reactivity:
-  - `user: User | null` — Currently signed-in user.
-  - `claims: Record<string, any>` — Extracted custom claims from the ID token.
-  - `loading: boolean` — Initial auth state / token refresh resolution.
-  - `isLoggedIn: boolean` — Convenience boolean.
-  - `hasClaim(claim: string, value?: any): boolean` — Role and permission checking helper.
-- **`signInWithGoogleWithFallback(auth, provider?, options?)`**: Helper function that attempts `signInWithPopup` and automatically falls back to `signInWithRedirect` when popups are blocked on iOS/mobile browsers.
-- **Sign-Out Events & Lifecycle**: Standardized `signOutUser(auth)` dispatcher.
-
-### Proposed API Example
-
-```typescript
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import {
-  AuthController,
-  signInWithGoogleWithFallback,
-} from '@littoral/literally-firebase/auth';
-import { auth } from '../firebase';
-
-@customElement('auth-status-bar')
-export class AuthStatusBar extends LitElement {
-  private authCtrl = new AuthController(this, { auth });
-
-  private handleLogin = async () => {
-    await signInWithGoogleWithFallback(auth);
-  };
-
-  render() {
-    if (this.authCtrl.loading) {
-      return html`<er-spacer>Authenticating...</er-spacer>`;
-    }
-
-    if (!this.authCtrl.isLoggedIn) {
-      return html`<er-button @click=${this.handleLogin}>Sign In</er-button>`;
-    }
-
-    return html`
-      <div>
-        <span>Welcome, ${this.authCtrl.user?.displayName}</span>
-        ${this.authCtrl.hasClaim('admin') ? html`<er-chip label="Admin"></er-chip>` : ''}
-      </div>
-    `;
-  }
-}
-```
-
----
-
-## 2. Dependency Injection via `@lit/context`
+## 1. Dependency Injection via `@lit/context`
 
 ### Motivation
 
@@ -81,7 +24,7 @@ Client apps frequently import Firebase instances as module-level singletons (`im
 
 ---
 
-## 3. Cloud Functions Integration & `ProcessingMixin` Bridge
+## 2. Cloud Functions Integration & `ProcessingMixin` Bridge
 
 ### Motivation
 
@@ -112,7 +55,7 @@ const result = await callFunctionWithProcessing<
 
 ---
 
-## 4. Firebase Storage Reactive Controller
+## 3. Firebase Storage Reactive Controller
 
 ### Motivation
 
@@ -133,7 +76,7 @@ Media and file uploads (e.g. photo cards, profile avatars, documents) require ma
 
 ---
 
-## 5. Testing & Emulation Harness (`/testing`)
+## 4. Testing & Emulation Harness (`/testing`)
 
 ### Motivation
 
@@ -153,5 +96,5 @@ Testing components or services against Firestore requires significant boilerplat
 | Milestone                                | Features Included                                                                                                                                                         | Status           | Target Goal                                                                                         |
 | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------- | :-------------------------------------------------------------------------------------------------- |
 | **Phase 1: Reactivity & Data Safety**    | • `cleanFirestoreData` & `createConverter`<br>• Date / Timestamp helper utilities (`toDate`, `toTimestamp`)<br>• `FirestoreDocController`<br>• `FirestoreQueryController` | ✅ **Completed** | Eliminate converter boilerplate and replace mixin-based listeners with clean, reactive controllers. |
-| **Phase 2: Auth & Context**              | • `AuthController`<br>• `signInWithGoogleWithFallback`<br>• `@lit/context` definitions (`firestoreContext`, `authContext`)<br>• Controller context auto-discovery         | 📋 Planned       | Standardize authentication, claims, and dependency injection across apps.                           |
+| **Phase 2: Auth & Context**              | • `AuthController`<br>• `signInWithGoogleWithFallback`<br>• `@lit/context` definitions (`firestoreContext`, `authContext`)<br>• Controller context auto-discovery         | 🔄 In Progress   | Standardize authentication, claims, and dependency injection across apps.                           |
 | **Phase 3: Extended Services & Testing** | • `ProcessingMixin` Cloud Functions caller<br>• `StorageUploadController`<br>• `@littoral/literally-firebase/testing` utilities                                           | 📋 Planned       | Streamline file uploads, backend RPC invocations, and unit testing workflows.                       |

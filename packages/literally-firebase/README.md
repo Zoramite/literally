@@ -230,6 +230,66 @@ const date = toDate(snapshot.get('createdOn')); // Date from Timestamp, ISO stri
 const timestamp = toTimestamp(new Date()); // Firestore Timestamp from Date or string
 ```
 
+---
+
+### Authentication (`@littoral/literally-firebase/auth`)
+
+Reactive controller and helper functions for Firebase Authentication.
+
+#### `AuthController`
+
+A Reactive Controller tracking `user`, custom claims, and authentication loading state with automatic `onIdTokenChanged` listener management.
+
+```typescript
+import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { getAuth } from 'firebase/auth';
+import {
+  AuthController,
+  signInWithGoogleWithFallback,
+} from '@littoral/literally-firebase/auth';
+
+@customElement('user-menu')
+export class UserMenu extends LitElement {
+  private auth = new AuthController(this, { auth: getAuth() });
+
+  private handleSignIn = async () => {
+    await signInWithGoogleWithFallback(getAuth());
+  };
+
+  render() {
+    if (this.auth.loading) return html`<p>Loading user...</p>`;
+
+    if (!this.auth.isLoggedIn) {
+      return html`<button @click=${this.handleSignIn}>
+        Sign In with Google
+      </button>`;
+    }
+
+    return html`
+      <div>
+        <span>Welcome, ${this.auth.displayName}</span>
+        ${this.auth.hasClaim('admin') ? html`<span class="badge">Admin</span>` : ''}
+        <button @click=${() => this.auth.signOut()}>Sign Out</button>
+      </div>
+    `;
+  }
+}
+```
+
+#### `signInWithGoogleWithFallback`
+
+Attempts popup sign-in, automatically falling back to `signInWithRedirect` if popup blockers intercept the request on mobile Safari or iOS devices.
+
+```typescript
+import { getAuth } from 'firebase/auth';
+import { signInWithGoogleWithFallback } from '@littoral/literally-firebase/auth';
+
+await signInWithGoogleWithFallback(getAuth());
+```
+
+---
+
 ## Roadmap
 
 See [ROADMAP.md](./ROADMAP.md) for planned features, reactive controllers, converter enhancements, and testing utilities.
