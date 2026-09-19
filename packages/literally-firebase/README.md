@@ -165,36 +165,70 @@ export class UserProfileCard extends FirestoreListenerMixin(LitElement) {
 
 ---
 
-### Type-Safe Firestore Converters (`FBConverter<Type>`)
+---
 
-`FBConverter<Type>` defines the Firestore data converter interface for strongly typed reads and writes:
+### Converter & Serialization Toolkit
+
+`@littoral/literally-firebase/firestore` provides utilities to create type-safe converters, eliminate runtime `undefined` field errors, and streamline `Date` <-> `Timestamp` conversions.
+
+#### `createConverter<T>()`
+
+A factory function creating an `FBConverter<T>` (compatible with `withConverter()`) with automated document ID injection, date conversion, and undefined property removal.
 
 ```typescript
-import { type FBConverter } from '@littoral/literally-firebase/firestore/converter';
+import { createConverter } from '@littoral/literally-firebase/firestore';
 
-export interface UserProfile {
+export interface CampInfo {
   id: string;
   name: string;
-  email: string;
+  startOn: Date;
+  endOn: Date;
+  notes?: string;
+  meta?: { lastModified?: Date };
 }
 
-export const userProfileConverter: FBConverter<UserProfile> = {
-  toFirestore: (user: UserProfile) => ({
-    name: user.name,
-    email: user.email,
-  }),
-  fromFirestore: (snapshot, options) => {
-    const data = snapshot.data(options);
-    return {
-      id: snapshot.id,
-      name: data.name,
-      email: data.email,
-    };
-  },
-};
+export const campConverter = createConverter<CampInfo>({
+  idField: 'id', // Injects snapshot.id on read (default: 'id')
+  dateFields: ['startOn', 'endOn', 'meta.lastModified'], // Converts Date <-> Timestamp automatically
+  cleanUndefined: true, // Strips undefined fields before writing (default: true)
+});
 ```
 
----
+#### `cleanFirestoreData(data, options?)`
+
+Recursively removes `undefined` properties from an object or array before sending it to Firestore (e.g. via `setDoc` or `updateDoc`), preventing `Unsupported field value: undefined` crashes.
+
+Preserves Firestore types (`Timestamp`, `FieldValue`, `DocumentReference`, `GeoPoint`, `Bytes`) and native `Date` instances intact.
+
+```typescript
+import {
+  updateDoc,
+  doc,
+  serverTimestamp,
+  getFirestore,
+} from 'firebase/firestore';
+import { cleanFirestoreData } from '@littoral/literally-firebase/firestore';
+
+const db = getFirestore();
+const campRef = doc(db, 'camps', 'camp-123');
+
+await updateDoc(
+  campRef,
+  cleanFirestoreData({
+    notes: userNote || undefined, // undefined values safely stripped
+    updatedAt: serverTimestamp(), // FieldValue sentinels preserved
+  }),
+);
+```
+
+#### Date Utilities: `toDate` & `toTimestamp`
+
+```typescript
+import { toDate, toTimestamp } from '@littoral/literally-firebase/firestore';
+
+const date = toDate(snapshot.get('createdOn')); // Date from Timestamp, ISO string, or number
+const timestamp = toTimestamp(new Date()); // Firestore Timestamp from Date or string
+```
 
 ## Roadmap
 
