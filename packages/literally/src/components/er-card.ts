@@ -10,6 +10,7 @@ import { customElement, property } from 'lit/decorators.js';
  * @cssclass fullHeight - Sets height to 100%.
  * @cssclass hoverEffect - Applies elevation/transform hover transition.
  * @cssclass outlined - Applies a 1px border.
+ * @cssclass themeSurface - Sets surface theme colors.
  * @cssclass themeSurfaceVariant - Sets surface-variant theme colors.
  * @cssclass themeSurfaceContainer - Sets surface-container theme colors.
  * @cssclass themePrimary - Sets primary theme colors.
@@ -113,6 +114,16 @@ export class ErCard extends NavigationMixin(LitElement) {
               var(--md-sys-color-outline, var(--md-sys-color-on-surface))
             )
           );
+      }
+
+      :host(.themeSurface) {
+        --er-card-background-color: var(--md-sys-color-surface);
+        --er-card-background-color-hover: color-mix(
+          in srgb,
+          var(--er-card-background-color) 80%,
+          transparent
+        );
+        --er-card-color: var(--md-sys-color-on-surface);
       }
 
       :host(.themeSurfaceVariant) {

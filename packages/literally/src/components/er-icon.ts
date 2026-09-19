@@ -22,6 +22,9 @@ import { contrast, hexToRgb } from '../utils/color';
  * @cssclass themeTertiaryContainer - Apply tertiary-container theme colors.
  * @cssclass themeError - Apply error theme colors.
  * @cssclass themeErrorContainer - Apply error-container theme colors.
+ * @cssclass themeSurface - Apply surface theme colors.
+ * @cssclass themeSurfaceVariant - Apply surface-variant theme colors.
+ * @cssclass themeSurfaceContainer - Apply surface-container theme colors.
  */
 @customElement('er-icon')
 export class ErIcon extends NavigationMixin(LitElement) {
@@ -132,6 +135,21 @@ export class ErIcon extends NavigationMixin(LitElement) {
       :host(.themeErrorContainer) {
         --color-default: var(--md-sys-color-error-container);
         --on-color-default: var(--md-sys-color-on-error-container);
+      }
+
+      :host(.themeSurface) {
+        --color-default: var(--md-sys-color-surface);
+        --on-color-default: var(--md-sys-color-on-surface);
+      }
+
+      :host(.themeSurfaceVariant) {
+        --color-default: var(--md-sys-color-surface-variant);
+        --on-color-default: var(--md-sys-color-on-surface-variant);
+      }
+
+      :host(.themeSurfaceContainer) {
+        --color-default: var(--md-sys-color-surface-container);
+        --on-color-default: var(--md-sys-color-on-surface);
       }
 
       .material-symbols-outlined {

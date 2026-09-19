@@ -17,9 +17,17 @@ import { customElement, property } from 'lit/decorators.js';
  * @cssclass capitalize - Capitalize the text in the chip.
  * @cssclass wrap - Enable text wrapping for the chip contents.
  * @cssclass themePrimary - Apply primary theme color.
+ * @cssclass themePrimaryContainer - Apply primary-container theme color.
  * @cssclass themeSecondary - Apply secondary theme color.
+ * @cssclass themeSecondaryContainer - Apply secondary-container theme color.
  * @cssclass themeTertiary - Apply tertiary theme color.
+ * @cssclass themeTertiaryContainer - Apply tertiary-container theme color.
  * @cssclass themeError - Apply error theme color.
+ * @cssclass themeErrorContainer - Apply error-container theme color.
+ * @cssclass themeSurface - Apply surface theme color.
+ * @cssclass themeSurfaceVariant - Apply surface-variant theme color.
+ * @cssclass themeSurfaceContainer - Apply surface-container theme color.
+ * @cssclass themeSurfaceContainerLow - Apply surface-container-low theme color.
  * @cssclass link - Make the chip hoverable with a pointer cursor.
  */
 @customElement('er-chip')
@@ -102,9 +110,21 @@ export class ErChip extends NavigationMixin(LitElement) {
         --er-chip-theme-color: var(--md-sys-color-on-primary);
       }
 
+      :host(.themePrimaryContainer) {
+        --er-chip-theme-background-color: var(--md-sys-color-primary-container);
+        --er-chip-theme-color: var(--md-sys-color-on-primary-container);
+      }
+
       :host(.themeSecondary) {
         --er-chip-theme-background-color: var(--md-sys-color-secondary);
         --er-chip-theme-color: var(--md-sys-color-on-secondary);
+      }
+
+      :host(.themeSecondaryContainer) {
+        --er-chip-theme-background-color: var(
+          --md-sys-color-secondary-container
+        );
+        --er-chip-theme-color: var(--md-sys-color-on-secondary-container);
       }
 
       :host(.themeTertiary) {
@@ -112,9 +132,43 @@ export class ErChip extends NavigationMixin(LitElement) {
         --er-chip-theme-color: var(--md-sys-color-on-tertiary);
       }
 
+      :host(.themeTertiaryContainer) {
+        --er-chip-theme-background-color: var(
+          --md-sys-color-tertiary-container
+        );
+        --er-chip-theme-color: var(--md-sys-color-on-tertiary-container);
+      }
+
       :host(.themeError) {
         --er-chip-theme-background-color: var(--md-sys-color-error);
         --er-chip-theme-color: var(--md-sys-color-on-error);
+      }
+
+      :host(.themeErrorContainer) {
+        --er-chip-theme-background-color: var(--md-sys-color-error-container);
+        --er-chip-theme-color: var(--md-sys-color-on-error-container);
+      }
+
+      :host(.themeSurface) {
+        --er-chip-theme-background-color: var(--md-sys-color-surface);
+        --er-chip-theme-color: var(--md-sys-color-on-surface);
+      }
+
+      :host(.themeSurfaceVariant) {
+        --er-chip-theme-background-color: var(--md-sys-color-surface-variant);
+        --er-chip-theme-color: var(--md-sys-color-on-surface-variant);
+      }
+
+      :host(.themeSurfaceContainer) {
+        --er-chip-theme-background-color: var(--md-sys-color-surface-container);
+        --er-chip-theme-color: var(--md-sys-color-on-surface);
+      }
+
+      :host(.themeSurfaceContainerLow) {
+        --er-chip-theme-background-color: var(
+          --md-sys-color-surface-container-low
+        );
+        --er-chip-theme-color: var(--md-sys-color-on-surface);
       }
 
       :host(.link:hover),

@@ -4,8 +4,10 @@ import { customElement, property } from 'lit/decorators.js';
 /**
  * Loading placeholder/skeleton component with fade animation and theme variable support.
  *
+ * @cssclass themeSurface - Sets surface theme colors.
  * @cssclass themeSurfaceVariant - Sets surface-variant theme colors.
  * @cssclass themeSurfaceContainer - Sets surface-container theme colors.
+ * @cssclass themeSurfaceContainerLow - Sets surface-container-low theme colors.
  * @cssclass themePrimary - Sets primary theme colors.
  * @cssclass themePrimaryContainer - Sets primary-container theme colors.
  * @cssclass themeSecondary - Sets secondary theme colors.
@@ -138,6 +140,18 @@ export class ErLoading extends LitElement {
       }
 
       /* Theme colors using 'on' color mixed with transparent */
+      :host(.themeSurface) {
+        --er-loading-color: color-mix(
+          in srgb,
+          var(--md-sys-color-on-surface) 12%,
+          transparent
+        );
+        --er-loading-highlight-color: color-mix(
+          in srgb,
+          var(--md-sys-color-on-surface) 24%,
+          transparent
+        );
+      }
       :host(.themeSurfaceVariant) {
         --er-loading-color: color-mix(
           in srgb,
@@ -151,6 +165,18 @@ export class ErLoading extends LitElement {
         );
       }
       :host(.themeSurfaceContainer) {
+        --er-loading-color: color-mix(
+          in srgb,
+          var(--md-sys-color-on-surface) 12%,
+          transparent
+        );
+        --er-loading-highlight-color: color-mix(
+          in srgb,
+          var(--md-sys-color-on-surface) 24%,
+          transparent
+        );
+      }
+      :host(.themeSurfaceContainerLow) {
         --er-loading-color: color-mix(
           in srgb,
           var(--md-sys-color-on-surface) 12%,

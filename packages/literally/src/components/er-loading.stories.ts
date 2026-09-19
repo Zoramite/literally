@@ -42,8 +42,6 @@ const meta: Meta = {
       control: 'select',
       options: [
         '',
-        'themeSurfaceVariant',
-        'themeSurfaceContainer',
         'themePrimary',
         'themePrimaryContainer',
         'themeSecondary',
@@ -52,6 +50,10 @@ const meta: Meta = {
         'themeTertiaryContainer',
         'themeError',
         'themeErrorContainer',
+        'themeSurface',
+        'themeSurfaceVariant',
+        'themeSurfaceContainer',
+        'themeSurfaceContainerLow',
       ],
     },
     animation: {

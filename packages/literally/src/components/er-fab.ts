@@ -12,9 +12,16 @@ import { type BreakpointDevice, breakpoints } from '../structure/devices';
  * @cssclass secondary - Style the fab with the secondary outline theme.
  * @cssclass tertiary - Style the fab with the tertiary text theme.
  * @cssclass themePrimary - Apply primary theme color.
+ * @cssclass themePrimaryContainer - Apply primary-container theme color.
  * @cssclass themeSecondary - Apply secondary theme color.
+ * @cssclass themeSecondaryContainer - Apply secondary-container theme color.
  * @cssclass themeTertiary - Apply tertiary theme color.
+ * @cssclass themeTertiaryContainer - Apply tertiary-container theme color.
  * @cssclass themeError - Apply error theme color.
+ * @cssclass themeErrorContainer - Apply error-container theme color.
+ * @cssclass themeSurface - Apply surface theme color.
+ * @cssclass themeSurfaceVariant - Apply surface-variant theme color.
+ * @cssclass themeSurfaceContainer - Apply surface-container theme color.
  * @cssclass link - Make the fab hoverable with an outline.
  * @cssclass full - Make the fab take the full width of its parent container. Supports breakpoint suffixes (e.g. fullOnMobile).
  * @cssclass center - Center the content inside the fab. Supports breakpoint suffixes (e.g. centerOnMobile).
@@ -91,9 +98,21 @@ export class ErFab extends NavigationMixin(LitElement) {
         --er-fab-theme-color: var(--md-sys-color-on-primary);
       }
 
+      :host(.themePrimaryContainer) {
+        --er-fab-theme-background-color: var(--md-sys-color-primary-container);
+        --er-fab-theme-color: var(--md-sys-color-on-primary-container);
+      }
+
       :host(.themeSecondary) {
         --er-fab-theme-background-color: var(--md-sys-color-secondary);
         --er-fab-theme-color: var(--md-sys-color-on-secondary);
+      }
+
+      :host(.themeSecondaryContainer) {
+        --er-fab-theme-background-color: var(
+          --md-sys-color-secondary-container
+        );
+        --er-fab-theme-color: var(--md-sys-color-on-secondary-container);
       }
 
       :host(.themeTertiary) {
@@ -101,9 +120,34 @@ export class ErFab extends NavigationMixin(LitElement) {
         --er-fab-theme-color: var(--md-sys-color-on-tertiary);
       }
 
+      :host(.themeTertiaryContainer) {
+        --er-fab-theme-background-color: var(--md-sys-color-tertiary-container);
+        --er-fab-theme-color: var(--md-sys-color-on-tertiary-container);
+      }
+
       :host(.themeError) {
         --er-fab-theme-background-color: var(--md-sys-color-error);
         --er-fab-theme-color: var(--md-sys-color-on-error);
+      }
+
+      :host(.themeErrorContainer) {
+        --er-fab-theme-background-color: var(--md-sys-color-error-container);
+        --er-fab-theme-color: var(--md-sys-color-on-error-container);
+      }
+
+      :host(.themeSurface) {
+        --er-fab-theme-background-color: var(--md-sys-color-surface);
+        --er-fab-theme-color: var(--md-sys-color-on-surface);
+      }
+
+      :host(.themeSurfaceVariant) {
+        --er-fab-theme-background-color: var(--md-sys-color-surface-variant);
+        --er-fab-theme-color: var(--md-sys-color-on-surface-variant);
+      }
+
+      :host(.themeSurfaceContainer) {
+        --er-fab-theme-background-color: var(--md-sys-color-surface-container);
+        --er-fab-theme-color: var(--md-sys-color-on-surface);
       }
 
       :host([path]:hover:not([disabled])),
