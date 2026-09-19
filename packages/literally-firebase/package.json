@@ -40,6 +40,7 @@
     "dist",
     "custom-elements.json",
     "README.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "ROADMAP.md"
   ]
 }

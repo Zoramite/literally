@@ -4,16 +4,11 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   "references": [
     {
       "path": "../literally"
     }
   ],
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.stories.ts"
-  ]
+  "exclude": ["src/**/*.test.ts", "src/**/*.stories.ts"]
 }

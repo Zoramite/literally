@@ -112,6 +112,12 @@ export const userProfileConverter: FBConverter<UserProfile> = {
 
 ---
 
+## Roadmap
+
+See [ROADMAP.md](./ROADMAP.md) for planned features, reactive controllers, converter enhancements, and testing utilities.
+
+---
+
 ## License
 
 [MIT](LICENSE)
