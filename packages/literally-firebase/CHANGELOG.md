@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.4.0...literally-firebase-v0.5.0) (2026-09-22)
+
+
+### Features
+
+* add explicit exports for subpaths and preserve existing id in firestore converter ([468550c](https://github.com/Zoramite/literally/commit/468550c30eef761ec6f563245a6294860a00d3a1))
+
 ## [0.4.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.3.0...literally-firebase-v0.4.0) (2026-09-19)
 
 
