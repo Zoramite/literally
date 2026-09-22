@@ -156,7 +156,7 @@ export function createConverter<T = any>(
 
       // Inject document ID
       if (idKey) {
-        data[idKey] = snapshot.id;
+        data[idKey] = snapshot.id ?? data[idKey];
       }
 
       // Convert Timestamps to native Dates
