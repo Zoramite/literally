@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.0](https://github.com/Zoramite/literally/compare/literally-v3.3.0...literally-v3.4.0) (2026-09-30)
+
+
+### Features
+
+* add subgrid detection and full-width host styles to er-grid ([ff70c2b](https://github.com/Zoramite/literally/commit/ff70c2beff71bcc0ce29ee0ed810420c27a068b3))
+* add subgrid support and documentation for ErGrid components ([80d99ea](https://github.com/Zoramite/literally/commit/80d99ea2e9dc89505092ac639636ac00128483fb))
+
 ## [3.3.0](https://github.com/Zoramite/literally/compare/literally-v3.2.0...literally-v3.3.0) (2026-09-19)
 
 
