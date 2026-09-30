@@ -95,5 +95,6 @@ describe('ErGrid and ErGridItem', () => {
     expect(subGrid.shadowRoot?.querySelector('slot')).not.toBeNull();
     expect(subGrid.classList.contains('sub')).toBe(true);
     expect(subGrid.children.length).toBe(2);
+    expect(parentItem.classList.contains('subgrid')).toBe(true);
   });
 });

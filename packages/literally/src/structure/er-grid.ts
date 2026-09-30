@@ -176,6 +176,10 @@ export class ErGridItem extends LitElement {
         grid-template-columns: subgrid;
       }
 
+      :host(.full) {
+        grid-column: 1 / -1;
+      }
+
       /**
        * Default spans for all breakpoints to full width.
        */
@@ -617,8 +621,33 @@ export class ErGridItem extends LitElement {
     `,
   ];
 
+  override connectedCallback() {
+    super.connectedCallback();
+    this.checkSubgrid();
+  }
+
+  private checkSubgrid() {
+    const hasSubgrid = Array.from(this.children).some(
+      (el) =>
+        el.tagName.toLowerCase() === 'er-grid' && el.classList.contains('sub'),
+    );
+    this.classList.toggle('subgrid', hasSubgrid);
+  }
+
+  private handleSlotChange(e: Event) {
+    const slot = e.target as HTMLSlotElement;
+    const hasSubgrid = slot
+      .assignedElements({ flatten: true })
+      .some(
+        (el) =>
+          el.tagName.toLowerCase() === 'er-grid' &&
+          el.classList.contains('sub'),
+      );
+    this.classList.toggle('subgrid', hasSubgrid);
+  }
+
   render() {
-    return html` <slot></slot> `;
+    return html` <slot @slotchange=${this.handleSlotChange}></slot> `;
   }
 }
 
