@@ -8,6 +8,7 @@ import { tablet, desktop, mobile, print, breakpoints } from './devices';
  *
  * @slot - Grid contents.
  *
+ * @cssclass sub - Subgrid for nesting inside another grid or grid item. Inherits parent column tracks and removes page margins.
  * @cssclass gapRowSmall - Set small row gap. Supports breakpoint suffixes (e.g. gapRowSmallOnMobile).
  * @cssclass gapRowMedium - Set medium row gap. Supports breakpoint suffixes (e.g. gapRowMediumOnMobile).
  * @cssclass gapRowLarge - Set large row gap. Supports breakpoint suffixes (e.g. gapRowLargeOnMobile).
@@ -41,24 +42,30 @@ export class ErGrid extends LitElement {
       }
 
       ${tablet.mediaQuery} {
-        :host {
+        :host(:not(.sub)) {
           /* 8 Columns on tablet */
           grid-template-columns: repeat(8, 1fr);
         }
       }
 
       ${desktop.mediaQuery} {
-        :host {
+        :host(:not(.sub)) {
           /* 12 Columns on desktop */
           grid-template-columns: repeat(12, 1fr);
         }
       }
 
       ${print.mediaQuery} {
-        :host {
+        :host(:not(.sub)) {
           /* 8 Columns on print */
           grid-template-columns: repeat(8, 1fr);
         }
+      }
+
+      :host(.sub) {
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        margin: 0;
       }
     `,
     // Targeted breakpoint styles.
@@ -150,6 +157,9 @@ export class ErGrid extends LitElement {
  * Grid item for displaying content inside the grid.
  *
  * @slot - Grid item contents.
+ *
+ * @cssclass subgrid - Enables subgrid display for nesting child grids.
+ * @cssclass full - Span all available columns.
  */
 @customElement('er-grid-item')
 export class ErGridItem extends LitElement {
@@ -157,6 +167,13 @@ export class ErGridItem extends LitElement {
     css`
       :host {
         display: block;
+      }
+
+      :host(:has(> er-grid.sub)),
+      :host(:has(er-grid.sub)),
+      :host(.subgrid) {
+        display: grid;
+        grid-template-columns: subgrid;
       }
 
       /**

@@ -179,3 +179,51 @@ export const MixedSpansShowcase: StoryObj = {
     </er-grid>
   `,
 };
+
+export const SubgridShowcase: StoryObj = {
+  render: () => html`
+    <div style="font-family: sans-serif;">
+      <p style="margin-bottom: 16px;">
+        Demonstrates nested <code>&lt;er-grid class="sub"&gt;</code> inheriting
+        parent grid column tracks.
+      </p>
+      <er-grid
+        style="background: var(--md-sys-color-surface-container-low); padding: 16px; border-radius: 8px;"
+      >
+        <er-grid-item span="desktop:8; tablet:4; mobile:4">
+          <div
+            style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline-variant); padding: 16px; border-radius: 4px;"
+          >
+            <p style="margin-top: 0; font-weight: bold;">
+              Parent Grid Item (Desktop: 8 cols, Tablet: 4 cols, Mobile: 4 cols)
+            </p>
+            <er-grid class="sub">
+              <er-grid-item span="desktop:4; tablet:2; mobile:2">
+                <div
+                  style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); padding: 16px; border-radius: 4px; text-align: center;"
+                >
+                  Nested Sub-Item 1 (Desktop: 4, Tablet: 2, Mobile: 2)
+                </div>
+              </er-grid-item>
+              <er-grid-item span="desktop:4; tablet:2; mobile:2">
+                <div
+                  style="background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); padding: 16px; border-radius: 4px; text-align: center;"
+                >
+                  Nested Sub-Item 2 (Desktop: 4, Tablet: 2, Mobile: 2)
+                </div>
+              </er-grid-item>
+            </er-grid>
+          </div>
+        </er-grid-item>
+
+        <er-grid-item span="desktop:4; tablet:4; mobile:4">
+          <div
+            style="background: var(--md-sys-color-tertiary-container); color: var(--md-sys-color-on-tertiary-container); padding: 16px; border-radius: 4px; text-align: center; height: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: center;"
+          >
+            Sibling Item (Desktop: 4 cols, Tablet: 4 cols, Mobile: 4 cols)
+          </div>
+        </er-grid-item>
+      </er-grid>
+    </div>
+  `,
+};

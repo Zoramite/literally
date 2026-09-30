@@ -435,25 +435,26 @@ Grid for controlling the layout of the page.
 
 #### CSS Classes
 
-| Name               | Description                                                                                    |
-| ------------------ | ---------------------------------------------------------------------------------------------- |
-| `gapRowSmall`      | Set small row gap. Supports breakpoint suffixes (e.g. gapRowSmallOnMobile).                    |
-| `gapRowMedium`     | Set medium row gap. Supports breakpoint suffixes (e.g. gapRowMediumOnMobile).                  |
-| `gapRowLarge`      | Set large row gap. Supports breakpoint suffixes (e.g. gapRowLargeOnMobile).                    |
-| `gapRowXlarge`     | Set extra large row gap. Supports breakpoint suffixes (e.g. gapRowXlargeOnMobile).             |
-| `gapRowXxlarge`    | Set double extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxlargeOnMobile).     |
-| `gapRowXxxlarge`   | Set triple extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxxlargeOnMobile).    |
-| `gapColSmall`      | Set small column gap. Supports breakpoint suffixes (e.g. gapColSmallOnMobile).                 |
-| `gapColMedium`     | Set medium column gap. Supports breakpoint suffixes (e.g. gapColMediumOnMobile).               |
-| `gapColLarge`      | Set large column gap. Supports breakpoint suffixes (e.g. gapColLargeOnMobile).                 |
-| `gapColXlarge`     | Set extra large column gap. Supports breakpoint suffixes (e.g. gapColXlargeOnMobile).          |
-| `gapColXxlarge`    | Set double extra large column gap. Supports breakpoint suffixes (e.g. gapColXxlargeOnMobile).  |
-| `gapColXxxlarge`   | Set triple extra large column gap. Supports breakpoint suffixes (e.g. gapColXxxlargeOnMobile). |
-| `alignBaseline`    | Align items to baseline. Supports breakpoint suffixes (e.g. alignBaselineOnMobile).            |
-| `alignEnd`         | Align items to end. Supports breakpoint suffixes (e.g. alignEndOnMobile).                      |
-| `alignCenter`      | Align items to center. Supports breakpoint suffixes (e.g. alignCenterOnMobile).                |
-| `alignStart`       | Align items to start. Supports breakpoint suffixes (e.g. alignStartOnMobile).                  |
-| `alignSelfStretch` | Set align-self to stretch on grid items.                                                       |
+| Name               | Description                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `sub`              | Subgrid for nesting inside another grid or grid item. Inherits parent column tracks and removes page margins. |
+| `gapRowSmall`      | Set small row gap. Supports breakpoint suffixes (e.g. gapRowSmallOnMobile).                                   |
+| `gapRowMedium`     | Set medium row gap. Supports breakpoint suffixes (e.g. gapRowMediumOnMobile).                                 |
+| `gapRowLarge`      | Set large row gap. Supports breakpoint suffixes (e.g. gapRowLargeOnMobile).                                   |
+| `gapRowXlarge`     | Set extra large row gap. Supports breakpoint suffixes (e.g. gapRowXlargeOnMobile).                            |
+| `gapRowXxlarge`    | Set double extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxlargeOnMobile).                    |
+| `gapRowXxxlarge`   | Set triple extra large row gap. Supports breakpoint suffixes (e.g. gapRowXxxlargeOnMobile).                   |
+| `gapColSmall`      | Set small column gap. Supports breakpoint suffixes (e.g. gapColSmallOnMobile).                                |
+| `gapColMedium`     | Set medium column gap. Supports breakpoint suffixes (e.g. gapColMediumOnMobile).                              |
+| `gapColLarge`      | Set large column gap. Supports breakpoint suffixes (e.g. gapColLargeOnMobile).                                |
+| `gapColXlarge`     | Set extra large column gap. Supports breakpoint suffixes (e.g. gapColXlargeOnMobile).                         |
+| `gapColXxlarge`    | Set double extra large column gap. Supports breakpoint suffixes (e.g. gapColXxlargeOnMobile).                 |
+| `gapColXxxlarge`   | Set triple extra large column gap. Supports breakpoint suffixes (e.g. gapColXxxlargeOnMobile).                |
+| `alignBaseline`    | Align items to baseline. Supports breakpoint suffixes (e.g. alignBaselineOnMobile).                           |
+| `alignEnd`         | Align items to end. Supports breakpoint suffixes (e.g. alignEndOnMobile).                                     |
+| `alignCenter`      | Align items to center. Supports breakpoint suffixes (e.g. alignCenterOnMobile).                               |
+| `alignStart`       | Align items to start. Supports breakpoint suffixes (e.g. alignStartOnMobile).                                 |
+| `alignSelfStretch` | Set align-self to stretch on grid items.                                                                      |
 
 ### `<er-grid-item>` (ErGridItem)
 
@@ -466,6 +467,13 @@ Grid item for displaying content inside the grid.
 | Name        | Description         |
 | ----------- | ------------------- |
 | _(default)_ | Grid item contents. |
+
+#### CSS Classes
+
+| Name      | Description                                      |
+| --------- | ------------------------------------------------ |
+| `subgrid` | Enables subgrid display for nesting child grids. |
+| `full`    | Span all available columns.                      |
 
 ### `<er-grid-overlay>` (ErGridOverlay)
 

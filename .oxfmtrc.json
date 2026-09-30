@@ -2,7 +2,7 @@
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "singleQuote": true,
   "printWidth": 80,
-  "ignorePatterns": [],
+  "ignorePatterns": ["**/CHANGELOG.md", "CHANGELOG.md"],
   "sortPackageJson": false,
   "sortImports": {
     "groups": [
