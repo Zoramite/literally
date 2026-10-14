@@ -3,6 +3,8 @@ import { NavigationMixin } from '@littoral/literally/navigation/navigation.mixin
 import { LitElement, css, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+import { breakpoints } from '../structure/devices';
+
 /**
  * Chip element for displaying info in a stylized way.
  *
@@ -29,6 +31,22 @@ import { customElement, property } from 'lit/decorators.js';
  * @cssclass themeSurfaceContainer - Apply surface-container theme color.
  * @cssclass themeSurfaceContainerLow - Apply surface-container-low theme color.
  * @cssclass link - Make the chip hoverable with a pointer cursor.
+ * @cssclass fontSizeXxsmall - Apply extra-extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXxsmallOnMobile).
+ * @cssclass fontSizeXsmall - Apply extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXsmallOnMobile).
+ * @cssclass fontSizeSmall - Apply small body font size. Supports breakpoint suffixes (e.g. fontSizeSmallOnMobile).
+ * @cssclass fontSizeMedium - Apply medium body font size. Supports breakpoint suffixes (e.g. fontSizeMediumOnMobile).
+ * @cssclass fontSizeLarge - Apply large body font size. Supports breakpoint suffixes (e.g. fontSizeLargeOnMobile).
+ * @cssclass fontSizeXlarge - Apply extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXlargeOnMobile).
+ * @cssclass fontSizeXxlarge - Apply double-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxlargeOnMobile).
+ * @cssclass fontSizeXxxlarge - Apply triple-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxxlargeOnMobile).
+ * @cssclass fontXxsmall - Alias for fontSizeXxsmall. Supports breakpoint suffixes.
+ * @cssclass fontXsmall - Alias for fontSizeXsmall. Supports breakpoint suffixes.
+ * @cssclass fontSmall - Alias for fontSizeSmall. Supports breakpoint suffixes.
+ * @cssclass fontMedium - Alias for fontSizeMedium. Supports breakpoint suffixes.
+ * @cssclass fontLarge - Alias for fontSizeLarge. Supports breakpoint suffixes.
+ * @cssclass fontXlarge - Alias for fontSizeXlarge. Supports breakpoint suffixes.
+ * @cssclass fontXxlarge - Alias for fontSizeXxlarge. Supports breakpoint suffixes.
+ * @cssclass fontXxxlarge - Alias for fontSizeXxxlarge. Supports breakpoint suffixes.
  */
 @customElement('er-chip')
 export class ErChip extends NavigationMixin(LitElement) {
@@ -53,6 +71,10 @@ export class ErChip extends NavigationMixin(LitElement) {
         );
         font-size: var(--er-chip-font-size, var(--er-sys-body-font-size-small));
         font-weight: var(--er-chip-font-weight, var(--body-font-weight));
+        --er-icon-font-size: var(
+          --er-chip-icon-font-size,
+          var(--er-chip-font-size, 1em)
+        );
         grid-gap: var(--space-small);
         grid-template-columns: 1fr;
         padding: var(--space-xsmall) var(--space-small);
@@ -200,6 +222,68 @@ export class ErChip extends NavigationMixin(LitElement) {
         white-space: wrap;
       }
     `,
+    // Targeted breakpoint styles.
+    ...breakpoints.mixupStyles((breakpoint) => {
+      const styling = css`
+        :host(.fontSizeXxsmall${breakpoint?.targetClass ?? css``}),
+        :host(.fontXxsmall${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-xxsmall);
+          font-size: var(--er-sys-body-font-size-xxsmall);
+        }
+
+        :host(.fontSizeXsmall${breakpoint?.targetClass ?? css``}),
+        :host(.fontXsmall${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-xsmall);
+          font-size: var(--er-sys-body-font-size-xsmall);
+        }
+
+        :host(.fontSizeSmall${breakpoint?.targetClass ?? css``}),
+        :host(.fontSmall${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-small);
+          font-size: var(--er-sys-body-font-size-small);
+        }
+
+        :host(.fontSizeMedium${breakpoint?.targetClass ?? css``}),
+        :host(.fontMedium${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-medium);
+          font-size: var(--er-sys-body-font-size-medium);
+        }
+
+        :host(.fontSizeLarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontLarge${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-large);
+          font-size: var(--er-sys-body-font-size-large);
+        }
+
+        :host(.fontSizeXlarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontXlarge${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-xlarge);
+          font-size: var(--er-sys-body-font-size-xlarge);
+        }
+
+        :host(.fontSizeXxlarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontXxlarge${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-xxlarge);
+          font-size: var(--er-sys-body-font-size-xxlarge);
+        }
+
+        :host(.fontSizeXxxlarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontXxxlarge${breakpoint?.targetClass ?? css``}) {
+          --er-chip-font-size: var(--er-sys-body-font-size-xxxlarge);
+          font-size: var(--er-sys-body-font-size-xxxlarge);
+        }
+      `;
+
+      if (!breakpoint) {
+        return styling;
+      }
+
+      return css`
+        ${breakpoint.mediaQuery} {
+          ${styling}
+        }
+      `;
+    }),
   ];
 
   @property({ attribute: 'icon-start' })

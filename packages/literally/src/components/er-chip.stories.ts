@@ -19,6 +19,9 @@ const meta: Meta = {
     if (args.capitalize) {
       classes.push('capitalize');
     }
+    if (args.fontSize) {
+      classes.push(args.fontSize);
+    }
 
     return html`
       <er-chip
@@ -54,6 +57,20 @@ const meta: Meta = {
         'themeSurfaceContainerLow',
       ],
     },
+    fontSize: {
+      control: 'select',
+      options: [
+        '',
+        'fontSizeXxsmall',
+        'fontSizeXsmall',
+        'fontSizeSmall',
+        'fontSizeMedium',
+        'fontSizeLarge',
+        'fontSizeXlarge',
+        'fontSizeXxlarge',
+        'fontSizeXxxlarge',
+      ],
+    },
     capitalize: { control: 'boolean' },
     iconStart: { control: 'text' },
     iconEnd: { control: 'text' },
@@ -62,6 +79,7 @@ const meta: Meta = {
     label: 'Chip Label',
     variant: 'primary',
     theme: 'themePrimary',
+    fontSize: '',
     capitalize: false,
     iconStart: '',
     iconEnd: '',
@@ -145,6 +163,39 @@ export const AllChipsShowcase: StoryObj = {
         icon-start="star"
         icon-end="close"
         >With Both Icons</er-chip
+      >
+    </div>
+  `,
+};
+
+export const FontSizes: StoryObj = {
+  render: () => html`
+    <div
+      style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;"
+    >
+      <er-chip class="themePrimary primary fontSizeXxsmall" icon-start="star"
+        >xxsmall chip</er-chip
+      >
+      <er-chip class="themePrimary primary fontSizeXsmall" icon-start="star"
+        >xsmall chip</er-chip
+      >
+      <er-chip class="themePrimary primary fontSizeSmall" icon-start="star"
+        >small chip (default)</er-chip
+      >
+      <er-chip class="themePrimary primary fontSizeMedium" icon-start="star"
+        >medium chip</er-chip
+      >
+      <er-chip class="themePrimary primary fontSizeLarge" icon-start="star"
+        >large chip</er-chip
+      >
+      <er-chip class="themePrimary primary fontSizeXlarge" icon-start="star"
+        >xlarge chip</er-chip
+      >
+      <er-chip class="themePrimary primary fontSizeXxlarge" icon-start="star"
+        >xxlarge chip</er-chip
+      >
+      <er-chip class="themePrimary primary fontSizeXxxlarge" icon-start="star"
+        >xxxlarge chip</er-chip
       >
     </div>
   `,

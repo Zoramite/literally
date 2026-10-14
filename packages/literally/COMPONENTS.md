@@ -76,31 +76,47 @@ Chip element for displaying info in a stylized way.
 
 #### CSS Classes
 
-| Name                       | Description                                                |
-| -------------------------- | ---------------------------------------------------------- |
-| `alignSelfCenter`          | Align the chip to the center of the cross axis.            |
-| `justifySelfCenter`        | Justify the chip to the center of the main axis.           |
-| `justifySelfFlexEnd`       | Justify the chip to the flex-end.                          |
-| `full`                     | Make the chip take the full width of its parent container. |
-| `center`                   | Center the text inside the chip.                           |
-| `primary`                  | Style the chip with the primary theme color.               |
-| `secondary`                | Style the chip with the secondary outline theme.           |
-| `tertiary`                 | Style the chip with the tertiary text theme.               |
-| `capitalize`               | Capitalize the text in the chip.                           |
-| `wrap`                     | Enable text wrapping for the chip contents.                |
-| `themePrimary`             | Apply primary theme color.                                 |
-| `themePrimaryContainer`    | Apply primary-container theme color.                       |
-| `themeSecondary`           | Apply secondary theme color.                               |
-| `themeSecondaryContainer`  | Apply secondary-container theme color.                     |
-| `themeTertiary`            | Apply tertiary theme color.                                |
-| `themeTertiaryContainer`   | Apply tertiary-container theme color.                      |
-| `themeError`               | Apply error theme color.                                   |
-| `themeErrorContainer`      | Apply error-container theme color.                         |
-| `themeSurface`             | Apply surface theme color.                                 |
-| `themeSurfaceVariant`      | Apply surface-variant theme color.                         |
-| `themeSurfaceContainer`    | Apply surface-container theme color.                       |
-| `themeSurfaceContainerLow` | Apply surface-container-low theme color.                   |
-| `link`                     | Make the chip hoverable with a pointer cursor.             |
+| Name                       | Description                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `alignSelfCenter`          | Align the chip to the center of the cross axis.                                                        |
+| `justifySelfCenter`        | Justify the chip to the center of the main axis.                                                       |
+| `justifySelfFlexEnd`       | Justify the chip to the flex-end.                                                                      |
+| `full`                     | Make the chip take the full width of its parent container.                                             |
+| `center`                   | Center the text inside the chip.                                                                       |
+| `primary`                  | Style the chip with the primary theme color.                                                           |
+| `secondary`                | Style the chip with the secondary outline theme.                                                       |
+| `tertiary`                 | Style the chip with the tertiary text theme.                                                           |
+| `capitalize`               | Capitalize the text in the chip.                                                                       |
+| `wrap`                     | Enable text wrapping for the chip contents.                                                            |
+| `themePrimary`             | Apply primary theme color.                                                                             |
+| `themePrimaryContainer`    | Apply primary-container theme color.                                                                   |
+| `themeSecondary`           | Apply secondary theme color.                                                                           |
+| `themeSecondaryContainer`  | Apply secondary-container theme color.                                                                 |
+| `themeTertiary`            | Apply tertiary theme color.                                                                            |
+| `themeTertiaryContainer`   | Apply tertiary-container theme color.                                                                  |
+| `themeError`               | Apply error theme color.                                                                               |
+| `themeErrorContainer`      | Apply error-container theme color.                                                                     |
+| `themeSurface`             | Apply surface theme color.                                                                             |
+| `themeSurfaceVariant`      | Apply surface-variant theme color.                                                                     |
+| `themeSurfaceContainer`    | Apply surface-container theme color.                                                                   |
+| `themeSurfaceContainerLow` | Apply surface-container-low theme color.                                                               |
+| `link`                     | Make the chip hoverable with a pointer cursor.                                                         |
+| `fontSizeXxsmall`          | Apply extra-extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXxsmallOnMobile).   |
+| `fontSizeXsmall`           | Apply extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXsmallOnMobile).          |
+| `fontSizeSmall`            | Apply small body font size. Supports breakpoint suffixes (e.g. fontSizeSmallOnMobile).                 |
+| `fontSizeMedium`           | Apply medium body font size. Supports breakpoint suffixes (e.g. fontSizeMediumOnMobile).               |
+| `fontSizeLarge`            | Apply large body font size. Supports breakpoint suffixes (e.g. fontSizeLargeOnMobile).                 |
+| `fontSizeXlarge`           | Apply extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXlargeOnMobile).          |
+| `fontSizeXxlarge`          | Apply double-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxlargeOnMobile).  |
+| `fontSizeXxxlarge`         | Apply triple-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxxlargeOnMobile). |
+| `fontXxsmall`              | Alias for fontSizeXxsmall. Supports breakpoint suffixes.                                               |
+| `fontXsmall`               | Alias for fontSizeXsmall. Supports breakpoint suffixes.                                                |
+| `fontSmall`                | Alias for fontSizeSmall. Supports breakpoint suffixes.                                                 |
+| `fontMedium`               | Alias for fontSizeMedium. Supports breakpoint suffixes.                                                |
+| `fontLarge`                | Alias for fontSizeLarge. Supports breakpoint suffixes.                                                 |
+| `fontXlarge`               | Alias for fontSizeXlarge. Supports breakpoint suffixes.                                                |
+| `fontXxlarge`              | Alias for fontSizeXxlarge. Supports breakpoint suffixes.                                               |
+| `fontXxxlarge`             | Alias for fontSizeXxxlarge. Supports breakpoint suffixes.                                              |
 
 ### `<er-fab>` (ErFab)
 
@@ -149,6 +165,22 @@ Fab visual element for collapsable button/links.
 | `full`                    | Make the fab take the full width of its parent container. Supports breakpoint suffixes (e.g. fullOnMobile). |
 | `center`                  | Center the content inside the fab. Supports breakpoint suffixes (e.g. centerOnMobile).                      |
 | `expanded`                | Force the fab to be expanded. Supports breakpoint suffixes (e.g. expandedOnMobile).                         |
+| `fontSizeXxsmall`         | Apply extra-extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXxsmallOnMobile).        |
+| `fontSizeXsmall`          | Apply extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXsmallOnMobile).               |
+| `fontSizeSmall`           | Apply small body font size. Supports breakpoint suffixes (e.g. fontSizeSmallOnMobile).                      |
+| `fontSizeMedium`          | Apply medium body font size. Supports breakpoint suffixes (e.g. fontSizeMediumOnMobile).                    |
+| `fontSizeLarge`           | Apply large body font size. Supports breakpoint suffixes (e.g. fontSizeLargeOnMobile).                      |
+| `fontSizeXlarge`          | Apply extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXlargeOnMobile).               |
+| `fontSizeXxlarge`         | Apply double-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxlargeOnMobile).       |
+| `fontSizeXxxlarge`        | Apply triple-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxxlargeOnMobile).      |
+| `fontXxsmall`             | Alias for fontSizeXxsmall. Supports breakpoint suffixes.                                                    |
+| `fontXsmall`              | Alias for fontSizeXsmall. Supports breakpoint suffixes.                                                     |
+| `fontSmall`               | Alias for fontSizeSmall. Supports breakpoint suffixes.                                                      |
+| `fontMedium`              | Alias for fontSizeMedium. Supports breakpoint suffixes.                                                     |
+| `fontLarge`               | Alias for fontSizeLarge. Supports breakpoint suffixes.                                                      |
+| `fontXlarge`              | Alias for fontSizeXlarge. Supports breakpoint suffixes.                                                     |
+| `fontXxlarge`             | Alias for fontSizeXxlarge. Supports breakpoint suffixes.                                                    |
+| `fontXxxlarge`            | Alias for fontSizeXxxlarge. Supports breakpoint suffixes.                                                   |
 
 ### `<er-h1>` (ErH1)
 

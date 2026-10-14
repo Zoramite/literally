@@ -26,6 +26,22 @@ import { type BreakpointDevice, breakpoints } from '../structure/devices';
  * @cssclass full - Make the fab take the full width of its parent container. Supports breakpoint suffixes (e.g. fullOnMobile).
  * @cssclass center - Center the content inside the fab. Supports breakpoint suffixes (e.g. centerOnMobile).
  * @cssclass expanded - Force the fab to be expanded. Supports breakpoint suffixes (e.g. expandedOnMobile).
+ * @cssclass fontSizeXxsmall - Apply extra-extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXxsmallOnMobile).
+ * @cssclass fontSizeXsmall - Apply extra-small body font size. Supports breakpoint suffixes (e.g. fontSizeXsmallOnMobile).
+ * @cssclass fontSizeSmall - Apply small body font size. Supports breakpoint suffixes (e.g. fontSizeSmallOnMobile).
+ * @cssclass fontSizeMedium - Apply medium body font size. Supports breakpoint suffixes (e.g. fontSizeMediumOnMobile).
+ * @cssclass fontSizeLarge - Apply large body font size. Supports breakpoint suffixes (e.g. fontSizeLargeOnMobile).
+ * @cssclass fontSizeXlarge - Apply extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXlargeOnMobile).
+ * @cssclass fontSizeXxlarge - Apply double-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxlargeOnMobile).
+ * @cssclass fontSizeXxxlarge - Apply triple-extra-large body font size. Supports breakpoint suffixes (e.g. fontSizeXxxlargeOnMobile).
+ * @cssclass fontXxsmall - Alias for fontSizeXxsmall. Supports breakpoint suffixes.
+ * @cssclass fontXsmall - Alias for fontSizeXsmall. Supports breakpoint suffixes.
+ * @cssclass fontSmall - Alias for fontSizeSmall. Supports breakpoint suffixes.
+ * @cssclass fontMedium - Alias for fontSizeMedium. Supports breakpoint suffixes.
+ * @cssclass fontLarge - Alias for fontSizeLarge. Supports breakpoint suffixes.
+ * @cssclass fontXlarge - Alias for fontSizeXlarge. Supports breakpoint suffixes.
+ * @cssclass fontXxlarge - Alias for fontSizeXxlarge. Supports breakpoint suffixes.
+ * @cssclass fontXxxlarge - Alias for fontSizeXxxlarge. Supports breakpoint suffixes.
  */
 @customElement('er-fab')
 export class ErFab extends NavigationMixin(LitElement) {
@@ -45,6 +61,17 @@ export class ErFab extends NavigationMixin(LitElement) {
         display: inline-flex;
         flex-direction: row;
         flex-wrap: nowrap;
+        font-family: var(--er-fab-font-family, var(--body-font-family));
+        font-optical-sizing: var(
+          --er-fab-font-optical-sizing,
+          var(--body-font-optical-sizing)
+        );
+        font-size: var(--er-fab-font-size, var(--er-sys-body-font-size-medium));
+        font-weight: var(--er-fab-font-weight, var(--body-font-weight));
+        --er-icon-font-size: var(
+          --er-fab-icon-font-size,
+          var(--er-fab-font-size, 1em)
+        );
         gap: var(--space-small);
         line-height: 1;
         padding: var(--space-small) var(--space-medium);
@@ -170,6 +197,54 @@ export class ErFab extends NavigationMixin(LitElement) {
 
         :host(.center${breakpoint?.targetClass ?? css``}) {
           justify-content: center;
+        }
+
+        :host(.fontSizeXxsmall${breakpoint?.targetClass ?? css``}),
+        :host(.fontXxsmall${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-xxsmall);
+          font-size: var(--er-sys-body-font-size-xxsmall);
+        }
+
+        :host(.fontSizeXsmall${breakpoint?.targetClass ?? css``}),
+        :host(.fontXsmall${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-xsmall);
+          font-size: var(--er-sys-body-font-size-xsmall);
+        }
+
+        :host(.fontSizeSmall${breakpoint?.targetClass ?? css``}),
+        :host(.fontSmall${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-small);
+          font-size: var(--er-sys-body-font-size-small);
+        }
+
+        :host(.fontSizeMedium${breakpoint?.targetClass ?? css``}),
+        :host(.fontMedium${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-medium);
+          font-size: var(--er-sys-body-font-size-medium);
+        }
+
+        :host(.fontSizeLarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontLarge${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-large);
+          font-size: var(--er-sys-body-font-size-large);
+        }
+
+        :host(.fontSizeXlarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontXlarge${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-xlarge);
+          font-size: var(--er-sys-body-font-size-xlarge);
+        }
+
+        :host(.fontSizeXxlarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontXxlarge${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-xxlarge);
+          font-size: var(--er-sys-body-font-size-xxlarge);
+        }
+
+        :host(.fontSizeXxxlarge${breakpoint?.targetClass ?? css``}),
+        :host(.fontXxxlarge${breakpoint?.targetClass ?? css``}) {
+          --er-fab-font-size: var(--er-sys-body-font-size-xxxlarge);
+          font-size: var(--er-sys-body-font-size-xxxlarge);
         }
       `;
 

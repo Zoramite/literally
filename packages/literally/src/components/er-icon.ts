@@ -45,9 +45,10 @@ export class ErIcon extends NavigationMixin(LitElement) {
         border: 1px solid transparent;
         box-sizing: border-box;
         color: var(--on-color);
-        display: inline-block;
-        /* Hack to get around extra whitespace around icon. */
-        font-size: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--er-icon-font-size, 24px);
         font-variation-settings:
           'FILL' 0,
           'wght' 400,
@@ -56,6 +57,7 @@ export class ErIcon extends NavigationMixin(LitElement) {
         line-height: 1;
         padding: 0;
         text-align: center;
+        vertical-align: middle;
       }
 
       :host([disabled]) {
@@ -154,10 +156,10 @@ export class ErIcon extends NavigationMixin(LitElement) {
 
       .material-symbols-outlined {
         display: inline-block;
-        font-size: var(--er-icon-font-size, 24px);
+        font-size: inherit;
         line-height: 1;
         overflow: hidden;
-        max-width: var(--er-icon-font-size, 24px);
+        max-width: var(--er-icon-font-size, 1em);
       }
 
       :host([highlight]) {

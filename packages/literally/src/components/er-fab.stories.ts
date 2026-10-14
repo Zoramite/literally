@@ -22,6 +22,9 @@ const meta: Meta = {
     if (args.centered) {
       classes.push('center');
     }
+    if (args.fontSize) {
+      classes.push(args.fontSize);
+    }
 
     return html`
       <er-fab
@@ -61,6 +64,20 @@ const meta: Meta = {
         'themeSurfaceContainer',
       ],
     },
+    fontSize: {
+      control: 'select',
+      options: [
+        '',
+        'fontSizeXxsmall',
+        'fontSizeXsmall',
+        'fontSizeSmall',
+        'fontSizeMedium',
+        'fontSizeLarge',
+        'fontSizeXlarge',
+        'fontSizeXxlarge',
+        'fontSizeXxxlarge',
+      ],
+    },
     fullWidth: { control: 'boolean' },
     centered: { control: 'boolean' },
   },
@@ -71,6 +88,7 @@ const meta: Meta = {
     disabled: false,
     variant: 'primary',
     theme: 'themePrimary',
+    fontSize: '',
     highlight: '',
     fullWidth: false,
     centered: false,
@@ -120,4 +138,104 @@ export const DisabledFab: Story = {
     theme: 'themePrimary',
     disabled: true,
   },
+};
+
+export const FontSizes: StoryObj = {
+  render: () => html`
+    <div
+      style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;"
+    >
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeXxsmall"
+          icon="edit"
+          label="xxsmall fab"
+          expanded
+        ></er-fab>
+        <er-fab
+          class="primary themePrimary fontSizeXxsmall"
+          icon="edit"
+        ></er-fab>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeXsmall"
+          icon="edit"
+          label="xsmall fab"
+          expanded
+        ></er-fab>
+        <er-fab
+          class="primary themePrimary fontSizeXsmall"
+          icon-start="edit"
+          icon="edit"
+        ></er-fab>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeSmall"
+          icon="edit"
+          label="small fab"
+          expanded
+        ></er-fab>
+        <er-fab class="primary themePrimary fontSizeSmall" icon="edit"></er-fab>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeMedium"
+          icon="edit"
+          label="medium fab (default)"
+          expanded
+        ></er-fab>
+        <er-fab
+          class="primary themePrimary fontSizeMedium"
+          icon="edit"
+        ></er-fab>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeLarge"
+          icon="edit"
+          label="large fab"
+          expanded
+        ></er-fab>
+        <er-fab class="primary themePrimary fontSizeLarge" icon="edit"></er-fab>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeXlarge"
+          icon="edit"
+          label="xlarge fab"
+          expanded
+        ></er-fab>
+        <er-fab
+          class="primary themePrimary fontSizeXlarge"
+          icon="edit"
+        ></er-fab>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeXxlarge"
+          icon="edit"
+          label="xxlarge fab"
+          expanded
+        ></er-fab>
+        <er-fab
+          class="primary themePrimary fontSizeXxlarge"
+          icon="edit"
+        ></er-fab>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <er-fab
+          class="primary themePrimary fontSizeXxxlarge"
+          icon="edit"
+          label="xxxlarge fab"
+          expanded
+        ></er-fab>
+        <er-fab
+          class="primary themePrimary fontSizeXxxlarge"
+          icon="edit"
+        ></er-fab>
+      </div>
+    </div>
+  `,
 };
