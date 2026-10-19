@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.5.0...literally-firebase-v0.6.0) (2026-10-19)
+
+
+### Features
+
+* add comprehensive notification controller, messaging service, and models package ([b60788a](https://github.com/Zoramite/literally/commit/b60788afd926612b7f4d7a8d759b6b4fe55651d9))
+
 ## [0.5.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.4.0...literally-firebase-v0.5.0) (2026-09-22)
 
 
