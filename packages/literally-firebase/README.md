@@ -290,6 +290,86 @@ await signInWithGoogleWithFallback(getAuth());
 
 ---
 
+### Notifications (`@littoral/literally-firebase/notifications`)
+
+Comprehensive push and in-app notifications system for Lit web applications. Combines real-time Firestore synchronization, in-tab arrival toast hooks, unread counters, and FCM Web Push device registration without token drift.
+
+#### `NotificationController`
+
+A Reactive Controller tracking in-app notifications, unread count, and device push status. Supports subcollection (`users/{uid}/notifications`) and root collection (`/notifications`) storage patterns.
+
+```typescript
+import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { getFirestore } from 'firebase/firestore';
+import { getApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { NotificationController } from '@littoral/literally-firebase/notifications';
+
+@customElement('app-notifications-bell')
+export class AppNotificationsBell extends LitElement {
+  private notif = new NotificationController(this, {
+    firestore: getFirestore(),
+    app: getApp(),
+    uid: () => getAuth().currentUser?.uid,
+    push: { vapidKey: 'YOUR_PUBLIC_VAPID_KEY' },
+    onNotificationReceived: (notif) => {
+      // Direct hook for butter-bar or toast notifications
+      console.log('New notification arrived:', notif.title);
+    },
+  });
+
+  render() {
+    if (this.notif.loading) return html`<p>Loading...</p>`;
+
+    return html`
+      <div>
+        <button @click=${() => this.notif.togglePush()}>
+          Push: ${this.notif.pushState}
+        </button>
+        <span>Unread: ${this.notif.unreadCount}</span>
+        ${
+          this.notif.unreadCount > 0
+            ? html`<button @click=${() => this.notif.markAllAsRead()}>
+                Mark All Read
+              </button>`
+            : ''
+        }
+        <ul>
+          ${this.notif.notifications.map(
+            (n) => html`
+              <li class="${n.readAt ? 'read' : 'unread'}">
+                <strong>${n.title}</strong>: ${n.body}
+                ${
+                  !n.readAt
+                    ? html`<button @click=${() => this.notif.markAsRead(n.id)}>
+                        Read
+                      </button>`
+                    : ''
+                }
+              </li>
+            `,
+          )}
+        </ul>
+      </div>
+    `;
+  }
+}
+```
+
+#### `PushMessagingService`
+
+Utilities to manage FCM Web Push tokens, permission queries, silent re-registration, and shared-device cleanup.
+
+- `PushMessagingService.isSupported()`: Check if browser supports Web Push and FCM.
+- `PushMessagingService.isDeviceTokenRegistered(app, registeredTokens, options)`: Verifies if current device token exists in Firestore.
+- `PushMessagingService.requestPermission(app, db, uid, options)`: Prompts for permission and registers token to Firestore profile.
+- `PushMessagingService.ensureDeviceTokenRegistered(app, db, uid, registeredTokens, options)`: Silently auto-registers token if permission already granted (e.g. Chromebooks/PWAs).
+- `PushMessagingService.disablePush(app, db, uid, options)`: Unregisters token and deletes FCM token.
+- `PushMessagingService.forgetOnSignOut(app, db, uid, options)`: Best-effort token removal during logout on shared workstations.
+
+---
+
 ## Roadmap
 
 See [ROADMAP.md](./ROADMAP.md) for planned features, reactive controllers, converter enhancements, and testing utilities.

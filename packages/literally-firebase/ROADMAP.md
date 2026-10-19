@@ -76,7 +76,22 @@ Media and file uploads (e.g. photo cards, profile avatars, documents) require ma
 
 ---
 
-## 4. Testing & Emulation Harness (`/testing`)
+## 4. Push & In-App Notifications (`/notifications`)
+
+### Motivation
+
+Managing notifications across multiple apps requires duplicating Web Push permission flows, FCM token lifecycle management, dead-token pruning, in-app Firestore storage strategies, unread counters, and in-tab arrival toast hooks.
+
+### Completed Features
+
+- Subpath export: `@littoral/literally-firebase/notifications`
+- **`AppNotificationData` & `notificationConverter`**: Clean, type-safe data model with zero undefined fields and dual storage strategy support (subcollection vs root collection).
+- **`PushMessagingService`**: Drift-free FCM device registration verification, silent re-registration for enterprise/returning users, and shared-device cleanup on sign-out.
+- **`NotificationController`**: Reactive Lit controller tracking recent notifications, unread counts, push status, in-tab arrival toasts, and document mutations (`markAsRead`, `markAllAsRead`, `createNotification`, `deleteNotification`).
+
+---
+
+## 5. Testing & Emulation Harness (`/testing`)
 
 ### Motivation
 
@@ -97,4 +112,5 @@ Testing components or services against Firestore requires significant boilerplat
 | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------- | :-------------------------------------------------------------------------------------------------- |
 | **Phase 1: Reactivity & Data Safety**    | • `cleanFirestoreData` & `createConverter`<br>• Date / Timestamp helper utilities (`toDate`, `toTimestamp`)<br>• `FirestoreDocController`<br>• `FirestoreQueryController` | ✅ **Completed** | Eliminate converter boilerplate and replace mixin-based listeners with clean, reactive controllers. |
 | **Phase 2: Auth & Context**              | • `AuthController`<br>• `signInWithGoogleWithFallback`<br>• `@lit/context` definitions (`firestoreContext`, `authContext`)<br>• Controller context auto-discovery         | 🔄 In Progress   | Standardize authentication, claims, and dependency injection across apps.                           |
-| **Phase 3: Extended Services & Testing** | • `ProcessingMixin` Cloud Functions caller<br>• `StorageUploadController`<br>• `@littoral/literally-firebase/testing` utilities                                           | 📋 Planned       | Streamline file uploads, backend RPC invocations, and unit testing workflows.                       |
+| **Phase 3: Notifications & Messaging**   | • `NotificationController`<br>• `PushMessagingService` (FCM + SW)<br>• `notificationConverter` & `createNotification`<br>• Subcollection & root storage strategies        | ✅ **Completed** | Standardize Web Push, in-app notifications, unread counters, and arrival toasts across apps.        |
+| **Phase 4: Extended Services & Testing** | • `ProcessingMixin` Cloud Functions caller<br>• `StorageUploadController`<br>• `@littoral/literally-firebase/testing` utilities                                           | 📋 Planned       | Streamline file uploads, backend RPC invocations, and unit testing workflows.                       |
