@@ -39,6 +39,7 @@ export function navigateToPathEvent(
   return new CustomEvent<NavigationEvent>(ROUTE_NAVIGATION_EVENT_NAME, {
     bubbles: true,
     composed: true,
+    cancelable: true,
     detail: {
       path,
       rootPath: rootPath && rootPath !== '' ? rootPath : undefined,
@@ -47,9 +48,50 @@ export function navigateToPathEvent(
   });
 }
 
+export const ROUTE_BLOCK_NAVIGATION_EVENT_NAME = 'routeBlockNavigation';
+export const ROUTE_UNBLOCK_NAVIGATION_EVENT_NAME = 'routeUnblockNavigation';
+
+export interface RouteBlockNavigationEvent {
+  key?: string;
+}
+
+/**
+ * Event creation for blocking route navigation.
+ */
+export function blockNavigationEvent(
+  key?: string,
+): CustomEvent<RouteBlockNavigationEvent> {
+  return new CustomEvent<RouteBlockNavigationEvent>(
+    ROUTE_BLOCK_NAVIGATION_EVENT_NAME,
+    {
+      bubbles: true,
+      composed: true,
+      detail: { key },
+    },
+  );
+}
+
+/**
+ * Event creation for unblocking route navigation.
+ */
+export function unblockNavigationEvent(
+  key?: string,
+): CustomEvent<RouteBlockNavigationEvent> {
+  return new CustomEvent<RouteBlockNavigationEvent>(
+    ROUTE_UNBLOCK_NAVIGATION_EVENT_NAME,
+    {
+      bubbles: true,
+      composed: true,
+      detail: { key },
+    },
+  );
+}
+
 declare global {
   interface GlobalEventHandlersEventMap {
     routeNavigation: CustomEvent<NavigationEvent>;
+    routeBlockNavigation: CustomEvent<RouteBlockNavigationEvent>;
+    routeUnblockNavigation: CustomEvent<RouteBlockNavigationEvent>;
     stickySizeUpdate: CustomEvent<StickySize>;
     appElement: CustomEvent<AppElementEvent>;
   }

@@ -5,13 +5,23 @@ import { property, state } from 'lit/decorators.js';
 import { type Constructor } from '../mixins/mixin';
 import {
   type NavigationEvent,
+  ROUTE_BLOCK_NAVIGATION_EVENT_NAME,
   ROUTE_NAVIGATION_EVENT_NAME,
+  ROUTE_UNBLOCK_NAVIGATION_EVENT_NAME,
+  type RouteBlockNavigationEvent,
+  navigateToPathEvent,
 } from '../navigation/navigation';
-import { routeTrieContext, routeTrieMatchContext } from './context';
+import {
+  routeTrieContext,
+  routeTrieMatchContext,
+  routerContext,
+} from './context';
 import { type PageRoute } from './route';
 import { RouteTrie, type RouteTrieMatchValue } from './router';
 
 export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
+export const NAVIGATION_BLOCKED_EVENT_NAME = 'navigationBlocked';
+export const DEFAULT_BLOCK_KEY = '_default_';
 
 /**
  * Set a route value event.
@@ -21,16 +31,53 @@ export interface RouteSetEvent<Type> {
   value: Type;
 }
 
+export interface NavigationBlockedDetail {
+  path: string;
+  rootPath?: string;
+  openInNewWindow?: boolean;
+  source: 'navigationEvent' | 'popstate' | 'hashchange' | 'navigateToPath';
+  blockedKeys: string[];
+  retry: () => boolean;
+}
+
+export type NavigationBlockedCallback = (
+  detail: NavigationBlockedDetail,
+) => void;
+
 export interface RouterInterface {
   routeTrieMatch: RouteTrieMatchValue<PageRoute> | undefined;
   routeTrie: RouteTrie<PageRoute>;
   routePath: string;
   routerMode: 'hash' | 'path';
   rootPath: string;
+
+  navigationBlockedCallback?: NavigationBlockedCallback;
+
+  addNavigationBlockedCallback(callback: NavigationBlockedCallback): () => void;
+  removeNavigationBlockedCallback(callback: NavigationBlockedCallback): void;
+
+  isNavigationBlocked(key?: string): boolean;
+  startBlocking(key?: string): () => void;
+  stopBlocking(key?: string): void;
+  clearNavigationBlocking(key?: string): void;
+  getBlockedNavigationKeys(): string[];
+
+  wrapBlocking<T>(fn: () => T, key?: string): T;
+  wrapAsyncBlocking<T>(fn: () => Promise<T>, key?: string): Promise<T>;
+
+  navigateToPath(
+    path: string,
+    rootPath?: string,
+    openInNewWindow?: boolean,
+  ): boolean;
 }
 
 export interface RouteMatchInterface {
   routeMatch: RouteTrieMatchValue<PageRoute> | undefined;
+}
+
+export interface RouterConsumerInterface {
+  router: RouterInterface | undefined;
 }
 
 /**
@@ -50,6 +97,22 @@ export const RouteMatchConsumerMixin = <T extends Constructor<LitElement>>(
 };
 
 /**
+ * Mixin for adding a router consumer.
+ */
+export const RouterConsumerMixin = <T extends Constructor<LitElement>>(
+  superClass: T,
+) => {
+  class RouterConsumerElement extends superClass {
+    static styles = [(superClass as unknown as typeof LitElement).styles ?? []];
+
+    @consume({ context: routerContext, subscribe: true })
+    @state()
+    router: RouterInterface | undefined;
+  }
+  return RouterConsumerElement as Constructor<RouterConsumerInterface> & T;
+};
+
+/**
  * Mixin for adding router functionality to a component.
  */
 export const RouterMixin = <T extends Constructor<LitElement>>(
@@ -64,6 +127,9 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     @property({ type: String, attribute: 'root-path' })
     rootPath = '';
 
+    @property({ attribute: false })
+    navigationBlockedCallback?: NavigationBlockedCallback;
+
     @state()
     routePath = '';
 
@@ -74,13 +140,35 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     @provide({ context: routeTrieContext })
     routeTrie = new RouteTrie<PageRoute>();
 
+    @provide({ context: routerContext })
+    router: RouterInterface = this as unknown as RouterInterface;
+
+    private blockingCounts = new Map<string, number>();
+    private navigationBlockedCallbacks = new Set<NavigationBlockedCallback>();
+
     connectedCallback(): void {
       super.connectedCallback();
 
       // Listen for updating routes.
       this.addEventListener(
         ROUTE_TRIE_SET_EVENT_NAME,
-        this.handleRouteChange.bind(this),
+        this.onRouteTrieSetRoute,
+      );
+
+      // Listen for route navigation.
+      this.addEventListener(
+        ROUTE_NAVIGATION_EVENT_NAME,
+        this.handleNavigationEvent,
+      );
+
+      // Listen for route blocking events.
+      this.addEventListener(
+        ROUTE_BLOCK_NAVIGATION_EVENT_NAME,
+        this.handleBlockNavigation,
+      );
+      this.addEventListener(
+        ROUTE_UNBLOCK_NAVIGATION_EVENT_NAME,
+        this.handleUnblockNavigation,
       );
 
       // Update the match whenever the trie routes are updated.
@@ -93,33 +181,100 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
         this.routePath = this.currentRoutePath;
       }
 
-      // Listen for route navigation.
-      this.addEventListener(
+      // Add pop state listener for navigation.
+      window.addEventListener('popstate', this.handlePopState);
+
+      // Add listener for anchor changes
+      window.addEventListener('hashchange', this.handleHashChange);
+    }
+
+    disconnectedCallback(): void {
+      super.disconnectedCallback();
+
+      this.removeEventListener(
+        ROUTE_TRIE_SET_EVENT_NAME,
+        this.onRouteTrieSetRoute,
+      );
+      this.removeEventListener(
         ROUTE_NAVIGATION_EVENT_NAME,
-        this.handleNavigation.bind(this),
+        this.handleNavigationEvent,
+      );
+      this.removeEventListener(
+        ROUTE_BLOCK_NAVIGATION_EVENT_NAME,
+        this.handleBlockNavigation,
+      );
+      this.removeEventListener(
+        ROUTE_UNBLOCK_NAVIGATION_EVENT_NAME,
+        this.handleUnblockNavigation,
       );
 
-      // Add pop state listener for navigation.
-      window.addEventListener('popstate', (event: PopStateEvent) => {
+      window.removeEventListener('popstate', this.handlePopState);
+      window.removeEventListener('hashchange', this.handleHashChange);
+    }
+
+    private onRouteTrieSetRoute = (
+      evt: CustomEvent<RouteSetEvent<PageRoute>>,
+    ) => {
+      this.handleRouteChange(evt);
+    };
+
+    private handleNavigationEvent = (evt: CustomEvent<NavigationEvent>) => {
+      this.handleNavigation(evt);
+    };
+
+    private handleBlockNavigation = (
+      evt: CustomEvent<RouteBlockNavigationEvent>,
+    ) => {
+      this.startBlocking(evt.detail?.key);
+    };
+
+    private handleUnblockNavigation = (
+      evt: CustomEvent<RouteBlockNavigationEvent>,
+    ) => {
+      this.stopBlocking(evt.detail?.key);
+    };
+
+    private handlePopState = (event: PopStateEvent) => {
+      if (this.routerMode === 'path') {
         const nextPath = event.state?.path ?? this.currentRoutePath ?? '';
         if (this.routePath !== nextPath) {
+          if (this.isNavigationBlocked()) {
+            this.handleNavigationBlocked({
+              path: nextPath,
+              source: 'popstate',
+              blockedKeys: this.getBlockedNavigationKeys(),
+              retry: () => this.navigateToPath(nextPath),
+            });
+            const currentUrl = (this.rootPath || '') + this.routePath;
+            history.pushState({ path: this.routePath }, '', currentUrl || '/');
+            return;
+          }
           this.routePath = nextPath;
           this.updateRouteTrieMatch();
         }
-      });
+      }
+    };
 
-      // Add listener for anchor changes
-      window.addEventListener('hashchange', () => {
-        if (this.routerMode === 'hash') {
-          const newPath = this.currentRoutePath ?? '';
+    private handleHashChange = () => {
+      if (this.routerMode === 'hash') {
+        const newPath = this.currentRoutePath ?? '';
 
-          if (this.routePath !== newPath) {
-            this.routePath = newPath;
-            this.updateRouteTrieMatch();
+        if (this.routePath !== newPath) {
+          if (this.isNavigationBlocked()) {
+            this.handleNavigationBlocked({
+              path: newPath,
+              source: 'hashchange',
+              blockedKeys: this.getBlockedNavigationKeys(),
+              retry: () => this.navigateToPath(newPath),
+            });
+            window.location.hash = this.routePath ? '#' + this.routePath : '';
+            return;
           }
+          this.routePath = newPath;
+          this.updateRouteTrieMatch();
         }
-      });
-    }
+      }
+    };
 
     get currentRoutePath() {
       if (this.routerMode === 'hash') {
@@ -136,7 +291,153 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       }
     }
 
+    isNavigationBlocked(key?: string): boolean {
+      if (key !== undefined) {
+        return (this.blockingCounts.get(key) ?? 0) > 0;
+      }
+      return this.blockingCounts.size > 0;
+    }
+
+    startBlocking(key = DEFAULT_BLOCK_KEY): () => void {
+      this.blockingCounts.set(key, (this.blockingCounts.get(key) ?? 0) + 1);
+      this.requestUpdate();
+      let stopped = false;
+      return () => {
+        if (!stopped) {
+          stopped = true;
+          this.stopBlocking(key);
+        }
+      };
+    }
+
+    stopBlocking(key = DEFAULT_BLOCK_KEY): void {
+      const currentCount = this.blockingCounts.get(key) ?? 0;
+      if (currentCount <= 1) {
+        this.blockingCounts.delete(key);
+      } else {
+        this.blockingCounts.set(key, currentCount - 1);
+      }
+      this.requestUpdate();
+    }
+
+    clearNavigationBlocking(key?: string): void {
+      if (key !== undefined) {
+        this.blockingCounts.delete(key);
+      } else {
+        this.blockingCounts.clear();
+      }
+      this.requestUpdate();
+    }
+
+    getBlockedNavigationKeys(): string[] {
+      return Array.from(this.blockingCounts.keys());
+    }
+
+    wrapBlocking<T>(fn: () => T, key = DEFAULT_BLOCK_KEY): T {
+      const unblock = this.startBlocking(key);
+      try {
+        const result = fn();
+        if (
+          result &&
+          typeof (result as unknown as Promise<unknown>).then === 'function'
+        ) {
+          return (result as unknown as Promise<unknown>).finally(() => {
+            unblock();
+          }) as unknown as T;
+        }
+        unblock();
+        return result;
+      } catch (err) {
+        unblock();
+        throw err;
+      }
+    }
+
+    async wrapAsyncBlocking<T>(
+      fn: () => Promise<T>,
+      key = DEFAULT_BLOCK_KEY,
+    ): Promise<T> {
+      const unblock = this.startBlocking(key);
+      try {
+        return await fn();
+      } finally {
+        unblock();
+      }
+    }
+
+    addNavigationBlockedCallback(
+      callback: NavigationBlockedCallback,
+    ): () => void {
+      this.navigationBlockedCallbacks.add(callback);
+      return () => {
+        this.removeNavigationBlockedCallback(callback);
+      };
+    }
+
+    removeNavigationBlockedCallback(callback: NavigationBlockedCallback): void {
+      this.navigationBlockedCallbacks.delete(callback);
+    }
+
+    handleNavigationBlocked(detail: NavigationBlockedDetail): void {
+      if (this.navigationBlockedCallback) {
+        this.navigationBlockedCallback(detail);
+      }
+      for (const callback of this.navigationBlockedCallbacks) {
+        callback(detail);
+      }
+      this.dispatchEvent(
+        new CustomEvent<NavigationBlockedDetail>(
+          NAVIGATION_BLOCKED_EVENT_NAME,
+          {
+            bubbles: true,
+            composed: true,
+            detail,
+          },
+        ),
+      );
+    }
+
+    navigateToPath(
+      path: string,
+      rootPath?: string,
+      openInNewWindow = false,
+    ): boolean {
+      if (this.isNavigationBlocked()) {
+        this.handleNavigationBlocked({
+          path,
+          rootPath,
+          openInNewWindow,
+          source: 'navigateToPath',
+          blockedKeys: this.getBlockedNavigationKeys(),
+          retry: () => this.navigateToPath(path, rootPath, openInNewWindow),
+        });
+        return false;
+      }
+
+      const evt = navigateToPathEvent(path, rootPath, openInNewWindow);
+      this.dispatchEvent(evt);
+      return !evt.defaultPrevented;
+    }
+
     handleNavigation(evt: CustomEvent<NavigationEvent>) {
+      if (this.isNavigationBlocked()) {
+        evt.preventDefault();
+        this.handleNavigationBlocked({
+          path: evt.detail.path,
+          rootPath: evt.detail.rootPath,
+          openInNewWindow: evt.detail.openInNewWindow,
+          source: 'navigationEvent',
+          blockedKeys: this.getBlockedNavigationKeys(),
+          retry: () =>
+            this.navigateToPath(
+              evt.detail.path,
+              evt.detail.rootPath,
+              evt.detail.openInNewWindow,
+            ),
+        });
+        return;
+      }
+
       const nextUrl = new URL(window.location.href);
 
       const isDifferentRoot =
@@ -228,5 +529,6 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
 declare global {
   interface GlobalEventHandlersEventMap {
     routeTrieSetRoute: CustomEvent<RouteSetEvent<PageRoute>>;
+    navigationBlocked: CustomEvent<NavigationBlockedDetail>;
   }
 }
