@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/Zoramite/literally/compare/literally-v3.4.0...literally-v3.5.0) (2026-10-19)
+
+
+### Features
+
+* add navigation blocking and router context capabilities to router mixin ([d2819dd](https://github.com/Zoramite/literally/commit/d2819dd42fcbcbaa50f9cc3e6ada997a1ea7fcf0))
+
 ## [3.4.0](https://github.com/Zoramite/literally/compare/literally-v3.3.0...literally-v3.4.0) (2026-09-30)
 
 
