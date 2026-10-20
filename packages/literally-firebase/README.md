@@ -28,10 +28,11 @@ Lit Reactive Controllers provide declarative document and query subscriptions wi
 Subscribes to a single Firestore document. Supports static `DocumentReference` objects or reactive getter functions that re-evaluate when component properties change.
 
 ```typescript
+import { FirestoreDocController } from '@littoral/literally-firebase/firestore';
+import { doc, getFirestore } from 'firebase/firestore';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { doc, getFirestore } from 'firebase/firestore';
-import { FirestoreDocController } from '@littoral/literally-firebase/firestore';
+
 import { userConverter, type UserProfile } from './models';
 
 @customElement('user-profile-card')
@@ -66,10 +67,11 @@ export class UserProfileCard extends LitElement {
 Subscribes to Firestore collections or queries with automatic mapping to typed arrays.
 
 ```typescript
+import { FirestoreQueryController } from '@littoral/literally-firebase/firestore';
+import { collection, query, where, getFirestore } from 'firebase/firestore';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { collection, query, where, getFirestore } from 'firebase/firestore';
-import { FirestoreQueryController } from '@littoral/literally-firebase/firestore';
+
 import { taskConverter, type Task } from './models';
 
 @customElement('task-list')
@@ -114,10 +116,10 @@ A LitElement mixin that simplifies managing Firebase Firestore real-time snapsho
 #### Example Usage
 
 ```typescript
+import { FirestoreListenerMixin } from '@littoral/literally-firebase/mixins/firestore-watchers.mixin';
+import { doc, onSnapshot, getFirestore } from 'firebase/firestore';
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { doc, onSnapshot, getFirestore } from 'firebase/firestore';
-import { FirestoreListenerMixin } from '@littoral/literally-firebase/mixins/firestore-watchers.mixin';
 
 @customElement('user-profile-card')
 export class UserProfileCard extends FirestoreListenerMixin(LitElement) {
@@ -201,13 +203,13 @@ Recursively removes `undefined` properties from an object or array before sendin
 Preserves Firestore types (`Timestamp`, `FieldValue`, `DocumentReference`, `GeoPoint`, `Bytes`) and native `Date` instances intact.
 
 ```typescript
+import { cleanFirestoreData } from '@littoral/literally-firebase/firestore';
 import {
   updateDoc,
   doc,
   serverTimestamp,
   getFirestore,
 } from 'firebase/firestore';
-import { cleanFirestoreData } from '@littoral/literally-firebase/firestore';
 
 const db = getFirestore();
 const campRef = doc(db, 'camps', 'camp-123');
@@ -241,13 +243,13 @@ Reactive controller and helper functions for Firebase Authentication.
 A Reactive Controller tracking `user`, custom claims, and authentication loading state with automatic `onIdTokenChanged` listener management.
 
 ```typescript
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { getAuth } from 'firebase/auth';
 import {
   AuthController,
   signInWithGoogleWithFallback,
 } from '@littoral/literally-firebase/auth';
+import { getAuth } from 'firebase/auth';
+import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
 @customElement('user-menu')
 export class UserMenu extends LitElement {
@@ -282,8 +284,8 @@ export class UserMenu extends LitElement {
 Attempts popup sign-in, automatically falling back to `signInWithRedirect` if popup blockers intercept the request on mobile Safari or iOS devices.
 
 ```typescript
-import { getAuth } from 'firebase/auth';
 import { signInWithGoogleWithFallback } from '@littoral/literally-firebase/auth';
+import { getAuth } from 'firebase/auth';
 
 await signInWithGoogleWithFallback(getAuth());
 ```
@@ -299,12 +301,12 @@ Comprehensive push and in-app notifications system for Lit web applications. Com
 A Reactive Controller tracking in-app notifications, unread count, and device push status. Supports subcollection (`users/{uid}/notifications`) and root collection (`/notifications`) storage patterns.
 
 ```typescript
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { getFirestore } from 'firebase/firestore';
+import { NotificationController } from '@littoral/literally-firebase/notifications';
 import { getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { NotificationController } from '@littoral/literally-firebase/notifications';
+import { getFirestore } from 'firebase/firestore';
+import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
 @customElement('app-notifications-bell')
 export class AppNotificationsBell extends LitElement {

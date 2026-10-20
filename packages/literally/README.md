@@ -25,7 +25,6 @@ Import components and use them directly in your HTML or Lit templates:
 ```typescript
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-
 // Import desired components
 import '@littoral/literally/components/er-header';
 import '@littoral/literally/components/er-card';
