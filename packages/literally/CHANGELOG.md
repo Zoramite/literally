@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/Zoramite/literally/compare/literally-v3.5.0...literally-v3.6.0) (2026-10-20)
+
+
+### Features
+
+* add er-button component with stories and tests ([6cad7e8](https://github.com/Zoramite/literally/commit/6cad7e86e87571bc92c933db16d0cc9bf760e25b))
+
 ## [3.5.0](https://github.com/Zoramite/literally/compare/literally-v3.4.0...literally-v3.5.0) (2026-10-19)
 
 
