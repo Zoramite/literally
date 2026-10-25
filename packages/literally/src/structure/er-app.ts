@@ -1,10 +1,13 @@
 import { LitElement, type TemplateResult, css, html } from 'lit';
 import { query, state } from 'lit/decorators.js';
+import { until } from 'lit/directives/until.js';
 
+import '../components/er-loading';
 import {
   type AppElementEvent,
   type StickySize,
 } from '../navigation/navigation';
+import { type PageDetails } from '../routing/route';
 import { RouterMixin } from '../routing/router.mixin';
 
 /**
@@ -13,6 +16,11 @@ import { RouterMixin } from '../routing/router.mixin';
 export class ERApp extends RouterMixin(LitElement) {
   static styles = [
     css`
+      /* Reduce layout shift while custom elements are loading dynamically. */
+      :host :not(:defined) {
+        display: block;
+      }
+
       /* Development only styling to differentiate environments. */
       :host(.dev) .container {
         background-image: radial-gradient(
@@ -133,7 +141,25 @@ export class ERApp extends RouterMixin(LitElement) {
       return html``;
     }
 
-    return routeMatch.content()?.template ?? html``;
+    const contentResult = routeMatch.content();
+    if (!contentResult) {
+      return html``;
+    }
+
+    if (typeof (contentResult as Promise<PageDetails>).then === 'function') {
+      return html`${until(
+        (contentResult as Promise<PageDetails>).then(
+          (details) => details?.template ?? html``,
+        ),
+        this.renderLoadingRoute(),
+      )}`;
+    }
+
+    return (contentResult as PageDetails).template ?? html``;
+  }
+
+  renderLoadingRoute(): TemplateResult {
+    return html`<er-loading></er-loading>`;
   }
 }
 

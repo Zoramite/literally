@@ -167,3 +167,38 @@ describe('route setting and overwriting', () => {
     expect(match?.value).toBe('third-value');
   });
 });
+
+describe('sub-trie mounting', () => {
+  test.concurrent('mounts a child trie under a prefix', async ({ expect }) => {
+    const mainTrie = new RouteTrie();
+    mainTrie.add('/', 'home');
+
+    const campTrie = new RouteTrie();
+    campTrie.add('/badges', 'badges-page');
+    campTrie.add('/{campId}/stickers', 'stickers-page');
+
+    mainTrie.mount('/camp', campTrie);
+
+    expect(mainTrie.match('/')?.value).toBe('home');
+    expect(mainTrie.match('/camp/badges')?.value).toBe('badges-page');
+
+    const stickersMatch = mainTrie.match('/camp/123/stickers');
+    expect(stickersMatch?.value).toBe('stickers-page');
+    expect(stickersMatch?.params!['campId']).toBe('123');
+  });
+
+  test.concurrent('mounts nested sub-tries', async ({ expect }) => {
+    const mainTrie = new RouteTrie();
+    const gameTrie = new RouteTrie();
+    const jeopardyTrie = new RouteTrie();
+
+    jeopardyTrie.add('/host', 'jeopardy-host');
+    jeopardyTrie.add('/play', 'jeopardy-play');
+
+    gameTrie.mount('/jeopardy', jeopardyTrie);
+    mainTrie.mount('/games', gameTrie);
+
+    expect(mainTrie.match('/games/jeopardy/host')?.value).toBe('jeopardy-host');
+    expect(mainTrie.match('/games/jeopardy/play')?.value).toBe('jeopardy-play');
+  });
+});

@@ -116,6 +116,13 @@ export class RouteTrie<Type> {
   }
 
   /**
+   * Mount a sub-trie under a given path prefix.
+   */
+  mount(prefix: string, subTrie: RouteTrie<Type>, allowOverwrite = false) {
+    this.root.mount(prefix, subTrie.root, allowOverwrite);
+  }
+
+  /**
    * Overwrite a path with a new value or add to the routes if does not exist.
    */
   set(path: string, value: Type) {
@@ -143,6 +150,52 @@ export class RouteTrieNode<Type> {
     public paramSeparator = ':',
     public wildcardIndicator = '*',
   ) {}
+
+  /**
+   * Mount another RouteTrieNode under a given prefix.
+   */
+  mount(prefix: string, subRoot: RouteTrieNode<Type>, allowOverwrite = false) {
+    const parts = this.normalizePath(prefix).split(this.pathSeparator);
+    const currentPart = parts.shift();
+    const remainder = parts.join(this.pathSeparator);
+
+    if (!currentPart) {
+      this.merge(subRoot, allowOverwrite);
+      return;
+    }
+
+    if (!this.nodes[currentPart]) {
+      this.nodes[currentPart] = new RouteTrieNode(
+        this.pathSeparator,
+        this.paramSeparator,
+        this.wildcardIndicator,
+      );
+    }
+
+    this.nodes[currentPart].mount(remainder, subRoot, allowOverwrite);
+  }
+
+  /**
+   * Recursively merge another node into this node.
+   */
+  merge(otherNode: RouteTrieNode<Type>, allowOverwrite = false) {
+    if (otherNode.value !== undefined) {
+      if (this.value !== undefined && !allowOverwrite) {
+        throw new Error(
+          `Node value already exists during merge: ${this.value} => ${otherNode.value}`,
+        );
+      }
+      this.value = otherNode.value;
+    }
+
+    for (const key of Object.keys(otherNode.nodes)) {
+      if (!this.nodes[key]) {
+        this.nodes[key] = otherNode.nodes[key];
+      } else {
+        this.nodes[key].merge(otherNode.nodes[key], allowOverwrite);
+      }
+    }
+  }
 
   add(path: string, value: Type, allowOverwrite = false) {
     const parts = this.normalizePath(path).split(this.pathSeparator);

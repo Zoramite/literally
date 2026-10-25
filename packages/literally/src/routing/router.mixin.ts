@@ -70,6 +70,8 @@ export interface RouterInterface {
     rootPath?: string,
     openInNewWindow?: boolean,
   ): boolean;
+
+  updatePageTitle(title?: string): void;
 }
 
 export interface RouteMatchInterface {
@@ -521,6 +523,41 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     updateRouteTrieMatch() {
       this.routeTrieMatch = this.routeTrie.match(this.routePath);
       console.debug('Route changed', this.routeTrieMatch?.path);
+      this.updatePageTitle();
+    }
+
+    updatePageTitle(title?: string): void {
+      if (typeof document === 'undefined') {
+        return;
+      }
+
+      if (title !== undefined) {
+        document.title = title;
+        return;
+      }
+
+      const routeMatch = this.routeTrieMatch?.value;
+      const defaultTitle = this.routeTrie.defaultTitle;
+
+      let pageTitle: string | undefined;
+      if (routeMatch) {
+        const pageOptions =
+          typeof routeMatch.pageOptions === 'function'
+            ? routeMatch.pageOptions()
+            : routeMatch.pageOptions;
+
+        if (pageOptions?.title) {
+          pageTitle = pageOptions.title;
+        }
+      }
+
+      if (pageTitle && defaultTitle) {
+        document.title = `${pageTitle} - ${defaultTitle}`;
+      } else if (pageTitle) {
+        document.title = pageTitle;
+      } else if (defaultTitle && document.title !== defaultTitle) {
+        document.title = defaultTitle;
+      }
     }
   }
   return RouterElement as Constructor<RouterInterface> & T;
