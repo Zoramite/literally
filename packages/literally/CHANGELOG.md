@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/Zoramite/literally/compare/literally-v3.6.0...literally-v3.7.0) (2026-10-25)
+
+
+### Features
+
+* Flexible routing types and resolvers ([de12691](https://github.com/Zoramite/literally/commit/de1269147cece6f7f3f6c9c142001e0d6d55c61b))
+
 ## [3.6.0](https://github.com/Zoramite/literally/compare/literally-v3.5.0...literally-v3.6.0) (2026-10-20)
 
 
