@@ -3,6 +3,7 @@ import { type TemplateResult } from 'lit';
 export interface DefaultPageOptions {
   // Title of the page used to update the browser title.
   title?: string;
+  [key: string]: unknown;
 }
 
 export interface PageDetails {
@@ -182,7 +183,8 @@ export class RoleRoute implements PageRoute {
     permissions?: Record<string, boolean> | null,
   ): PageDetails | Promise<PageDetails> | undefined {
     // 1. Check if user is authenticated
-    if (!permissions || !permissions.authenticated) {
+    const isAuthenticated = permissions && (permissions.authenticated ?? true);
+    if (!permissions || !isAuthenticated) {
       if (this.customFallback) {
         return resolvePageDetails(
           this.customFallback('unauthenticated'),
@@ -236,7 +238,8 @@ export class RoleSwitchRoute implements PageRoute {
     permissions?: Record<string, boolean> | null,
   ): PageDetails | Promise<PageDetails> | undefined {
     // 1. Check if user is authenticated
-    if (!permissions || !permissions.authenticated) {
+    const isAuthenticated = permissions && (permissions.authenticated ?? true);
+    if (!permissions || !isAuthenticated) {
       if (this.options?.customFallback) {
         return resolvePageDetails(
           this.options.customFallback('unauthenticated'),

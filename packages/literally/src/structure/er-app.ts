@@ -133,7 +133,7 @@ export class ERApp extends RouterMixin(LitElement) {
     `;
   }
 
-  renderContent() {
+  renderContent(permissions?: Record<string, boolean> | null) {
     const routeMatch = this.routeTrieMatch?.value;
 
     // No route matched, nothing to show.
@@ -141,7 +141,7 @@ export class ERApp extends RouterMixin(LitElement) {
       return html``;
     }
 
-    const contentResult = routeMatch.content();
+    const contentResult = routeMatch.content(permissions);
     if (!contentResult) {
       return html``;
     }
