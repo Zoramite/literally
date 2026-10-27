@@ -29,6 +29,7 @@ describe('ErFab', () => {
     const icon = fab.shadowRoot?.querySelector('er-icon');
     expect(icon).not.toBeNull();
     expect(icon?.getAttribute('icon')).toBe('add');
+    expect(customElements.get('er-icon')).toBeDefined();
     expect(fab.shadowRoot?.querySelector('.label')?.textContent).toBe(
       'Add item',
     );

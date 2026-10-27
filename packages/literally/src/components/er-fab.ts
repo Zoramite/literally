@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { NavigationMixin } from '../navigation/navigation.mixin';
 import { type BreakpointDevice, breakpoints } from '../structure/devices';
+import './er-icon';
 
 /**
  * Fab visual element for collapsable button/links.
