@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.8.0](https://github.com/Zoramite/literally/compare/literally-v3.7.0...literally-v3.8.0) (2026-10-28)
+
+
+### Features
+
+* pass permissions to route content rendering and update component documentation ([0db157a](https://github.com/Zoramite/literally/commit/0db157ac951be840900df937e866d41dcdfc683b))
+
+
+### Bug Fixes
+
+* import er-icon component in er-fab and add test for its registration ([a3bbd50](https://github.com/Zoramite/literally/commit/a3bbd50b26824c32bc85a0cc5c5494b4034fcbcb))
+* Set default font settings for theme mixin ([f098cca](https://github.com/Zoramite/literally/commit/f098cca201140a5091d6f2b3dd557bb3d28a3d51))
+
 ## [3.7.0](https://github.com/Zoramite/literally/compare/literally-v3.6.0...literally-v3.7.0) (2026-10-25)
 
 
