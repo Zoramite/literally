@@ -224,6 +224,20 @@ export const ThemeMixin = <T extends Constructor<LitElement>>(
           --er-color-surface-container-highest: var(
             --md-sys-color-surface-container-highest
           );
+
+          color: var(--md-sys-color-on-surface);
+          font-family: var(
+            --body-font-family,
+            Inter,
+            system-ui,
+            Avenir,
+            Helvetica,
+            Arial,
+            sans-serif
+          );
+          font-optical-sizing: var(--body-font-optical-sizing, auto);
+          font-size: var(--er-sys-body-font-size-medium);
+          font-weight: var(--body-font-weight, 400);
         }
 
         @media (prefers-color-scheme: light) {
