@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.6.0...literally-firebase-v0.7.0) (2026-11-01)
+
+
+### Features
+
+* add feature flag system and firebase Firestore storage adapter ([631af35](https://github.com/Zoramite/literally/commit/631af35bc39fa4e9f34b32c2b09b66a9bbe54fd4))
+
 ## [0.6.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.5.0...literally-firebase-v0.6.0) (2026-10-19)
 
 
