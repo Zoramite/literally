@@ -93,7 +93,13 @@ Primitives for composing responsive grid and flexbox arrangements:
 - `RafMixin`: Ties animations or rapid DOM mutations to `requestAnimationFrame`.
 - `WakeLockMixin`: Manages the Screen Wake Lock API to prevent devices from sleeping during active user sessions.
 
-### 5. Theming & Design System (`/theme`)
+### 5. Feature Flags & Rollout Controls (`/feature-flags`)
+
+- `FeatureFlagManager` & `FeatureFlagStorageAdapter`: Storage-agnostic feature flag engine supporting global vs. scoped overrides (`scope__flagId`), user allowlists (`targetIds`), scope allowlists (`targetScopes`), custom attribute targeting (`targetAttributes`), and deterministic percentage rollouts (`rolloutPercentage`).
+- `computeRolloutHash` & `isWithinRolloutPercentage`: Synchronous SHA-256 deterministic hashing (`0–99`) compatible across browser and Node.js runtimes.
+- `FeatureFlagController`, `featureFlagContext`, & `<er-feature-flag>`: Lit reactive controller, `@lit/context` integration, and declarative gate element with `fallback` slot support.
+
+### 6. Theming & Design System (`/theme`)
 
 Literally is styled with Material Design 3 tokens:
 

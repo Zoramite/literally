@@ -18,6 +18,11 @@
       "import": "./dist/notifications/index.js",
       "default": "./dist/notifications/index.js"
     },
+    "./feature-flags": {
+      "types": "./dist/feature-flags/index.d.ts",
+      "import": "./dist/feature-flags/index.js",
+      "default": "./dist/feature-flags/index.js"
+    },
     "./*": {
       "types": "./dist/*.d.ts",
       "import": "./dist/*.js",

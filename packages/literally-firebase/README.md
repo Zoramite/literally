@@ -372,6 +372,82 @@ Utilities to manage FCM Web Push tokens, permission queries, silent re-registrat
 
 ---
 
+### Feature Flags (`@littoral/literally-firebase/feature-flags`)
+
+Firestore storage adapter and reactive controller for `@littoral/literally/feature-flags`, supporting namespaced collections (`canopy_feature_flags`), subcollections (`namespaces/canopy/feature_flags`), or document-prefixed keys (`canopy__flagId`).
+
+#### `FirestoreFeatureFlagAdapter`
+
+Implements `FeatureFlagStorageAdapter` backed by Firestore with automatic undefined-field cleaning (`featureFlagRuleConverter`) and real-time `onSnapshot` subscriptions.
+
+```typescript
+import { FirestoreFeatureFlagAdapter } from '@littoral/literally-firebase/feature-flags';
+import { FeatureFlagManager } from '@littoral/literally/feature-flags';
+import { getFirestore } from 'firebase/firestore';
+
+const adapter = new FirestoreFeatureFlagAdapter({
+  firestore: getFirestore(),
+  namespace: 'canopy', // Resolves to collection 'canopy_feature_flags' by default
+});
+
+const flagManager = new FeatureFlagManager({
+  adapter,
+  context: {
+    id: 'student@wilderland.academy',
+    scope: 'wilderland',
+    attributes: { bucket: 'high_school', cohort: 'class_2026' },
+  },
+});
+
+flagManager.startListening();
+```
+
+#### `FirestoreFeatureFlagController`
+
+A Lit Reactive Controller that connects a `FeatureFlagManager` directly to a namespaced Firestore collection and triggers host updates when rules or evaluation contexts change.
+
+```typescript
+import { provide } from '@lit/context';
+import '@littoral/literally/feature-flags/er-feature-flag';
+import { FirestoreFeatureFlagController } from '@littoral/literally-firebase/feature-flags';
+import {
+  featureFlagContext,
+  type FeatureFlagManager,
+} from '@littoral/literally/feature-flags';
+import { getFirestore } from 'firebase/firestore';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
+@customElement('app-shell')
+export class AppShell extends LitElement {
+  @property() userEmail = '';
+  @property() tenantId = 'wilderland';
+
+  private flags = new FirestoreFeatureFlagController(this, {
+    firestore: getFirestore(),
+    namespace: 'canopy',
+    context: () => ({
+      id: this.userEmail,
+      scope: this.tenantId,
+    }),
+  });
+
+  @provide({ context: featureFlagContext })
+  flagManager: FeatureFlagManager = this.flags.manager;
+
+  render() {
+    return html`
+      <er-feature-flag flag="classroom_freeze">
+        <classroom-freeze-panel></classroom-freeze-panel>
+        <p slot="fallback">Classroom freeze is not active for your account.</p>
+      </er-feature-flag>
+    `;
+  }
+}
+```
+
+---
+
 ## Roadmap
 
 See [ROADMAP.md](./ROADMAP.md) for planned features, reactive controllers, converter enhancements, and testing utilities.
