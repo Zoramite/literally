@@ -16,7 +16,7 @@ import {
   routeTrieMatchContext,
   routerContext,
 } from './context';
-import { type PageRoute } from './route';
+import { getRoutePageOptions, type PageRoute } from './route';
 import { RouteTrie, type RouteTrieMatchValue } from './router';
 
 export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
@@ -44,12 +44,17 @@ export type NavigationBlockedCallback = (
   detail: NavigationBlockedDetail,
 ) => void;
 
+export interface UpdatePageTitleOptions {
+  includeDefaultTitle?: boolean;
+}
+
 export interface RouterInterface {
   routeTrieMatch: RouteTrieMatchValue<PageRoute> | undefined;
   routeTrie: RouteTrie<PageRoute>;
   routePath: string;
   routerMode: 'hash' | 'path';
   rootPath: string;
+  defaultTitle: string;
 
   navigationBlockedCallback?: NavigationBlockedCallback;
 
@@ -71,7 +76,9 @@ export interface RouterInterface {
     openInNewWindow?: boolean,
   ): boolean;
 
-  updatePageTitle(title?: string): void;
+  getRoutePermissions(): Record<string, boolean> | null | undefined;
+  updateRouteTrieMatch(): void;
+  updatePageTitle(title?: string, options?: UpdatePageTitleOptions): void;
 }
 
 export interface RouteMatchInterface {
@@ -142,14 +149,39 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     @provide({ context: routeTrieContext })
     routeTrie = new RouteTrie<PageRoute>();
 
+    @property({ type: String, attribute: 'default-title' })
+    get defaultTitle(): string {
+      return this.routeTrie.defaultTitle;
+    }
+    set defaultTitle(value: string) {
+      const oldValue = this.routeTrie.defaultTitle;
+      this.routeTrie.defaultTitle = value ?? '';
+      this.requestUpdate('defaultTitle', oldValue);
+      if (this.isConnected) {
+        this.updatePageTitle();
+      }
+    }
+
     @provide({ context: routerContext })
     router: RouterInterface = this as unknown as RouterInterface;
 
     private blockingCounts = new Map<string, number>();
     private navigationBlockedCallbacks = new Set<NavigationBlockedCallback>();
+    private _routerModifiedTitle = false;
+    private onRouteTrieUpdated = () => {
+      this.updateRouteTrieMatch();
+    };
 
     connectedCallback(): void {
       super.connectedCallback();
+
+      if (
+        !this.routeTrie.defaultTitle &&
+        typeof document !== 'undefined' &&
+        document.title
+      ) {
+        this.routeTrie.defaultTitle = document.title;
+      }
 
       // Listen for updating routes.
       this.addEventListener(
@@ -174,9 +206,7 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       );
 
       // Update the match whenever the trie routes are updated.
-      this.routeTrie.addCallback(() => {
-        this.updateRouteTrieMatch();
-      });
+      this.routeTrie.addCallback(this.onRouteTrieUpdated);
 
       // Determine the initial path based on the url of the page.
       if (this.currentRoutePath !== undefined) {
@@ -192,6 +222,8 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
 
     disconnectedCallback(): void {
       super.disconnectedCallback();
+
+      this.routeTrie.removeCallback(this.onRouteTrieUpdated);
 
       this.removeEventListener(
         ROUTE_TRIE_SET_EVENT_NAME,
@@ -507,6 +539,17 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     }
 
     protected willUpdate(changedProperties: PropertyValueMap<this>): void {
+      super.willUpdate(changedProperties);
+
+      if (
+        (changedProperties.has('routerMode') ||
+          changedProperties.has('rootPath')) &&
+        !changedProperties.has('routePath') &&
+        this.currentRoutePath !== undefined
+      ) {
+        this.routePath = this.currentRoutePath;
+      }
+
       if (changedProperties.has('routePath')) {
         // Update the matched route when the path has changed.
         this.updateRouteTrieMatch();
@@ -520,43 +563,55 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       }
     }
 
+    getRoutePermissions(): Record<string, boolean> | null | undefined {
+      return undefined;
+    }
+
     updateRouteTrieMatch() {
       this.routeTrieMatch = this.routeTrie.match(this.routePath);
       console.debug('Route changed', this.routeTrieMatch?.path);
       this.updatePageTitle();
     }
 
-    updatePageTitle(title?: string): void {
+    updatePageTitle(title?: string, options?: UpdatePageTitleOptions): void {
       if (typeof document === 'undefined') {
         return;
       }
 
-      if (title !== undefined) {
-        document.title = title;
-        return;
-      }
-
-      const routeMatch = this.routeTrieMatch?.value;
       const defaultTitle = this.routeTrie.defaultTitle;
+      const includeDefaultTitle = options?.includeDefaultTitle ?? true;
 
-      let pageTitle: string | undefined;
-      if (routeMatch) {
-        const pageOptions =
-          typeof routeMatch.pageOptions === 'function'
-            ? routeMatch.pageOptions()
-            : routeMatch.pageOptions;
+      let pageTitle = title;
+      if (pageTitle === undefined) {
+        const routeMatch = this.routeTrieMatch?.value;
+        const pageOptions = getRoutePageOptions(
+          routeMatch,
+          this.getRoutePermissions(),
+        );
 
         if (pageOptions?.title) {
           pageTitle = pageOptions.title;
         }
       }
 
-      if (pageTitle && defaultTitle) {
-        document.title = `${pageTitle} - ${defaultTitle}`;
+      let nextTitle: string | undefined;
+      if (pageTitle && defaultTitle && includeDefaultTitle) {
+        nextTitle =
+          pageTitle === defaultTitle || pageTitle.endsWith(` - ${defaultTitle}`)
+            ? pageTitle
+            : `${pageTitle} - ${defaultTitle}`;
+        this._routerModifiedTitle = true;
       } else if (pageTitle) {
-        document.title = pageTitle;
-      } else if (defaultTitle && document.title !== defaultTitle) {
-        document.title = defaultTitle;
+        nextTitle = pageTitle;
+        this._routerModifiedTitle = true;
+      } else if (defaultTitle) {
+        nextTitle = defaultTitle;
+      } else if (this._routerModifiedTitle) {
+        nextTitle = '';
+      }
+
+      if (nextTitle !== undefined && document.title !== nextTitle) {
+        document.title = nextTitle;
       }
     }
   }

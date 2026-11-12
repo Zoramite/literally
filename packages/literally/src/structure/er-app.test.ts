@@ -2,7 +2,13 @@
 import { html } from 'lit';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LazyRoute, PublicRoute } from '../routing/route';
+import {
+  LazyRoute,
+  type PageDetails,
+  type PageRoute,
+  PublicRoute,
+  RoleRoute,
+} from '../routing/route';
 import { ERApp } from './er-app';
 
 class TestApp extends ERApp {}
@@ -85,5 +91,115 @@ describe('ERApp and routing integration', () => {
     // Resolve the async loader
     resolveModule!({ ready: true });
     await modulePromise;
+  });
+
+  it('updates document.title when async PageDetails resolves with pageOptions and ignores stale promises', async () => {
+    app.defaultTitle = 'My App';
+
+    let resolveFirst!: (details: PageDetails) => void;
+    const firstPromise = new Promise<PageDetails>((resolve) => {
+      resolveFirst = resolve;
+    });
+
+    let resolveSecond!: (details: PageDetails) => void;
+    const secondPromise = new Promise<PageDetails>((resolve) => {
+      resolveSecond = resolve;
+    });
+
+    const firstRoute: PageRoute = {
+      content: () => firstPromise,
+    };
+    const secondRoute: PageRoute = {
+      content: () => secondPromise,
+    };
+
+    app.routeTrie.set('/first', firstRoute);
+    app.routeTrie.set('/second', secondRoute);
+
+    app.navigateToPath('/first');
+    await app.updateComplete;
+    expect(document.title).toBe('My App');
+
+    // Navigate away before /first finishes loading
+    app.navigateToPath('/second');
+    await app.updateComplete;
+
+    resolveFirst({
+      pageOptions: { title: 'Stale First Page' },
+      template: html`<div>First</div>`,
+    });
+    await firstPromise;
+    await new Promise((r) => setTimeout(r, 0));
+    expect(document.title).toBe('My App');
+
+    resolveSecond({
+      pageOptions: { title: 'Resolved Second Page' },
+      template: html`<div>Second</div>`,
+    });
+    await secondPromise;
+    await new Promise((r) => setTimeout(r, 0));
+    expect(document.title).toBe('Resolved Second Page - My App');
+  });
+
+  it('does not overwrite dynamic child document.title on unrelated re-renders or unchanged-title permission updates', async () => {
+    let permissions: Record<string, boolean> | undefined = undefined;
+    app.getRoutePermissions = () => permissions;
+    app.defaultTitle = 'STAR Camp';
+
+    app.routeTrie.set(
+      '/camps/{campId}',
+      new PublicRoute({
+        pageOptions: { title: 'Camp Details' },
+        template: html`<div>Camp View</div>`,
+      }),
+    );
+
+    app.navigateToPath('/camps/odyssey');
+    await app.updateComplete;
+    expect(document.title).toBe('Camp Details - STAR Camp');
+
+    // Simulate child component setting a dynamic document title
+    document.title = 'Odyssey Lunar Base Camp';
+
+    // Trigger an unrelated app re-render
+    app.requestUpdate();
+    await app.updateComplete;
+    expect(document.title).toBe('Odyssey Lunar Base Camp');
+
+    // Trigger a permission update that resolves to the same route title
+    permissions = { user: true };
+    app.requestUpdate();
+    await app.updateComplete;
+    expect(document.title).toBe('Odyssey Lunar Base Camp');
+  });
+
+  it('updates document.title when permission changes alter RoleRoute pageOptions', async () => {
+    let permissions: Record<string, boolean> | undefined = undefined;
+    app.getRoutePermissions = () => permissions;
+    app.defaultTitle = 'STAR Camp';
+
+    app.routeTrie.set(
+      '/admin',
+      new RoleRoute(
+        ['admin'],
+        {
+          pageOptions: { title: 'Admin Dashboard' },
+          template: html`<div>Admin</div>`,
+        },
+        () => ({
+          pageOptions: { title: 'Access Denied' },
+          template: html`<div>Denied</div>`,
+        }),
+      ),
+    );
+
+    app.navigateToPath('/admin');
+    await app.updateComplete;
+    expect(document.title).toBe('Access Denied - STAR Camp');
+
+    permissions = { admin: true };
+    app.requestUpdate();
+    await app.updateComplete;
+    expect(document.title).toBe('Admin Dashboard - STAR Camp');
   });
 });

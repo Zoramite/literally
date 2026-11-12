@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
-import { LitElement } from 'lit';
+import { LitElement, html } from 'lit';
 import { afterEach, beforeEach, describe, test } from 'vitest';
 
 import { navigateToPathEvent } from '../navigation/navigation';
+import { PublicRoute, RoleRoute } from './route';
 import { RouterMixin } from './router.mixin';
 
 class TestRouterComponent extends RouterMixin(LitElement) {}
@@ -371,6 +372,111 @@ describe('RouterMixin', () => {
       expect(blockedDetail.path).toBe('/popped');
       expect(element.routePath).toBe('/current');
       expect(window.location.pathname).toBe('/app/current');
+    });
+  });
+
+  describe('page title updates', () => {
+    test('initializes defaultTitle from document.title on connect when unset', ({
+      expect,
+    }) => {
+      document.title = 'Initial App Name';
+      const el = document.createElement(
+        'test-router-component',
+      ) as TestRouterComponent;
+      document.body.appendChild(el);
+
+      expect(el.defaultTitle).toBe('Initial App Name');
+      el.remove();
+    });
+
+    test('preserves explicit defaultTitle set before connect', ({ expect }) => {
+      document.title = 'SSR Share Page Title';
+      const el = document.createElement(
+        'test-router-component',
+      ) as TestRouterComponent;
+      el.defaultTitle = 'Canonical App';
+      document.body.appendChild(el);
+
+      expect(el.defaultTitle).toBe('Canonical App');
+      el.remove();
+    });
+
+    test('formats route pageOptions.title with defaultTitle and resets on untitled routes', async ({
+      expect,
+    }) => {
+      element.defaultTitle = 'STAR Camp';
+      element.routeTrie.set(
+        '/titled',
+        new PublicRoute({
+          pageOptions: { title: 'Dashboard' },
+          template: html`<div>Dashboard</div>`,
+        }),
+      );
+      element.routeTrie.set(
+        '/untitled',
+        new PublicRoute({
+          template: html`<div>Untitled</div>`,
+        }),
+      );
+
+      element.navigateToPath('/titled');
+      await element.updateComplete;
+      expect(document.title).toBe('Dashboard - STAR Camp');
+
+      element.navigateToPath('/untitled');
+      await element.updateComplete;
+      expect(document.title).toBe('STAR Camp');
+    });
+
+    test('formats explicit updatePageTitle calls and avoids duplicate suffixes', ({
+      expect,
+    }) => {
+      element.defaultTitle = 'STAR Camp';
+
+      element.updatePageTitle('Checkout');
+      expect(document.title).toBe('Checkout - STAR Camp');
+
+      element.updatePageTitle('Checkout - STAR Camp');
+      expect(document.title).toBe('Checkout - STAR Camp');
+
+      element.updatePageTitle('STAR Camp');
+      expect(document.title).toBe('STAR Camp');
+
+      element.updatePageTitle('Custom Share Title', {
+        includeDefaultTitle: false,
+      });
+      expect(document.title).toBe('Custom Share Title');
+    });
+
+    test('uses getRoutePermissions when resolving route pageOptions', ({
+      expect,
+    }) => {
+      let permissions: Record<string, boolean> | undefined = undefined;
+      element.getRoutePermissions = () => permissions;
+      element.defaultTitle = 'STAR Camp';
+
+      element.routeTrie.set(
+        '/admin',
+        new RoleRoute(
+          ['admin'],
+          {
+            pageOptions: { title: 'Admin Console' },
+            template: html`<div>Admin</div>`,
+          },
+          () => ({
+            pageOptions: { title: 'Sign In Required' },
+            template: html`<div>Fallback</div>`,
+          }),
+        ),
+      );
+
+      element.routePath = '/admin';
+      element.updateRouteTrieMatch();
+      expect(document.title).toBe('Sign In Required - STAR Camp');
+
+      permissions = { admin: true };
+      element.updatePageTitle();
+      expect(document.title).toBe('Admin Console - STAR Camp');
     });
   });
 });

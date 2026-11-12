@@ -31,10 +31,8 @@ export class ERRouteBase extends LitElement {
   /**
    * Watch for an update of the route trie to add the routes.
    */
-  protected override async willUpdate(
-    changedProperties: PropertyValueMap<this>,
-  ) {
-    super.updated(changedProperties);
+  protected override willUpdate(changedProperties: PropertyValueMap<this>) {
+    super.willUpdate(changedProperties);
 
     if (changedProperties.has('routeTrie')) {
       this.addRoutes();

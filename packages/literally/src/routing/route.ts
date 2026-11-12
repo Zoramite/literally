@@ -40,6 +40,9 @@ export function getRoutePageOptions(
   if (!route) {
     return undefined;
   }
+  if (typeof route.getPageOptions === 'function') {
+    return route.getPageOptions(permissions);
+  }
   if (typeof route.pageOptions === 'function') {
     return route.pageOptions(permissions);
   }
@@ -55,6 +58,13 @@ export interface PageRoute {
     | ((
         permissions?: Record<string, boolean> | null,
       ) => DefaultPageOptions | undefined);
+
+  /**
+   * Optional permission-aware page options accessor without executing dynamic content loaders.
+   */
+  getPageOptions?: (
+    permissions?: Record<string, boolean> | null,
+  ) => DefaultPageOptions | undefined;
 
   /**
    * If no permissions provided it is considered looking for a public page.
@@ -179,6 +189,30 @@ export class RoleRoute implements PageRoute {
     return undefined;
   }
 
+  getPageOptions(
+    permissions?: Record<string, boolean> | null,
+  ): DefaultPageOptions | undefined {
+    const isAuthenticated = permissions && (permissions.authenticated ?? true);
+    if (!permissions || !isAuthenticated) {
+      const fallback = this.customFallback?.('unauthenticated');
+      return fallback && typeof fallback !== 'function'
+        ? fallback.pageOptions
+        : undefined;
+    }
+
+    const hasAllowedRole = this.allowedRoles.some((role) =>
+      Boolean(permissions[role]),
+    );
+    if (!hasAllowedRole) {
+      const fallback = this.customFallback?.('forbidden');
+      return fallback && typeof fallback !== 'function'
+        ? fallback.pageOptions
+        : undefined;
+    }
+
+    return this.pageOptions;
+  }
+
   content(
     permissions?: Record<string, boolean> | null,
   ): PageDetails | Promise<PageDetails> | undefined {
@@ -232,6 +266,48 @@ export class RoleSwitchRoute implements PageRoute {
 
   get pageOptions(): DefaultPageOptions | undefined {
     return this.options?.pageOptions;
+  }
+
+  getPageOptions(
+    permissions?: Record<string, boolean> | null,
+  ): DefaultPageOptions | undefined {
+    const isAuthenticated = permissions && (permissions.authenticated ?? true);
+    if (!permissions || !isAuthenticated) {
+      const fallback = this.options?.customFallback?.('unauthenticated');
+      return fallback && typeof fallback !== 'function'
+        ? fallback.pageOptions
+        : undefined;
+    }
+
+    const priority = this.options?.rolePriority ?? Object.keys(this.rolePages);
+    for (const role of priority) {
+      const pageVal = this.rolePages[role];
+      if (permissions[role] && pageVal) {
+        if (typeof pageVal !== 'function' && pageVal.pageOptions) {
+          return this.options?.pageOptions
+            ? { ...this.options.pageOptions, ...pageVal.pageOptions }
+            : pageVal.pageOptions;
+        }
+        return this.options?.pageOptions;
+      }
+    }
+
+    if (this.options?.fallbackRole) {
+      const fallbackVal = this.rolePages[this.options.fallbackRole];
+      if (fallbackVal) {
+        if (typeof fallbackVal !== 'function' && fallbackVal.pageOptions) {
+          return this.options?.pageOptions
+            ? { ...this.options.pageOptions, ...fallbackVal.pageOptions }
+            : fallbackVal.pageOptions;
+        }
+        return this.options?.pageOptions;
+      }
+    }
+
+    const fallback = this.options?.customFallback?.('forbidden');
+    return fallback && typeof fallback !== 'function'
+      ? fallback.pageOptions
+      : undefined;
   }
 
   content(

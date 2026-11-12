@@ -7,8 +7,17 @@ import {
   type AppElementEvent,
   type StickySize,
 } from '../navigation/navigation';
-import { type PageDetails } from '../routing/route';
-import { RouterMixin } from '../routing/router.mixin';
+import {
+  type DefaultPageOptions,
+  type PageDetails,
+  type PageRoute,
+  getRoutePageOptions,
+} from '../routing/route';
+import { type RouteTrieMatchValue } from '../routing/router';
+import {
+  RouterMixin,
+  type UpdatePageTitleOptions,
+} from '../routing/router.mixin';
 
 /**
  * Base app for use in applications.
@@ -105,6 +114,13 @@ export class ERApp extends RouterMixin(LitElement) {
   @state()
   globalElements: TemplateResult[] = [];
 
+  private _hasAppliedOnce = false;
+  private _lastAppliedMatch?: RouteTrieMatchValue<PageRoute>;
+  private _lastAppliedPermissions?: Record<string, boolean> | null;
+  private _lastResolvedPageTitle?: string;
+  private _contentOptionsToken = 0;
+  private _pendingAsyncOptionsToken = 0;
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -133,29 +149,153 @@ export class ERApp extends RouterMixin(LitElement) {
     `;
   }
 
+  override updateRouteTrieMatch() {
+    this._lastResolvedPageTitle = undefined;
+    super.updateRouteTrieMatch();
+  }
+
+  override updatePageTitle(
+    title?: string,
+    options?: UpdatePageTitleOptions,
+  ): void {
+    super.updatePageTitle(title ?? this._lastResolvedPageTitle, options);
+  }
+
+  applyPageOptions(
+    pageOptions?: DefaultPageOptions,
+    options?: { updateTitle?: boolean },
+  ): void {
+    if (options?.updateTitle ?? true) {
+      this.updatePageTitle(pageOptions?.title);
+    }
+  }
+
+  private _arePermissionsEqual(
+    a?: Record<string, boolean> | null,
+    b?: Record<string, boolean> | null,
+  ): boolean {
+    if (a === b) return true;
+    if (!a || !b) return false;
+    const keysA = Object.keys(a);
+    const keysB = Object.keys(b);
+    if (keysA.length !== keysB.length) return false;
+    return keysA.every((k) => a[k] === b[k]);
+  }
+
+  private _applyResolvedPageOptions(
+    pageOptions: DefaultPageOptions | undefined,
+    forceTitleUpdate: boolean,
+  ): void {
+    const nextTitle = pageOptions?.title;
+    const titleChanged = nextTitle !== this._lastResolvedPageTitle;
+    this._lastResolvedPageTitle = nextTitle;
+    this.applyPageOptions(pageOptions, {
+      updateTitle: forceTitleUpdate || titleChanged,
+    });
+  }
+
   renderContent(permissions?: Record<string, boolean> | null) {
-    const routeMatch = this.routeTrieMatch?.value;
+    const effectivePermissions =
+      permissions !== undefined ? permissions : this.getRoutePermissions();
+    const currentMatch = this.routeTrieMatch;
+    const routeMatch = currentMatch?.value;
+
+    const isNewRoute =
+      !this._hasAppliedOnce || currentMatch !== this._lastAppliedMatch;
+    const permissionsChanged = !this._arePermissionsEqual(
+      effectivePermissions,
+      this._lastAppliedPermissions,
+    );
+    const shouldSyncOptions = isNewRoute || permissionsChanged;
+
+    let token = this._contentOptionsToken;
+    if (shouldSyncOptions) {
+      this._hasAppliedOnce = true;
+      this._lastAppliedMatch = currentMatch;
+      this._lastAppliedPermissions = effectivePermissions
+        ? { ...effectivePermissions }
+        : effectivePermissions;
+      token = ++this._contentOptionsToken;
+      this._pendingAsyncOptionsToken = 0;
+    }
 
     // No route matched, nothing to show.
     if (!routeMatch) {
-      return html``;
+      if (shouldSyncOptions) {
+        this._applyResolvedPageOptions(undefined, isNewRoute);
+      }
+      return this.renderMissingRoute();
     }
 
-    const contentResult = routeMatch.content(permissions);
+    const upfrontOptions = getRoutePageOptions(
+      routeMatch,
+      effectivePermissions,
+    );
+    const contentResult = routeMatch.content(effectivePermissions);
     if (!contentResult) {
-      return html``;
+      if (shouldSyncOptions) {
+        this._applyResolvedPageOptions(upfrontOptions, isNewRoute);
+      }
+      return this.renderUnauthorizedRoute(effectivePermissions);
     }
 
     if (typeof (contentResult as Promise<PageDetails>).then === 'function') {
+      if (shouldSyncOptions) {
+        this._pendingAsyncOptionsToken = token;
+        if (isNewRoute || upfrontOptions !== undefined) {
+          this._applyResolvedPageOptions(upfrontOptions, isNewRoute);
+        }
+      }
+      const forceTitleOnResolve = isNewRoute;
       return html`${until(
-        (contentResult as Promise<PageDetails>).then(
-          (details) => details?.template ?? html``,
-        ),
+        (contentResult as Promise<PageDetails>)
+          .then((details) => {
+            if (
+              this._pendingAsyncOptionsToken === token &&
+              token === this._contentOptionsToken
+            ) {
+              this._pendingAsyncOptionsToken = 0;
+              const mergedOptions =
+                upfrontOptions || details?.pageOptions
+                  ? { ...upfrontOptions, ...details?.pageOptions }
+                  : undefined;
+              this._applyResolvedPageOptions(
+                mergedOptions,
+                forceTitleOnResolve && Boolean(details?.pageOptions),
+              );
+            }
+            return details?.template ?? html``;
+          })
+          .catch((err) => this.renderErrorRoute(err)),
         this.renderLoadingRoute(),
       )}`;
     }
 
-    return (contentResult as PageDetails).template ?? html``;
+    const syncDetails = contentResult as PageDetails;
+    if (shouldSyncOptions) {
+      const mergedOptions =
+        upfrontOptions || syncDetails.pageOptions
+          ? { ...upfrontOptions, ...syncDetails.pageOptions }
+          : undefined;
+      this._applyResolvedPageOptions(mergedOptions, isNewRoute);
+    }
+
+    return syncDetails.template ?? html``;
+  }
+
+  renderMissingRoute(): TemplateResult {
+    return html``;
+  }
+
+  renderUnauthorizedRoute(
+    _permissions?: Record<string, boolean> | null,
+  ): TemplateResult {
+    return html``;
+  }
+
+  renderErrorRoute(err: unknown): TemplateResult {
+    console.error('Failed to load page module:', err);
+    return html``;
   }
 
   renderLoadingRoute(): TemplateResult {
