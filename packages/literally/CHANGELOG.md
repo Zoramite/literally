@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.0](https://github.com/Zoramite/literally/compare/literally-v3.8.0...literally-v3.9.0) (2026-11-12)
+
+
+### Features
+
+* add automatic page title management and route page options to router mixin ([ff0388a](https://github.com/Zoramite/literally/commit/ff0388a94293b2cc290b9d25ebdbcea8e8bb832e))
+
 ## [3.8.0](https://github.com/Zoramite/literally/compare/literally-v3.7.0...literally-v3.8.0) (2026-11-01)
 
 
