@@ -26,6 +26,8 @@ export interface NavigationEvent {
   rootPath?: string;
   // Should it open in a new tab or window?
   openInNewWindow?: boolean;
+  // Should it replace the current history entry instead of pushing a new one?
+  replace?: boolean;
 }
 
 /**
@@ -35,6 +37,7 @@ export function navigateToPathEvent(
   path: string,
   rootPath?: string,
   openInNewWindow = false,
+  replace = false,
 ): CustomEvent<NavigationEvent> {
   return new CustomEvent<NavigationEvent>(ROUTE_NAVIGATION_EVENT_NAME, {
     bubbles: true,
@@ -44,6 +47,7 @@ export function navigateToPathEvent(
       path,
       rootPath: rootPath && rootPath !== '' ? rootPath : undefined,
       openInNewWindow,
+      replace,
     },
   });
 }

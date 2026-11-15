@@ -1,4 +1,6 @@
-import { type TemplateResult } from 'lit';
+import { type TemplateResult, html } from 'lit';
+
+import { type RouteTrieParamValue } from './router';
 
 export interface DefaultPageOptions {
   // Title of the page used to update the browser title.
@@ -6,9 +8,20 @@ export interface DefaultPageOptions {
   [key: string]: unknown;
 }
 
+export interface RedirectTarget {
+  path: string;
+  rootPath?: string;
+  /**
+   * Whether to replace the current history entry instead of pushing a new one.
+   * Defaults to true for redirects.
+   */
+  replace?: boolean;
+}
+
 export interface PageDetails {
   pageOptions?: DefaultPageOptions;
   template: TemplateResult;
+  redirect?: RedirectTarget;
 }
 
 export type PageDetailsResolver = (
@@ -345,6 +358,230 @@ export class RoleSwitchRoute implements PageRoute {
     if (this.options?.customFallback) {
       return resolvePageDetails(
         this.options.customFallback('forbidden'),
+        permissions,
+      );
+    }
+
+    return undefined;
+  }
+}
+
+export type RedirectDestination = string | RedirectTarget;
+
+export type RedirectResolver = (
+  permissions?: Record<string, boolean> | null,
+) => RedirectDestination | undefined;
+
+export type RoleRedirectMap = Partial<Record<string, RedirectDestination>>;
+
+export type RedirectRouteTarget =
+  | RedirectDestination
+  | RedirectResolver
+  | RoleRedirectMap;
+
+export interface RedirectRouteOptions {
+  /**
+   * Order in which roles are checked when using a role-based redirect map.
+   * Defaults to the key order of the role map.
+   */
+  rolePriority?: string[];
+  /**
+   * Role key in the role map to use if the authenticated user has none of the
+   * configured roles.
+   */
+  fallbackRole?: string;
+  /**
+   * Destination to redirect to when the user is authenticated but has no
+   * matching role (and no fallbackRole matched).
+   */
+  fallback?: RedirectDestination;
+  /**
+   * Destination to redirect to when the user is unauthenticated.
+   * If omitted, returns undefined so the router renders the unauthorized route.
+   */
+  unauthenticated?: RedirectDestination;
+  /**
+   * Custom fallback when unauthenticated or forbidden, matching RoleRoute/RoleSwitchRoute.
+   */
+  customFallback?: (
+    reason: 'unauthenticated' | 'forbidden',
+  ) => PageRouteValue | undefined;
+  /**
+   * Whether to replace the current history entry instead of pushing (default: true).
+   */
+  replace?: boolean;
+  /**
+   * Optional rootPath applied to destinations that do not specify one.
+   */
+  rootPath?: string;
+  /**
+   * Optional page options while redirecting.
+   */
+  pageOptions?: DefaultPageOptions;
+}
+
+/**
+ * Interpolates route params (e.g. `{campId}`) in a redirect path.
+ */
+export function resolveRedirectPath(
+  path: string,
+  params?: Record<string, RouteTrieParamValue>,
+): string {
+  if (!params) {
+    return path;
+  }
+  return path.replace(/\{([^}]+)\}/g, (match, key) => {
+    const value = params[key];
+    return value !== undefined ? String(value) : match;
+  });
+}
+
+function isRedirectTarget(value: unknown): value is RedirectTarget {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'path' in value &&
+    typeof (value as RedirectTarget).path === 'string' &&
+    Object.keys(value).every(
+      (k) => k === 'path' || k === 'rootPath' || k === 'replace',
+    )
+  );
+}
+
+/**
+ * Route helper that redirects to another path.
+ *
+ * Supports:
+ * - Normal redirects via a path string or `RedirectTarget` object
+ * - Dynamic redirects via a resolver function
+ * - Role-based redirects via a role-to-path map (checked in `rolePriority` or key order)
+ */
+export class RedirectRoute implements PageRoute {
+  constructor(
+    public target: RedirectRouteTarget,
+    public options?: RedirectRouteOptions,
+  ) {}
+
+  get pageOptions(): DefaultPageOptions | undefined {
+    return this.options?.pageOptions;
+  }
+
+  private _normalizeTarget(dest: RedirectDestination): RedirectTarget {
+    if (typeof dest === 'string') {
+      return {
+        path: dest,
+        rootPath: this.options?.rootPath,
+        replace: this.options?.replace ?? true,
+      };
+    }
+    return {
+      ...dest,
+      rootPath: dest.rootPath ?? this.options?.rootPath,
+      replace: dest.replace ?? this.options?.replace ?? true,
+    };
+  }
+
+  private _isRoleMap(target: RedirectRouteTarget): target is RoleRedirectMap {
+    return (
+      typeof target === 'object' && target !== null && !isRedirectTarget(target)
+    );
+  }
+
+  /**
+   * Resolves the redirect target for the given permissions, or undefined if
+   * no redirect applies (e.g. unauthenticated or forbidden without fallback).
+   */
+  getRedirect(
+    permissions?: Record<string, boolean> | null,
+  ): RedirectTarget | undefined {
+    if (typeof this.target === 'string' || isRedirectTarget(this.target)) {
+      return this._normalizeTarget(this.target);
+    }
+
+    if (typeof this.target === 'function') {
+      const resolved = this.target(permissions);
+      return resolved !== undefined
+        ? this._normalizeTarget(resolved)
+        : undefined;
+    }
+
+    // Role-based redirect map
+    const isAuthenticated = permissions && (permissions.authenticated ?? true);
+    if (!permissions || !isAuthenticated) {
+      if (this.options?.unauthenticated) {
+        return this._normalizeTarget(this.options.unauthenticated);
+      }
+      return undefined;
+    }
+
+    const priority = this.options?.rolePriority ?? Object.keys(this.target);
+    for (const role of priority) {
+      const dest = this.target[role];
+      if (permissions[role] && dest) {
+        return this._normalizeTarget(dest);
+      }
+    }
+
+    if (this.options?.fallbackRole) {
+      const fallbackDest = this.target[this.options.fallbackRole];
+      if (fallbackDest) {
+        return this._normalizeTarget(fallbackDest);
+      }
+    }
+
+    if (this.options?.fallback) {
+      return this._normalizeTarget(this.options.fallback);
+    }
+
+    return undefined;
+  }
+
+  getPageOptions(
+    permissions?: Record<string, boolean> | null,
+  ): DefaultPageOptions | undefined {
+    const redirect = this.getRedirect(permissions);
+    if (redirect) {
+      return this.pageOptions;
+    }
+
+    if (this._isRoleMap(this.target)) {
+      const isAuthenticated =
+        permissions && (permissions.authenticated ?? true);
+      const reason =
+        !permissions || !isAuthenticated ? 'unauthenticated' : 'forbidden';
+      const fallback = this.options?.customFallback?.(reason);
+      return fallback && typeof fallback !== 'function'
+        ? fallback.pageOptions
+        : undefined;
+    }
+
+    const fallback = this.options?.customFallback?.('forbidden');
+    return fallback && typeof fallback !== 'function'
+      ? fallback.pageOptions
+      : undefined;
+  }
+
+  content(
+    permissions?: Record<string, boolean> | null,
+  ): PageDetails | Promise<PageDetails> | undefined {
+    const redirect = this.getRedirect(permissions);
+    if (redirect) {
+      return {
+        pageOptions: this.pageOptions,
+        template: html``,
+        redirect,
+      };
+    }
+
+    if (this.options?.customFallback) {
+      const isAuthenticated =
+        permissions && (permissions.authenticated ?? true);
+      const reason =
+        this._isRoleMap(this.target) && (!permissions || !isAuthenticated)
+          ? 'unauthenticated'
+          : 'forbidden';
+      return resolvePageDetails(
+        this.options.customFallback(reason),
         permissions,
       );
     }

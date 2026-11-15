@@ -4,10 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   LazyRoute,
   PublicRoute,
+  RedirectRoute,
   RoleRoute,
   RoleSwitchRoute,
   getRoutePageOptions,
   resolvePageDetails,
+  resolveRedirectPath,
 } from './route';
 
 describe('route resolvers and getRoutePageOptions', () => {
@@ -236,5 +238,187 @@ describe('RoleSwitchRoute', () => {
     expect(route.content({ authenticated: true, otherRole: true })).toBe(
       studentPage,
     );
+  });
+});
+
+describe('resolveRedirectPath', () => {
+  it('interpolates route params into path placeholders', () => {
+    expect(
+      resolveRedirectPath('/camps/{campId}/days/{dayNumber}', {
+        campId: 'odyssey',
+        dayNumber: 2,
+      }),
+    ).toBe('/camps/odyssey/days/2');
+  });
+
+  it('leaves unmatched placeholders and plain paths unchanged', () => {
+    expect(resolveRedirectPath('/plain/path', { campId: 'odyssey' })).toBe(
+      '/plain/path',
+    );
+    expect(resolveRedirectPath('/camps/{missing}', { campId: 'odyssey' })).toBe(
+      '/camps/{missing}',
+    );
+    expect(resolveRedirectPath('/camps/{campId}')).toBe('/camps/{campId}');
+  });
+});
+
+describe('RedirectRoute', () => {
+  it('supports simple string redirects with replace defaulting to true', () => {
+    const route = new RedirectRoute('/new-home');
+
+    expect(route.getRedirect()).toEqual({
+      path: '/new-home',
+      rootPath: undefined,
+      replace: true,
+    });
+    expect(route.getRedirect(null)).toEqual({
+      path: '/new-home',
+      rootPath: undefined,
+      replace: true,
+    });
+
+    const details = route.content() as any;
+    expect(details.redirect).toEqual({
+      path: '/new-home',
+      rootPath: undefined,
+      replace: true,
+    });
+  });
+
+  it('supports RedirectTarget objects and route options', () => {
+    const route = new RedirectRoute(
+      { path: '/admin', rootPath: '/portal', replace: false },
+      { pageOptions: { title: 'Redirecting...' } },
+    );
+
+    expect(route.pageOptions).toEqual({ title: 'Redirecting...' });
+    expect(route.getRedirect()).toEqual({
+      path: '/admin',
+      rootPath: '/portal',
+      replace: false,
+    });
+  });
+
+  it('supports dynamic resolver functions', () => {
+    const route = new RedirectRoute((permissions) =>
+      permissions?.admin ? '/admin/home' : '/user/home',
+    );
+
+    expect(route.getRedirect({ admin: true })).toEqual({
+      path: '/admin/home',
+      rootPath: undefined,
+      replace: true,
+    });
+    expect(route.getRedirect(null)).toEqual({
+      path: '/user/home',
+      rootPath: undefined,
+      replace: true,
+    });
+  });
+
+  it('routes different roles to different paths based on priority', () => {
+    const route = new RedirectRoute(
+      {
+        admin: '/admin/dashboard',
+        staff: '/staff/overview',
+        camper: '/camper/profile',
+      },
+      {
+        rolePriority: ['admin', 'staff', 'camper'],
+      },
+    );
+
+    // Unauthenticated returns undefined when no unauthenticated fallback is set
+    expect(route.getRedirect(null)).toBeUndefined();
+    expect(route.content(null)).toBeUndefined();
+
+    // Staff + camper -> staff wins based on rolePriority
+    expect(
+      route.getRedirect({ authenticated: true, staff: true, camper: true }),
+    ).toEqual({
+      path: '/staff/overview',
+      rootPath: undefined,
+      replace: true,
+    });
+
+    // Admin wins over staff
+    expect(
+      route.getRedirect({ authenticated: true, admin: true, staff: true }),
+    ).toEqual({
+      path: '/admin/dashboard',
+      rootPath: undefined,
+      replace: true,
+    });
+  });
+
+  it('supports fallbackRole, fallback, unauthenticated, and customFallback for role-based redirects', () => {
+    const routeWithFallbacks = new RedirectRoute(
+      {
+        admin: '/admin',
+        member: '/member',
+      },
+      {
+        fallbackRole: 'member',
+        unauthenticated: '/login',
+      },
+    );
+
+    expect(routeWithFallbacks.getRedirect(null)).toEqual({
+      path: '/login',
+      rootPath: undefined,
+      replace: true,
+    });
+    expect(
+      routeWithFallbacks.getRedirect({ authenticated: true, guest: true }),
+    ).toEqual({
+      path: '/member',
+      rootPath: undefined,
+      replace: true,
+    });
+
+    const routeWithDestinationFallback = new RedirectRoute(
+      { admin: '/admin' },
+      { fallback: { path: '/no-access', replace: false } },
+    );
+    expect(
+      routeWithDestinationFallback.getRedirect({
+        authenticated: true,
+        guest: true,
+      }),
+    ).toEqual({
+      path: '/no-access',
+      rootPath: undefined,
+      replace: false,
+    });
+
+    const unauthPage = {
+      pageOptions: { title: 'Sign In' },
+      template: html`<sign-in></sign-in>`,
+    };
+    const forbiddenPage = {
+      pageOptions: { title: 'Forbidden' },
+      template: html`<forbidden></forbidden>`,
+    };
+    const routeWithCustomFallback = new RedirectRoute(
+      { admin: '/admin' },
+      {
+        customFallback: (reason) =>
+          reason === 'unauthenticated' ? unauthPage : forbiddenPage,
+      },
+    );
+
+    expect(routeWithCustomFallback.getPageOptions(null)).toEqual({
+      title: 'Sign In',
+    });
+    expect(routeWithCustomFallback.content(null)).toBe(unauthPage);
+    expect(
+      routeWithCustomFallback.getPageOptions({
+        authenticated: true,
+        guest: true,
+      }),
+    ).toEqual({ title: 'Forbidden' });
+    expect(
+      routeWithCustomFallback.content({ authenticated: true, guest: true }),
+    ).toBe(forbiddenPage);
   });
 });

@@ -74,6 +74,7 @@ export interface RouterInterface {
     path: string,
     rootPath?: string,
     openInNewWindow?: boolean,
+    replace?: boolean,
   ): boolean;
 
   getRoutePermissions(): Record<string, boolean> | null | undefined;
@@ -435,6 +436,7 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       path: string,
       rootPath?: string,
       openInNewWindow = false,
+      replace = false,
     ): boolean {
       if (this.isNavigationBlocked()) {
         this.handleNavigationBlocked({
@@ -443,12 +445,13 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
           openInNewWindow,
           source: 'navigateToPath',
           blockedKeys: this.getBlockedNavigationKeys(),
-          retry: () => this.navigateToPath(path, rootPath, openInNewWindow),
+          retry: () =>
+            this.navigateToPath(path, rootPath, openInNewWindow, replace),
         });
         return false;
       }
 
-      const evt = navigateToPathEvent(path, rootPath, openInNewWindow);
+      const evt = navigateToPathEvent(path, rootPath, openInNewWindow, replace);
       this.dispatchEvent(evt);
       return !evt.defaultPrevented;
     }
@@ -512,7 +515,11 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
 
       // Do a full redirect if the root paths have changed.
       if (isDifferentRoot) {
-        window.location.href = nextUrl.toString();
+        if (evt.detail.replace) {
+          window.location.replace(nextUrl.toString());
+        } else {
+          window.location.href = nextUrl.toString();
+        }
         return;
       }
 
@@ -527,7 +534,11 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
         this.routePath = routePath;
       }
 
-      history.pushState(evt.detail, '', nextUrl.toString());
+      if (evt.detail.replace) {
+        history.replaceState(evt.detail, '', nextUrl.toString());
+      } else {
+        history.pushState(evt.detail, '', nextUrl.toString());
+      }
     }
 
     handleRouteChange(evt: CustomEvent<RouteSetEvent<PageRoute>>) {

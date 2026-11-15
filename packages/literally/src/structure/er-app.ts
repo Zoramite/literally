@@ -11,9 +11,14 @@ import {
   type DefaultPageOptions,
   type PageDetails,
   type PageRoute,
+  type RedirectTarget,
   getRoutePageOptions,
+  resolveRedirectPath,
 } from '../routing/route';
-import { type RouteTrieMatchValue } from '../routing/router';
+import {
+  type RouteTrieMatchValue,
+  type RouteTrieParamValue,
+} from '../routing/router';
 import {
   RouterMixin,
   type UpdatePageTitleOptions,
@@ -120,6 +125,8 @@ export class ERApp extends RouterMixin(LitElement) {
   private _lastResolvedPageTitle?: string;
   private _contentOptionsToken = 0;
   private _pendingAsyncOptionsToken = 0;
+  private _pendingRedirectKey?: string;
+  private _redirectCount = 0;
 
   connectedCallback() {
     super.connectedCallback();
@@ -151,6 +158,7 @@ export class ERApp extends RouterMixin(LitElement) {
 
   override updateRouteTrieMatch() {
     this._lastResolvedPageTitle = undefined;
+    this._pendingRedirectKey = undefined;
     super.updateRouteTrieMatch();
   }
 
@@ -194,6 +202,51 @@ export class ERApp extends RouterMixin(LitElement) {
     });
   }
 
+  private _performRedirect(
+    redirect: RedirectTarget,
+    params?: Record<string, RouteTrieParamValue>,
+  ): TemplateResult {
+    const resolvedPath = resolveRedirectPath(redirect.path, params);
+    const targetRootPath = redirect.rootPath;
+    const isSameRoot =
+      targetRootPath === undefined || targetRootPath === this.rootPath;
+
+    if (isSameRoot && resolvedPath === this.routePath) {
+      this._redirectCount = 0;
+      return this.renderRedirectRoute();
+    }
+
+    if (this._redirectCount >= 10) {
+      console.warn(
+        'Maximum redirect depth exceeded, aborting redirect to',
+        resolvedPath,
+      );
+      this._redirectCount = 0;
+      return this.renderRedirectRoute();
+    }
+
+    const replace = redirect.replace ?? true;
+    const redirectKey = `${targetRootPath ?? ''}::${resolvedPath}`;
+    if (this._pendingRedirectKey !== redirectKey) {
+      this._pendingRedirectKey = redirectKey;
+      queueMicrotask(() => {
+        if (this._pendingRedirectKey === redirectKey) {
+          this._pendingRedirectKey = undefined;
+        }
+        if (!this.isConnected) {
+          return;
+        }
+        if (isSameRoot && resolvedPath === this.routePath) {
+          return;
+        }
+        this._redirectCount++;
+        this.navigateToPath(resolvedPath, targetRootPath, false, replace);
+      });
+    }
+
+    return this.renderRedirectRoute();
+  }
+
   renderContent(permissions?: Record<string, boolean> | null) {
     const effectivePermissions =
       permissions !== undefined ? permissions : this.getRoutePermissions();
@@ -221,6 +274,7 @@ export class ERApp extends RouterMixin(LitElement) {
 
     // No route matched, nothing to show.
     if (!routeMatch) {
+      this._redirectCount = 0;
       if (shouldSyncOptions) {
         this._applyResolvedPageOptions(undefined, isNewRoute);
       }
@@ -233,6 +287,7 @@ export class ERApp extends RouterMixin(LitElement) {
     );
     const contentResult = routeMatch.content(effectivePermissions);
     if (!contentResult) {
+      this._redirectCount = 0;
       if (shouldSyncOptions) {
         this._applyResolvedPageOptions(upfrontOptions, isNewRoute);
       }
@@ -250,6 +305,13 @@ export class ERApp extends RouterMixin(LitElement) {
       return html`${until(
         (contentResult as Promise<PageDetails>)
           .then((details) => {
+            if (details?.redirect) {
+              return this._performRedirect(
+                details.redirect,
+                currentMatch?.params,
+              );
+            }
+            this._redirectCount = 0;
             if (
               this._pendingAsyncOptionsToken === token &&
               token === this._contentOptionsToken
@@ -272,6 +334,11 @@ export class ERApp extends RouterMixin(LitElement) {
     }
 
     const syncDetails = contentResult as PageDetails;
+    if (syncDetails.redirect) {
+      return this._performRedirect(syncDetails.redirect, currentMatch?.params);
+    }
+
+    this._redirectCount = 0;
     if (shouldSyncOptions) {
       const mergedOptions =
         upfrontOptions || syncDetails.pageOptions
@@ -281,6 +348,10 @@ export class ERApp extends RouterMixin(LitElement) {
     }
 
     return syncDetails.template ?? html``;
+  }
+
+  renderRedirectRoute(): TemplateResult {
+    return html``;
   }
 
   renderMissingRoute(): TemplateResult {

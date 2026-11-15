@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { LitElement, html } from 'lit';
-import { afterEach, beforeEach, describe, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { navigateToPathEvent } from '../navigation/navigation';
 import { PublicRoute, RoleRoute } from './route';
@@ -477,6 +477,24 @@ describe('RouterMixin', () => {
       permissions = { admin: true };
       element.updatePageTitle();
       expect(document.title).toBe('Admin Console - STAR Camp');
+    });
+  });
+
+  describe('history replace navigation', () => {
+    test('uses history.replaceState when replace is true in navigateToPath', async () => {
+      element.routerMode = 'path';
+      await element.updateComplete;
+
+      const replaceSpy = vi.spyOn(window.history, 'replaceState');
+      const pushSpy = vi.spyOn(window.history, 'pushState');
+
+      element.navigateToPath('/replaced', undefined, false, true);
+      expect(replaceSpy).toHaveBeenCalledTimes(1);
+      expect(pushSpy).not.toHaveBeenCalled();
+      expect(element.routePath).toBe('/replaced');
+
+      replaceSpy.mockRestore();
+      pushSpy.mockRestore();
     });
   });
 });

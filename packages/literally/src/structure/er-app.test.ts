@@ -7,6 +7,7 @@ import {
   type PageDetails,
   type PageRoute,
   PublicRoute,
+  RedirectRoute,
   RoleRoute,
 } from '../routing/route';
 import { ERApp } from './er-app';
@@ -201,5 +202,112 @@ describe('ERApp and routing integration', () => {
     app.requestUpdate();
     await app.updateComplete;
     expect(document.title).toBe('Admin Dashboard - STAR Camp');
+  });
+
+  it('redirects normal RedirectRoute to target path and replaces history', async () => {
+    app.routerMode = 'path';
+    app.defaultTitle = 'STAR Camp';
+    app.routeTrie.set('/old', new RedirectRoute('/new'));
+    app.routeTrie.set(
+      '/new',
+      new PublicRoute({
+        pageOptions: { title: 'New Page' },
+        template: html`<div id="new-view">New</div>`,
+      }),
+    );
+
+    app.navigateToPath('/old');
+    await app.updateComplete;
+    await new Promise((r) => setTimeout(r, 0));
+    await app.updateComplete;
+
+    expect(app.routePath).toBe('/new');
+    expect(window.location.pathname).toBe('/new');
+    expect(document.title).toBe('New Page - STAR Camp');
+  });
+
+  it('redirects role-based RedirectRoute based on permissions and reacts to permission updates', async () => {
+    let permissions: Record<string, boolean> | null | undefined = undefined;
+    app.getRoutePermissions = () => permissions;
+    app.routerMode = 'path';
+
+    app.routeTrie.set(
+      '/portal',
+      new RedirectRoute(
+        {
+          admin: '/admin/dashboard',
+          staff: '/staff/home',
+        },
+        {
+          rolePriority: ['admin', 'staff'],
+        },
+      ),
+    );
+    app.routeTrie.set(
+      '/admin/dashboard',
+      new PublicRoute({
+        pageOptions: { title: 'Admin Dashboard' },
+        template: html`<div>Admin</div>`,
+      }),
+    );
+    app.routeTrie.set(
+      '/staff/home',
+      new PublicRoute({
+        pageOptions: { title: 'Staff Home' },
+        template: html`<div>Staff</div>`,
+      }),
+    );
+
+    app.navigateToPath('/portal');
+    await app.updateComplete;
+    await new Promise((r) => setTimeout(r, 0));
+    // While permissions are undefined (unauthenticated), stays on /portal
+    expect(app.routePath).toBe('/portal');
+
+    // Once staff permissions load, redirects to /staff/home
+    permissions = { authenticated: true, staff: true };
+    app.requestUpdate();
+    await app.updateComplete;
+    await new Promise((r) => setTimeout(r, 0));
+    await app.updateComplete;
+
+    expect(app.routePath).toBe('/staff/home');
+  });
+
+  it('interpolates route params in RedirectRoute target paths', async () => {
+    app.routerMode = 'path';
+    app.routeTrie.set(
+      '/camps/{campId}',
+      new RedirectRoute('/camps/{campId}/dashboard'),
+    );
+    app.routeTrie.set(
+      '/camps/{campId}/dashboard',
+      new PublicRoute({
+        pageOptions: { title: 'Camp Dashboard' },
+        template: html`<div>Dashboard</div>`,
+      }),
+    );
+
+    app.navigateToPath('/camps/odyssey');
+    await app.updateComplete;
+    await new Promise((r) => setTimeout(r, 0));
+    await app.updateComplete;
+
+    expect(app.routePath).toBe('/camps/odyssey/dashboard');
+  });
+
+  it('aborts infinite redirect loops safely', async () => {
+    app.routerMode = 'path';
+    app.routeTrie.set('/loop-a', new RedirectRoute('/loop-b'));
+    app.routeTrie.set('/loop-b', new RedirectRoute('/loop-a'));
+
+    app.navigateToPath('/loop-a');
+    for (let i = 0; i < 15; i++) {
+      await app.updateComplete;
+      await new Promise((r) => setTimeout(r, 0));
+    }
+
+    // Should have stopped redirecting without hanging
+    expect(['/loop-a', '/loop-b']).toContain(app.routePath);
   });
 });
