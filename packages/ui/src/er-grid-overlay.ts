@@ -1,7 +1,6 @@
+import { desktop, mobile, tablet } from '@littoral/literally/structure/devices';
 import { LitElement, css, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
-import { desktop, mobile, tablet } from './devices';
 
 /**
  * Dev grid overlay component for aligning and debugging layouts on page.

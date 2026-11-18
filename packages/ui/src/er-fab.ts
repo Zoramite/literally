@@ -1,8 +1,11 @@
+import { NavigationMixin } from '@littoral/literally/navigation/navigation.mixin';
+import {
+  type BreakpointDevice,
+  breakpoints,
+} from '@littoral/literally/structure/devices';
 import { LitElement, type PropertyValues, css, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { NavigationMixin } from '../navigation/navigation.mixin';
-import { type BreakpointDevice, breakpoints } from '../structure/devices';
 import './er-icon';
 
 /**

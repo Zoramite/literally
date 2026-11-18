@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "./packages/literally" },
-    { "path": "./packages/literally-firebase" }
+    { "path": "./packages/literally-firebase" },
+    { "path": "./packages/ui" }
   ]
 }

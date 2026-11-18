@@ -41,3 +41,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ steps.release.outputs['packages/literally-firebase--release_created'] }}
+      - name: Publish @littoral/ui
+        run: npm publish -w packages/ui
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ steps.release.outputs['packages/ui--release_created'] }}

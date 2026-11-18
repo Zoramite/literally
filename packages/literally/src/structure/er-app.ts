@@ -2,7 +2,6 @@ import { LitElement, type TemplateResult, css, html } from 'lit';
 import { query, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import '../components/er-loading';
 import {
   type AppElementEvent,
   type StickySize,
@@ -370,7 +369,7 @@ export class ERApp extends RouterMixin(LitElement) {
   }
 
   renderLoadingRoute(): TemplateResult {
-    return html`<er-loading></er-loading>`;
+    return html``;
   }
 }
 

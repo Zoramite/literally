@@ -1,9 +1,8 @@
 import './er-icon';
 import { NavigationMixin } from '@littoral/literally/navigation/navigation.mixin';
+import { breakpoints } from '@littoral/literally/structure/devices';
 import { LitElement, css, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
-import { breakpoints } from '../structure/devices';
 
 /**
  * Chip element for displaying info in a stylized way.

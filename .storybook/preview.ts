@@ -4,10 +4,17 @@ import { setCustomElementsManifest } from '@storybook/web-components';
 import { css, html } from 'lit';
 import { LitElement } from 'lit';
 
-import customElementsManifest from '../packages/literally/custom-elements.json';
+import coreCustomElementsManifest from '../packages/literally/custom-elements.json';
 import { ThemeMixin } from '../packages/literally/src/theme/theme.mixin';
+import uiCustomElementsManifest from '../packages/ui/custom-elements.json';
 
-setCustomElementsManifest(customElementsManifest);
+setCustomElementsManifest({
+  ...coreCustomElementsManifest,
+  modules: [
+    ...(coreCustomElementsManifest.modules ?? []),
+    ...(uiCustomElementsManifest.modules ?? []),
+  ],
+});
 
 class StorybookThemeWrapper extends ThemeMixin(LitElement) {
   static styles = [

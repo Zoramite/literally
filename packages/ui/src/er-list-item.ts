@@ -1,7 +1,7 @@
+import { NavigationMixin } from '@littoral/literally/navigation/navigation.mixin';
 import { LitElement, css, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { NavigationMixin } from '../navigation/navigation.mixin';
 import './er-icon';
 
 /**

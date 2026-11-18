@@ -1,7 +1,6 @@
+import { breakpoints } from '@littoral/literally/structure/devices';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
-import { breakpoints } from '../structure/devices';
 
 /**
  * Spacer for controlling the spacing between flex elements of the page.

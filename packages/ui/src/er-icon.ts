@@ -1,8 +1,7 @@
 import { NavigationMixin } from '@littoral/literally/navigation/navigation.mixin';
+import { contrast, hexToRgb } from '@littoral/literally/utils/color';
 import { LitElement, css, html, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
-import { contrast, hexToRgb } from '../utils/color';
 
 /**
  * Element for displaying material symbol icons.

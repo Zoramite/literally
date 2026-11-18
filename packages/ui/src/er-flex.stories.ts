@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 
 import './er-flex';
-import '../components/er-card';
+import './er-card';
 
 const meta: Meta = {
   title: 'Structure/ErFlex',

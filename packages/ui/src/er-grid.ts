@@ -1,7 +1,12 @@
+import {
+  tablet,
+  desktop,
+  mobile,
+  print,
+  breakpoints,
+} from '@littoral/literally/structure/devices';
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-
-import { tablet, desktop, mobile, print, breakpoints } from './devices';
 
 /**
  * Grid for controlling the layout of the page.
