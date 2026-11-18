@@ -51,7 +51,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@littoral/literally": "^3.5.0",
+    "@littoral/literally": "^3.5.0 || ^4.0.0",
     "lit": "^3.3.3",
     "firebase": "^13.0.0"
   },
