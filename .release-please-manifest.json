@@ -1,5 +1,5 @@
 {
-  "packages/literally": "3.9.0",
+  "packages/literally": "4.0.0",
   "packages/literally-firebase": "0.7.0",
-  "packages/ui": "0.0.0"
+  "packages/ui": "1.0.0"
 }

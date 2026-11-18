@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.0](https://github.com/Zoramite/literally/compare/literally-v3.9.0...literally-v4.0.0) (2026-11-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* extract UI and layout components into @littoral/ui
+
+### Features
+
+* add RedirectRoute and support navigation history replacement ([fcce980](https://github.com/Zoramite/literally/commit/fcce980c65904fb72526d7189bffbcc2fbe7a68f))
+* extract UI and layout components into @littoral/ui ([6cb0ef9](https://github.com/Zoramite/literally/commit/6cb0ef99f6eb06f43fe1323eabff38b3e26e4c23))
+
 ## [3.9.0](https://github.com/Zoramite/literally/compare/literally-v3.8.0...literally-v3.9.0) (2026-11-12)
 
 
