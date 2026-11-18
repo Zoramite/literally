@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/Zoramite/literally/compare/literally-firebase-v0.7.0...literally-firebase-v0.7.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* widen peer dependencies in literally-firebase for literally v4 and firebase v12-13 ([463cfa1](https://github.com/Zoramite/literally/commit/463cfa18e56dabdf16ce3feafc78cc4f605105aa))
+
 ## [0.7.0](https://github.com/Zoramite/literally/compare/literally-firebase-v0.6.0...literally-firebase-v0.7.0) (2026-11-01)
 
 
