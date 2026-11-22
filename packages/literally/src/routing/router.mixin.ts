@@ -169,6 +169,7 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     private blockingCounts = new Map<string, number>();
     private navigationBlockedCallbacks = new Set<NavigationBlockedCallback>();
     private _routerModifiedTitle = false;
+    private _lastLoggedRoute?: string;
     private onRouteTrieUpdated = () => {
       this.updateRouteTrieMatch();
     };
@@ -580,7 +581,11 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
 
     updateRouteTrieMatch() {
       this.routeTrieMatch = this.routeTrie.match(this.routePath);
-      console.debug('Route changed', this.routeTrieMatch?.path);
+      const routeKey = `${this.routePath}::${this.routeTrieMatch?.path ?? ''}`;
+      if (this._lastLoggedRoute !== routeKey) {
+        this._lastLoggedRoute = routeKey;
+        console.debug('Route changed', this.routeTrieMatch?.path);
+      }
       this.updatePageTitle();
     }
 
