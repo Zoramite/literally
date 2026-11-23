@@ -478,6 +478,66 @@ describe('RouterMixin', () => {
       element.updatePageTitle();
       expect(document.title).toBe('Admin Console - STAR Camp');
     });
+
+    test('resolves dynamic function titles and updates when updatePageTitle is called', ({
+      expect,
+    }) => {
+      let currentTitle = 'Your Cart';
+      element.defaultTitle = 'STAR Camp';
+      element.routeTrie.set(
+        '/cart',
+        new PublicRoute({
+          pageOptions: { title: () => currentTitle },
+          template: html`<div>Cart</div>`,
+        }),
+      );
+
+      element.routePath = '/cart';
+      element.updateRouteTrieMatch();
+      expect(document.title).toBe('Your Cart - STAR Camp');
+
+      currentTitle = 'Tu Carrito';
+      element.updatePageTitle();
+      expect(document.title).toBe('Tu Carrito - STAR Camp');
+    });
+
+    test('uses custom resolvePageTitle override for titleKey localization', ({
+      expect,
+    }) => {
+      let locale: 'en' | 'es' = 'en';
+      const dict = {
+        en: { 'pageTitles.faq': 'Frequently Asked Questions' },
+        es: { 'pageTitles.faq': 'Preguntas Frecuentes' },
+      };
+      element.defaultTitle = 'STAR Camp';
+      element.resolvePageTitle = (pageOptions) => {
+        if (pageOptions?.titleKey) {
+          return dict[locale][pageOptions.titleKey as 'pageTitles.faq'];
+        }
+        return typeof pageOptions?.title === 'function'
+          ? pageOptions.title()
+          : pageOptions?.title;
+      };
+
+      element.routeTrie.set(
+        '/faq',
+        new PublicRoute({
+          pageOptions: {
+            title: 'Frequently Asked Questions',
+            titleKey: 'pageTitles.faq',
+          },
+          template: html`<div>FAQ</div>`,
+        }),
+      );
+
+      element.routePath = '/faq';
+      element.updateRouteTrieMatch();
+      expect(document.title).toBe('Frequently Asked Questions - STAR Camp');
+
+      locale = 'es';
+      element.updatePageTitle();
+      expect(document.title).toBe('Preguntas Frecuentes - STAR Camp');
+    });
   });
 
   describe('history replace navigation', () => {

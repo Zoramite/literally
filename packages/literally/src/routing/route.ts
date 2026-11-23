@@ -2,9 +2,13 @@ import { type TemplateResult, html } from 'lit';
 
 import { type RouteTrieParamValue } from './router';
 
+export type PageTitleResolver = string | (() => string);
+
 export interface DefaultPageOptions {
   // Title of the page used to update the browser title.
-  title?: string;
+  title?: PageTitleResolver;
+  // Optional translation key for localized page titles.
+  titleKey?: string;
   [key: string]: unknown;
 }
 

@@ -121,6 +121,7 @@ export class ERApp extends RouterMixin(LitElement) {
   private _hasAppliedOnce = false;
   private _lastAppliedMatch?: RouteTrieMatchValue<PageRoute>;
   private _lastAppliedPermissions?: Record<string, boolean> | null;
+  private _lastResolvedPageOptions?: DefaultPageOptions;
   private _lastResolvedPageTitle?: string;
   private _contentOptionsToken = 0;
   private _pendingAsyncOptionsToken = 0;
@@ -156,6 +157,7 @@ export class ERApp extends RouterMixin(LitElement) {
   }
 
   override updateRouteTrieMatch() {
+    this._lastResolvedPageOptions = undefined;
     this._lastResolvedPageTitle = undefined;
     this._pendingRedirectKey = undefined;
     super.updateRouteTrieMatch();
@@ -165,7 +167,12 @@ export class ERApp extends RouterMixin(LitElement) {
     title?: string,
     options?: UpdatePageTitleOptions,
   ): void {
-    super.updatePageTitle(title ?? this._lastResolvedPageTitle, options);
+    const resolvedTitle =
+      title ??
+      (this._lastResolvedPageOptions
+        ? this.resolvePageTitle(this._lastResolvedPageOptions)
+        : undefined);
+    super.updatePageTitle(resolvedTitle, options);
   }
 
   applyPageOptions(
@@ -173,7 +180,7 @@ export class ERApp extends RouterMixin(LitElement) {
     options?: { updateTitle?: boolean },
   ): void {
     if (options?.updateTitle ?? true) {
-      this.updatePageTitle(pageOptions?.title);
+      this.updatePageTitle(this.resolvePageTitle(pageOptions));
     }
   }
 
@@ -193,7 +200,8 @@ export class ERApp extends RouterMixin(LitElement) {
     pageOptions: DefaultPageOptions | undefined,
     forceTitleUpdate: boolean,
   ): void {
-    const nextTitle = pageOptions?.title;
+    this._lastResolvedPageOptions = pageOptions;
+    const nextTitle = this.resolvePageTitle(pageOptions);
     const titleChanged = nextTitle !== this._lastResolvedPageTitle;
     this._lastResolvedPageTitle = nextTitle;
     this.applyPageOptions(pageOptions, {

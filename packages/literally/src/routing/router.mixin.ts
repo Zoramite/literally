@@ -16,7 +16,11 @@ import {
   routeTrieMatchContext,
   routerContext,
 } from './context';
-import { getRoutePageOptions, type PageRoute } from './route';
+import {
+  type DefaultPageOptions,
+  getRoutePageOptions,
+  type PageRoute,
+} from './route';
 import { RouteTrie, type RouteTrieMatchValue } from './router';
 
 export const ROUTE_TRIE_SET_EVENT_NAME = 'routeTrieSetRoute';
@@ -125,6 +129,7 @@ export interface RouterInterface {
 
   getRoutePermissions(): Record<string, boolean> | null | undefined;
   updateRouteTrieMatch(): void;
+  resolvePageTitle(pageOptions?: DefaultPageOptions): string | undefined;
   updatePageTitle(title?: string, options?: UpdatePageTitleOptions): void;
 }
 
@@ -675,6 +680,15 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       this.updatePageTitle();
     }
 
+    resolvePageTitle(pageOptions?: DefaultPageOptions): string | undefined {
+      if (!pageOptions?.title) {
+        return undefined;
+      }
+      return typeof pageOptions.title === 'function'
+        ? pageOptions.title()
+        : pageOptions.title;
+    }
+
     updatePageTitle(title?: string, options?: UpdatePageTitleOptions): void {
       if (typeof document === 'undefined') {
         return;
@@ -691,9 +705,7 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
           this.getRoutePermissions(),
         );
 
-        if (pageOptions?.title) {
-          pageTitle = pageOptions.title;
-        }
+        pageTitle = this.resolvePageTitle(pageOptions);
       }
 
       let nextTitle: string | undefined;
