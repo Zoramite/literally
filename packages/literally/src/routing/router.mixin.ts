@@ -48,6 +48,51 @@ export interface UpdatePageTitleOptions {
   includeDefaultTitle?: boolean;
 }
 
+export interface SetRootPathOptions {
+  /** Replace the current history entry instead of pushing a new one (default: true). */
+  replace?: boolean;
+  /** Optional new routePath under the new rootPath (defaults to current routePath). */
+  routePath?: string;
+}
+
+function normalizeRootPath(rootPath: string): string {
+  if (!rootPath || rootPath === '/') {
+    return '';
+  }
+  const withLeading = rootPath.startsWith('/') ? rootPath : `/${rootPath}`;
+  return withLeading.endsWith('/') ? withLeading.slice(0, -1) : withLeading;
+}
+
+function stripRootPath(pathname: string, rootPath: string): string {
+  const normalizedRoot = normalizeRootPath(rootPath);
+  if (!normalizedRoot) {
+    return pathname || '/';
+  }
+  if (pathname === normalizedRoot) {
+    return '/';
+  }
+  if (pathname.startsWith(`${normalizedRoot}/`)) {
+    return pathname.slice(normalizedRoot.length) || '/';
+  }
+  return pathname;
+}
+
+function joinRootAndRoutePath(rootPath: string, routePath: string): string {
+  const normalizedRoot = normalizeRootPath(rootPath);
+  const normalizedRoute =
+    !routePath || routePath === '/'
+      ? '/'
+      : routePath.startsWith('/')
+        ? routePath
+        : `/${routePath}`;
+  if (!normalizedRoot) {
+    return normalizedRoute;
+  }
+  return normalizedRoute === '/'
+    ? normalizedRoot
+    : `${normalizedRoot}${normalizedRoute}`;
+}
+
 export interface RouterInterface {
   routeTrieMatch: RouteTrieMatchValue<PageRoute> | undefined;
   routeTrie: RouteTrie<PageRoute>;
@@ -76,6 +121,7 @@ export interface RouterInterface {
     openInNewWindow?: boolean,
     replace?: boolean,
   ): boolean;
+  setRootPath(rootPath: string, options?: SetRootPathOptions): void;
 
   getRoutePermissions(): Record<string, boolean> | null | undefined;
   updateRouteTrieMatch(): void;
@@ -272,18 +318,36 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
 
     private handlePopState = (event: PopStateEvent) => {
       if (this.routerMode === 'path') {
-        const nextPath = event.state?.path ?? this.currentRoutePath ?? '';
-        if (this.routePath !== nextPath) {
+        const nextRootPath =
+          typeof event.state?.rootPath === 'string'
+            ? normalizeRootPath(event.state.rootPath)
+            : this.rootPath;
+        const rootChanged = nextRootPath !== this.rootPath;
+        const nextPath =
+          event.state?.path ??
+          stripRootPath(window.location.pathname, nextRootPath);
+        if (this.routePath !== nextPath || rootChanged) {
           if (this.isNavigationBlocked()) {
             this.handleNavigationBlocked({
               path: nextPath,
+              rootPath: rootChanged ? nextRootPath : undefined,
               source: 'popstate',
               blockedKeys: this.getBlockedNavigationKeys(),
               retry: () => this.navigateToPath(nextPath),
             });
-            const currentUrl = (this.rootPath || '') + this.routePath;
-            history.pushState({ path: this.routePath }, '', currentUrl || '/');
+            const currentUrl = joinRootAndRoutePath(
+              this.rootPath,
+              this.routePath,
+            );
+            history.pushState(
+              { path: this.routePath, rootPath: this.rootPath },
+              '',
+              currentUrl || '/',
+            );
             return;
+          }
+          if (rootChanged) {
+            this.rootPath = nextRootPath;
           }
           this.routePath = nextPath;
           this.updateRouteTrieMatch();
@@ -319,11 +383,7 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
         }
         return undefined;
       } else {
-        let path = window.location.pathname;
-        if (this.rootPath && path.startsWith(this.rootPath)) {
-          path = path.slice(this.rootPath.length);
-        }
-        return path;
+        return stripRootPath(window.location.pathname, this.rootPath);
       }
     }
 
@@ -457,6 +517,31 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       return !evt.defaultPrevented;
     }
 
+    setRootPath(rootPath: string, options?: SetRootPathOptions): void {
+      const normalizedRoot = normalizeRootPath(rootPath);
+      const nextRoutePath = options?.routePath ?? this.routePath ?? '/';
+      const replace = options?.replace ?? true;
+
+      this.rootPath = normalizedRoot;
+      if (options?.routePath !== undefined) {
+        this.routePath = nextRoutePath;
+      }
+
+      if (this.routerMode === 'path' && typeof window !== 'undefined') {
+        const nextUrl = new URL(window.location.href);
+        nextUrl.pathname = joinRootAndRoutePath(normalizedRoot, nextRoutePath);
+        const state = {
+          path: nextRoutePath,
+          rootPath: normalizedRoot,
+        };
+        if (replace) {
+          history.replaceState(state, '', nextUrl.toString());
+        } else {
+          history.pushState(state, '', nextUrl.toString());
+        }
+      }
+    }
+
     handleNavigation(evt: CustomEvent<NavigationEvent>) {
       if (this.isNavigationBlocked()) {
         evt.preventDefault();
@@ -528,17 +613,18 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       if (this.routerMode === 'hash') {
         this.routePath = nextUrl.hash.slice(1);
       } else {
-        let routePath = nextUrl.pathname;
-        if (this.rootPath && routePath.startsWith(this.rootPath)) {
-          routePath = routePath.slice(this.rootPath.length);
-        }
-        this.routePath = routePath;
+        this.routePath = stripRootPath(nextUrl.pathname, this.rootPath);
       }
 
+      const historyState = {
+        ...evt.detail,
+        path: this.routePath,
+        rootPath: this.rootPath,
+      };
       if (evt.detail.replace) {
-        history.replaceState(evt.detail, '', nextUrl.toString());
+        history.replaceState(historyState, '', nextUrl.toString());
       } else {
-        history.pushState(evt.detail, '', nextUrl.toString());
+        history.pushState(historyState, '', nextUrl.toString());
       }
     }
 

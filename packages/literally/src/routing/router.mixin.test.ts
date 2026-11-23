@@ -497,4 +497,87 @@ describe('RouterMixin', () => {
       pushSpy.mockRestore();
     });
   });
+
+  describe('setRootPath & locale prefix switching', () => {
+    test('switches rootPath in place without reloading and preserves routePath, query, and hash', async () => {
+      window.history.replaceState({}, '', '/camp/123?coupon=STAR#details');
+
+      const el = document.createElement(
+        'test-router-component',
+      ) as TestRouterComponent;
+      el.routerMode = 'path';
+      el.rootPath = '';
+      document.body.appendChild(el);
+      await el.updateComplete;
+
+      expect(el.routePath).toBe('/camp/123');
+
+      el.setRootPath('/es');
+      await el.updateComplete;
+
+      expect(el.rootPath).toBe('/es');
+      expect(el.routePath).toBe('/camp/123');
+      expect(window.location.pathname).toBe('/es/camp/123');
+      expect(window.location.search).toBe('?coupon=STAR');
+      expect(window.location.hash).toBe('#details');
+
+      // Internal navigation keeps the new rootPath
+      el.navigateToPath('/cart');
+      await el.updateComplete;
+      expect(el.routePath).toBe('/cart');
+      expect(window.location.pathname).toBe('/es/cart');
+
+      // Switching back to English rootPath
+      el.setRootPath('/en', { replace: false });
+      await el.updateComplete;
+      expect(el.rootPath).toBe('/en');
+      expect(el.routePath).toBe('/cart');
+      expect(window.location.pathname).toBe('/en/cart');
+
+      el.remove();
+    });
+
+    test('maps exact rootPath pathname (e.g. /es) to / and respects segment boundaries', async () => {
+      window.history.replaceState({}, '', '/es');
+      const el = document.createElement(
+        'test-router-component',
+      ) as TestRouterComponent;
+      el.routerMode = 'path';
+      el.rootPath = '/es';
+      document.body.appendChild(el);
+      await el.updateComplete;
+
+      expect(el.routePath).toBe('/');
+
+      // Segment boundary: /escalate should not be stripped by /es
+      window.history.replaceState({}, '', '/escalate');
+      expect(el.currentRoutePath).toBe('/escalate');
+
+      el.remove();
+    });
+
+    test('restores rootPath on popstate when state includes rootPath', async () => {
+      window.history.replaceState({}, '', '/es/cart');
+      const el = document.createElement(
+        'test-router-component',
+      ) as TestRouterComponent;
+      el.routerMode = 'path';
+      el.rootPath = '/es';
+      document.body.appendChild(el);
+      await el.updateComplete;
+
+      window.history.replaceState({}, '', '/en/cart');
+      window.dispatchEvent(
+        new PopStateEvent('popstate', {
+          state: { path: '/cart', rootPath: '/en' },
+        }),
+      );
+      await el.updateComplete;
+
+      expect(el.rootPath).toBe('/en');
+      expect(el.routePath).toBe('/cart');
+
+      el.remove();
+    });
+  });
 });
