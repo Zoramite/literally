@@ -1,5 +1,6 @@
 import { type TemplateResult, html } from 'lit';
 
+import { type PageMetaResolver } from './page-meta';
 import { type RouteTrieParamValue } from './router';
 
 export type PageTitleResolver = string | (() => string);
@@ -9,6 +10,8 @@ export interface DefaultPageOptions {
   title?: PageTitleResolver;
   // Optional translation key for localized page titles.
   titleKey?: string;
+  // Optional static or async head metadata (description, Open Graph, Twitter, links, etc.).
+  meta?: PageMetaResolver;
   [key: string]: unknown;
 }
 

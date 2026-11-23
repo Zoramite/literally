@@ -6,6 +6,7 @@ import {
   type AppElementEvent,
   type StickySize,
 } from '../navigation/navigation';
+import { type PageMeta, type PageMetaContext } from '../routing/page-meta';
 import {
   type DefaultPageOptions,
   type PageDetails,
@@ -125,6 +126,8 @@ export class ERApp extends RouterMixin(LitElement) {
   private _lastResolvedPageTitle?: string;
   private _contentOptionsToken = 0;
   private _pendingAsyncOptionsToken = 0;
+  private _metaResolveToken = 0;
+  private _metaAbortController?: AbortController;
   private _pendingRedirectKey?: string;
   private _redirectCount = 0;
 
@@ -149,6 +152,11 @@ export class ERApp extends RouterMixin(LitElement) {
     });
   }
 
+  override disconnectedCallback() {
+    this._cancelPendingMetaResolution();
+    super.disconnectedCallback();
+  }
+
   render() {
     return html`
       <div class="container">${this.renderContent()}</div>
@@ -160,6 +168,7 @@ export class ERApp extends RouterMixin(LitElement) {
     this._lastResolvedPageOptions = undefined;
     this._lastResolvedPageTitle = undefined;
     this._pendingRedirectKey = undefined;
+    this._cancelPendingMetaResolution();
     super.updateRouteTrieMatch();
   }
 
@@ -177,11 +186,93 @@ export class ERApp extends RouterMixin(LitElement) {
 
   applyPageOptions(
     pageOptions?: DefaultPageOptions,
-    options?: { updateTitle?: boolean },
+    options?: { updateTitle?: boolean; updateMeta?: boolean },
   ): void {
     if (options?.updateTitle ?? true) {
       this.updatePageTitle(this.resolvePageTitle(pageOptions));
     }
+    if (options?.updateMeta ?? true) {
+      this._resolveAndApplyPageMeta(pageOptions);
+    }
+  }
+
+  private _cancelPendingMetaResolution(): void {
+    this._metaResolveToken++;
+    if (this._metaAbortController) {
+      this._metaAbortController.abort();
+      this._metaAbortController = undefined;
+    }
+  }
+
+  private _resolveAndApplyPageMeta(pageOptions?: DefaultPageOptions): void {
+    this._cancelPendingMetaResolution();
+    const metaResolver = pageOptions?.meta;
+
+    if (!metaResolver) {
+      this.updatePageMeta(undefined, { pageOptions });
+      return;
+    }
+
+    if (typeof metaResolver !== 'function') {
+      this.updatePageMeta(metaResolver, { pageOptions });
+      return;
+    }
+
+    const token = this._metaResolveToken;
+    const abortController = new AbortController();
+    this._metaAbortController = abortController;
+
+    const context: PageMetaContext = {
+      path: this.routePath,
+      routePath: this.routeTrieMatch?.path ?? this.routePath,
+      rootPath: this.rootPath,
+      params: this.routeTrieMatch?.params,
+      permissions: this._lastAppliedPermissions,
+      signal: abortController.signal,
+    };
+
+    let result: PageMeta | undefined | Promise<PageMeta | undefined>;
+    try {
+      result = metaResolver(context);
+    } catch (err) {
+      console.error('Failed to resolve page meta:', err);
+      this.updatePageMeta(undefined, { pageOptions });
+      return;
+    }
+
+    if (
+      result &&
+      typeof (result as Promise<PageMeta | undefined>).then === 'function'
+    ) {
+      // Clear previous route's meta immediately while async meta loads.
+      this.updatePageMeta(undefined, { pageOptions });
+      (result as Promise<PageMeta | undefined>)
+        .then((resolved) => {
+          if (
+            token !== this._metaResolveToken ||
+            abortController.signal.aborted ||
+            !this.isConnected
+          ) {
+            return;
+          }
+          if (this._metaAbortController === abortController) {
+            this._metaAbortController = undefined;
+          }
+          this.updatePageMeta(resolved, { pageOptions });
+        })
+        .catch((err) => {
+          if (abortController.signal.aborted) {
+            return;
+          }
+          console.error('Failed to resolve async page meta:', err);
+        });
+      return;
+    }
+
+    if (this._metaAbortController === abortController) {
+      this._metaAbortController = undefined;
+    }
+    this.updatePageMeta(result as PageMeta | undefined, { pageOptions });
   }
 
   private _arePermissionsEqual(

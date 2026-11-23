@@ -310,4 +310,257 @@ describe('ERApp and routing integration', () => {
     // Should have stopped redirecting without hanging
     expect(['/loop-a', '/loop-b']).toContain(app.routePath);
   });
+
+  describe('dynamic page meta', () => {
+    afterEach(() => {
+      document.head
+        .querySelectorAll('meta, link[rel="canonical"], link[rel="alternate"]')
+        .forEach((el) => el.remove());
+    });
+
+    it('applies static route meta, merges with defaultMeta, and cleans up unused tags on navigation', async () => {
+      app.defaultTitle = 'My App';
+      app.defaultMeta = {
+        description: 'Default site description',
+        og: {
+          type: 'website',
+          siteName: 'My App',
+          image: 'https://example.com/default.jpg',
+          imageWidth: 1200,
+          imageHeight: 630,
+        },
+        twitter: {
+          card: 'summary_large_image',
+        },
+      };
+
+      app.routeTrie.set(
+        '/promo',
+        new PublicRoute({
+          pageOptions: {
+            title: 'Summer Promo',
+            meta: {
+              description: 'Special summer offer',
+              robots: 'noindex',
+              og: {
+                image: 'https://example.com/promo.jpg',
+              },
+            },
+          },
+          template: html`<div>Promo</div>`,
+        }),
+      );
+      app.routeTrie.set(
+        '/faq',
+        new PublicRoute({
+          pageOptions: { title: 'FAQ' },
+          template: html`<div>FAQ</div>`,
+        }),
+      );
+
+      app.navigateToPath('/promo');
+      await app.updateComplete;
+
+      expect(document.title).toBe('Summer Promo - My App');
+      expect(
+        document.head
+          .querySelector('meta[name="description"]')
+          ?.getAttribute('content'),
+      ).toBe('Special summer offer');
+      expect(
+        document.head
+          .querySelector('meta[name="robots"]')
+          ?.getAttribute('content'),
+      ).toBe('noindex');
+      expect(
+        document.head
+          .querySelector('meta[property="og:image"]')
+          ?.getAttribute('content'),
+      ).toBe('https://example.com/promo.jpg');
+      expect(
+        document.head.querySelector('meta[property="og:image:width"]'),
+      ).toBeNull();
+
+      // Navigate to /faq: robots should be cleaned up and defaults restored
+      app.navigateToPath('/faq');
+      await app.updateComplete;
+
+      expect(document.title).toBe('FAQ - My App');
+      expect(
+        document.head
+          .querySelector('meta[name="description"]')
+          ?.getAttribute('content'),
+      ).toBe('Default site description');
+      expect(document.head.querySelector('meta[name="robots"]')).toBeNull();
+      expect(
+        document.head
+          .querySelector('meta[property="og:image"]')
+          ?.getAttribute('content'),
+      ).toBe('https://example.com/default.jpg');
+      expect(
+        document.head
+          .querySelector('meta[property="og:image:width"]')
+          ?.getAttribute('content'),
+      ).toBe('1200');
+    });
+
+    it('resolves async route meta and cancels stale requests on navigation', async () => {
+      app.defaultTitle = 'My App';
+      app.defaultMeta = {
+        description: 'Default description',
+        og: { type: 'website' },
+      };
+
+      let resolveCampMeta!: (val: {
+        title: string;
+        description: string;
+        og: { image: string };
+      }) => void;
+      let capturedSignal: AbortSignal | undefined;
+
+      app.routeTrie.set(
+        '/camp/{campId}',
+        new PublicRoute({
+          pageOptions: {
+            title: 'Camp',
+            meta: ({ params, signal }) => {
+              capturedSignal = signal;
+              return new Promise((resolve) => {
+                resolveCampMeta = resolve;
+                void params;
+              });
+            },
+          },
+          template: html`<div>Camp</div>`,
+        }),
+      );
+      app.routeTrie.set(
+        '/about',
+        new PublicRoute({
+          pageOptions: {
+            title: 'About',
+            meta: { description: 'About us' },
+          },
+          template: html`<div>About</div>`,
+        }),
+      );
+
+      // First navigate to /camp/odyssey and let it resolve
+      app.navigateToPath('/camp/odyssey');
+      await app.updateComplete;
+      expect(document.title).toBe('Camp - My App');
+      expect(capturedSignal?.aborted).toBe(false);
+
+      resolveCampMeta({
+        title: 'Odyssey Camp | My App',
+        description: 'Lunar exploration camp',
+        og: { image: 'https://example.com/odyssey.jpg' },
+      });
+      await new Promise((r) => setTimeout(r, 0));
+
+      expect(document.title).toBe('Odyssey Camp | My App');
+      expect(
+        document.head
+          .querySelector('meta[property="og:description"]')
+          ?.getAttribute('content'),
+      ).toBe('Lunar exploration camp');
+      expect(
+        document.head
+          .querySelector('meta[property="og:image"]')
+          ?.getAttribute('content'),
+      ).toBe('https://example.com/odyssey.jpg');
+
+      // Navigate to a second camp, then navigate away before it resolves
+      app.navigateToPath('/camp/cadet');
+      await app.updateComplete;
+      const staleSignal = capturedSignal;
+      const staleResolve = resolveCampMeta;
+
+      app.navigateToPath('/about');
+      await app.updateComplete;
+      expect(staleSignal?.aborted).toBe(true);
+      expect(document.title).toBe('About - My App');
+
+      staleResolve({
+        title: 'Stale Cadet Camp',
+        description: 'Should be ignored',
+        og: { image: 'https://example.com/stale.jpg' },
+      });
+      await new Promise((r) => setTimeout(r, 0));
+
+      expect(document.title).toBe('About - My App');
+      expect(
+        document.head
+          .querySelector('meta[name="description"]')
+          ?.getAttribute('content'),
+      ).toBe('About us');
+      expect(
+        document.head.querySelector('meta[property="og:image"]'),
+      ).toBeNull();
+    });
+
+    it('supports component-level setPageMeta overrides that survive permission updates and clear on navigation', async () => {
+      app.defaultTitle = 'STAR Camp';
+      app.defaultMeta = {
+        description: 'Default STAR Camp',
+        og: { type: 'website', image: 'https://example.com/default.jpg' },
+      };
+      let permissions: Record<string, boolean> | undefined = undefined;
+      app.getRoutePermissions = () => permissions;
+
+      app.routeTrie.set(
+        '/camp/{campId}',
+        new PublicRoute({
+          pageOptions: { title: 'Camp Details' },
+          template: html`<div>Camp Details</div>`,
+        }),
+      );
+      app.routeTrie.set(
+        '/faq',
+        new PublicRoute({
+          pageOptions: { title: 'FAQ' },
+          template: html`<div>FAQ</div>`,
+        }),
+      );
+
+      app.navigateToPath('/camp/odyssey');
+      await app.updateComplete;
+
+      const clearOverride = app.setPageMeta({
+        title: 'Odyssey Lunar Base Camp',
+        description: 'Build a lunar base',
+        og: { image: 'https://example.com/odyssey.jpg' },
+      });
+
+      expect(document.title).toBe('Odyssey Lunar Base Camp');
+      expect(
+        document.head
+          .querySelector('meta[property="og:image"]')
+          ?.getAttribute('content'),
+      ).toBe('https://example.com/odyssey.jpg');
+
+      // Permission change on same route preserves override
+      permissions = { admin: false };
+      app.requestUpdate();
+      await app.updateComplete;
+      expect(document.title).toBe('Odyssey Lunar Base Camp');
+      expect(
+        document.head
+          .querySelector('meta[property="og:image"]')
+          ?.getAttribute('content'),
+      ).toBe('https://example.com/odyssey.jpg');
+
+      // Navigating away clears override automatically; stale clear() is a no-op
+      app.navigateToPath('/faq');
+      await app.updateComplete;
+      clearOverride();
+
+      expect(document.title).toBe('FAQ - STAR Camp');
+      expect(
+        document.head
+          .querySelector('meta[property="og:image"]')
+          ?.getAttribute('content'),
+      ).toBe('https://example.com/default.jpg');
+    });
+  });
 });

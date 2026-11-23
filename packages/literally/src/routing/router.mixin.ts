@@ -16,6 +16,7 @@ import {
   routeTrieMatchContext,
   routerContext,
 } from './context';
+import { type PageMeta, PageMetaManager, mergePageMeta } from './page-meta';
 import {
   type DefaultPageOptions,
   getRoutePageOptions,
@@ -50,6 +51,10 @@ export type NavigationBlockedCallback = (
 
 export interface UpdatePageTitleOptions {
   includeDefaultTitle?: boolean;
+}
+
+export interface UpdatePageMetaOptions {
+  pageOptions?: DefaultPageOptions;
 }
 
 export interface SetRootPathOptions {
@@ -104,6 +109,7 @@ export interface RouterInterface {
   routerMode: 'hash' | 'path';
   rootPath: string;
   defaultTitle: string;
+  defaultMeta?: PageMeta | (() => PageMeta | undefined);
 
   navigationBlockedCallback?: NavigationBlockedCallback;
 
@@ -131,6 +137,9 @@ export interface RouterInterface {
   updateRouteTrieMatch(): void;
   resolvePageTitle(pageOptions?: DefaultPageOptions): string | undefined;
   updatePageTitle(title?: string, options?: UpdatePageTitleOptions): void;
+  getDefaultPageMeta(): PageMeta | undefined;
+  updatePageMeta(meta?: PageMeta, options?: UpdatePageMetaOptions): void;
+  setPageMeta(meta: PageMeta | undefined): () => void;
 }
 
 export interface RouteMatchInterface {
@@ -214,6 +223,21 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       }
     }
 
+    @property({ attribute: false })
+    get defaultMeta(): PageMeta | (() => PageMeta | undefined) | undefined {
+      return this._defaultMeta;
+    }
+    set defaultMeta(
+      value: PageMeta | (() => PageMeta | undefined) | undefined,
+    ) {
+      const oldValue = this._defaultMeta;
+      this._defaultMeta = value;
+      this.requestUpdate('defaultMeta', oldValue);
+      if (this.isConnected) {
+        this.updatePageMeta();
+      }
+    }
+
     @provide({ context: routerContext })
     router: RouterInterface = this as unknown as RouterInterface;
 
@@ -221,6 +245,11 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     private navigationBlockedCallbacks = new Set<NavigationBlockedCallback>();
     private _routerModifiedTitle = false;
     private _lastLoggedRoute?: string;
+    private _defaultMeta?: PageMeta | (() => PageMeta | undefined);
+    private _pageMetaManager = new PageMetaManager();
+    private _lastRouteMeta?: PageMeta;
+    private _pageMetaOverride?: PageMeta;
+    private _pageMetaOverrideToken = 0;
     private onRouteTrieUpdated = () => {
       this.updateRouteTrieMatch();
     };
@@ -671,6 +700,9 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
     }
 
     updateRouteTrieMatch() {
+      this._lastRouteMeta = undefined;
+      this._pageMetaOverride = undefined;
+      this._pageMetaOverrideToken++;
       this.routeTrieMatch = this.routeTrie.match(this.routePath);
       const routeKey = `${this.routePath}::${this.routeTrieMatch?.path ?? ''}`;
       if (this._lastLoggedRoute !== routeKey) {
@@ -727,6 +759,62 @@ export const RouterMixin = <T extends Constructor<LitElement>>(
       if (nextTitle !== undefined && document.title !== nextTitle) {
         document.title = nextTitle;
       }
+    }
+
+    getDefaultPageMeta(): PageMeta | undefined {
+      return typeof this._defaultMeta === 'function'
+        ? this._defaultMeta()
+        : this._defaultMeta;
+    }
+
+    updatePageMeta(meta?: PageMeta, options?: UpdatePageMetaOptions): void {
+      if (meta !== undefined) {
+        this._lastRouteMeta = meta;
+      } else if (options && 'pageOptions' in options) {
+        this._lastRouteMeta = undefined;
+      }
+
+      const mergedMeta = mergePageMeta(
+        this.getDefaultPageMeta(),
+        this._lastRouteMeta,
+        this._pageMetaOverride,
+      );
+
+      if (mergedMeta?.title !== undefined) {
+        this.updatePageTitle(mergedMeta.title, {
+          includeDefaultTitle: mergedMeta.includeDefaultTitle ?? false,
+        });
+      }
+
+      const resolvedTitle =
+        typeof document !== 'undefined' && document.title
+          ? document.title
+          : undefined;
+
+      this._pageMetaManager.apply(mergedMeta, { resolvedTitle });
+    }
+
+    setPageMeta(meta: PageMeta | undefined): () => void {
+      const token = ++this._pageMetaOverrideToken;
+      const hadOverrideTitle = this._pageMetaOverride?.title !== undefined;
+      this._pageMetaOverride = meta;
+
+      if (meta?.title === undefined && hadOverrideTitle) {
+        this.updatePageTitle();
+      }
+      this.updatePageMeta();
+
+      return () => {
+        if (this._pageMetaOverrideToken !== token) {
+          return;
+        }
+        const clearedTitle = this._pageMetaOverride?.title !== undefined;
+        this._pageMetaOverride = undefined;
+        if (clearedTitle) {
+          this.updatePageTitle();
+        }
+        this.updatePageMeta();
+      };
     }
   }
   return RouterElement as Constructor<RouterInterface> & T;
