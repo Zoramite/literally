@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.1.0](https://github.com/Zoramite/literally/compare/literally-v4.0.0...literally-v4.1.0) (2026-11-27)
+
+
+### Features
+
+* add LocalizationConsumerMixin and enhance router with setRootPath support ([7ee6d85](https://github.com/Zoramite/literally/commit/7ee6d85ee4c04226c3dc5206443681293a399fe9))
+* add page meta management and SSR rendering for routing ([aa62844](https://github.com/Zoramite/literally/commit/aa628442eb65ad5fd5bb9dc2bfc721fbadbe99d8))
+* support dynamic function titles and titleKey options in router page titles ([06d3292](https://github.com/Zoramite/literally/commit/06d32923957435781d49e23ba7eb06b00bf9a43d))
+
+
+### Bug Fixes
+
+* debounce duplicate route changed debug logs in router mixin ([1436ac9](https://github.com/Zoramite/literally/commit/1436ac9ea4e352284e2c651a25467f2dfd015407))
+
 ## [4.0.0](https://github.com/Zoramite/literally/compare/literally-v3.9.0...literally-v4.0.0) (2026-11-18)
 
 
