@@ -1,6 +1,6 @@
 {
   "name": "@littoral/ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Lit-based UI components and responsive layout primitives for littoral applications.",
   "exports": {
     "./*": {
